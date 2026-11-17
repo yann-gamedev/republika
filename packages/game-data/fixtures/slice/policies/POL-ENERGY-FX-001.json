@@ -1,0 +1,67 @@
+{
+  "id": "POL-ENERGY-FX-001",
+  "version": 1,
+  "name": "Reformasi Subsidi Energi (fixture)",
+  "description": "Kebijakan fixture: kas hemat, inflasi naik, tanpa voting.",
+  "category": "ENERGY",
+  "apCost": 1,
+  "fiscalCostTrillion": 2,
+  "perTurnCostTrillion": 0,
+  "needsVote": false,
+  "durationTurns": 3,
+  "cooldownTurns": 2,
+  "requirements": [],
+  "conflicts": ["POL-SOCIAL-FX-001"],
+  "effects": [
+    { "type": "MODIFY_TREASURY", "deltaTrillion": 8, "reasonCode": "FX_SUBSIDY_SAVINGS" },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "inflationPct",
+      "delta": 0.6,
+      "timing": "IMMEDIATE",
+      "reasonCode": "FX_ENERGY_PASS_THROUGH"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": -4,
+      "timing": "IMMEDIATE",
+      "reasonCode": "FX_FUEL_DISCONTENT"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "welfare",
+      "delta": 3,
+      "timing": "DELAYED",
+      "delayTurns": 2,
+      "reasonCode": "FX_TARGETED_AID"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "growthPct",
+      "delta": 0.3,
+      "timing": "PER_TURN",
+      "reasonCode": "FX_ENERGY_EFFICIENCY"
+    },
+    {
+      "type": "CHANGE_FACTION_SUPPORT",
+      "ideologyTag": "populis",
+      "delta": -5,
+      "reasonCode": "FX_POPULIST_BACKLASH"
+    },
+    {
+      "type": "MODIFY_MINISTRY_EFFECTIVENESS",
+      "ministryId": "MIN-FX-ENERGY",
+      "delta": 2,
+      "reasonCode": "FX_ENERGY_REFORM"
+    },
+    { "type": "SET_FLAG", "flag": "FX_SUBSIDY_REFORMED", "reasonCode": "FX_SUBSIDY_FLAG" }
+  ],
+  "modifiers": [
+    {
+      "when": [{ "type": "INDICATOR_AT_LEAST", "target": "inflationPct", "value": 5 }],
+      "appliesTo": "approval",
+      "multiplier": 1.5
+    }
+  ]
+}

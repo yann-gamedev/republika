@@ -1,0 +1,55 @@
+{
+  "id": "EVT-FX-001",
+  "version": 1,
+  "title": "Banjir Pesisir (fixture)",
+  "body": "Hujan ekstrem merendam wilayah pesisir fiktif. Pemerintah daerah meminta dukungan darurat.",
+  "eligibility": [],
+  "triggerWeight": 10,
+  "cooldownTurns": 4,
+  "uniquePerCampaign": false,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Cairkan dana darurat",
+      "effects": [
+        { "type": "MODIFY_TREASURY", "deltaTrillion": -4, "reasonCode": "FX_EMERGENCY_FUND" },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "FX_SWIFT_RESPONSE"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 1,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "FX_RECOVERY_SEEN"
+        },
+        { "type": "CLEAR_FLAG", "flag": "FX_SUBSIDY_REFORMED", "reasonCode": "FX_FLAG_CLEARED" }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Serahkan ke daerah",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "FX_SEEN_AS_ABSENT"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "factionId": "FAC-FX-03",
+          "delta": -3,
+          "reasonCode": "FX_REGIONAL_ANGER"
+        }
+      ]
+    }
+  ]
+}

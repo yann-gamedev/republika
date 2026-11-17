@@ -1,0 +1,52 @@
+{
+  "id": "POL-FISCAL-FX-001",
+  "version": 1,
+  "name": "Reformasi PPN (fixture)",
+  "description": "Kebijakan fixture: kas menguat, persetujuan turun.",
+  "category": "FISCAL",
+  "apCost": 1,
+  "fiscalCostTrillion": 0,
+  "perTurnCostTrillion": 0,
+  "needsVote": true,
+  "durationTurns": 4,
+  "cooldownTurns": 2,
+  "requirements": [],
+  "conflicts": [],
+  "effects": [
+    { "type": "MODIFY_TREASURY", "deltaTrillion": 6, "reasonCode": "FX_VAT_REVENUE" },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "fiscalHealth",
+      "delta": 1.5,
+      "timing": "PER_TURN",
+      "reasonCode": "FX_VAT_FISCAL_SPACE"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": -3,
+      "timing": "IMMEDIATE",
+      "reasonCode": "FX_VAT_BACKLASH"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "inflationPct",
+      "delta": 0.3,
+      "timing": "IMMEDIATE",
+      "reasonCode": "FX_VAT_PRICE_LEVEL"
+    },
+    {
+      "type": "CHANGE_FACTION_SUPPORT",
+      "ideologyTag": "populis",
+      "delta": -4,
+      "reasonCode": "FX_VAT_POPULIST_ANGER"
+    }
+  ],
+  "modifiers": [
+    {
+      "when": [{ "type": "INDICATOR_AT_MOST", "target": "approval", "value": 45 }],
+      "appliesTo": "approval",
+      "multiplier": 1.5
+    }
+  ]
+}
