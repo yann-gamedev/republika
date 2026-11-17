@@ -311,6 +311,7 @@ export const copy = {
       POLICY: 'Kebijakan',
       VOTE: 'Voting',
       EVENT: 'Peristiwa',
+      FLAG: 'Penanda',
       SYSTEM: 'Sistem',
     },
     reportFor: (name: string) => `Laporan untuk Presiden ${name}`,

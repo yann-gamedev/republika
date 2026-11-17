@@ -1,0 +1,30 @@
+[
+  {
+    "id": "MIN-FX-FISCAL",
+    "version": 1,
+    "name": "Kementerian Keuangan (fixture)",
+    "categories": ["FISCAL"],
+    "initialEffectiveness": 65
+  },
+  {
+    "id": "MIN-FX-SOCIAL",
+    "version": 1,
+    "name": "Kementerian Sosial (fixture)",
+    "categories": ["SOCIAL"],
+    "initialEffectiveness": 60
+  },
+  {
+    "id": "MIN-FX-ENERGY",
+    "version": 1,
+    "name": "Kementerian Energi (fixture)",
+    "categories": ["ENERGY"],
+    "initialEffectiveness": 55
+  },
+  {
+    "id": "MIN-FX-GOVERNANCE",
+    "version": 1,
+    "name": "Kementerian Dalam Negeri (fixture)",
+    "categories": ["GOVERNANCE"],
+    "initialEffectiveness": 60
+  }
+]

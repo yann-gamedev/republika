@@ -1,0 +1,13 @@
+{
+  "id": "FAC-FX-03",
+  "version": 1,
+  "name": "Fraksi Daerah (fixture)",
+  "shortName": "DAE",
+  "seats": 32,
+  "color": "#2F4A6B",
+  "ideologyTags": ["regionalis", "populis"],
+  "baseSupport": 45,
+  "initialSupport": 45,
+  "policyPreferences": { "FISCAL": 0, "SOCIAL": 1, "ENERGY": 0, "GOVERNANCE": 1 },
+  "description": "Fraksi fixture yang menimbang kepentingan daerah."
+}

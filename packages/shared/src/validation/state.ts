@@ -35,6 +35,8 @@ export const activePolicySchema = z.object({
   enactedTurn: z.number().int().min(1).max(100),
   remainingTurns: nonNegativeInt.max(100),
   perTurnCostBillion: nonNegativeInt,
+  /** Turn terakhir efek PER_TURN dijalankan; mencegah efek ganda dalam satu turn. */
+  lastTickedTurn: nonNegativeInt.max(100),
 });
 
 export type ActivePolicy = z.infer<typeof activePolicySchema>;
@@ -65,7 +67,10 @@ export const pendingEventSchema = z.object({
 export type PendingEvent = z.infer<typeof pendingEventSchema>;
 
 export const delayedEffectSchema = z.object({
+  sourceType: z.enum(['POLICY', 'EVENT']),
   sourceId: idSchema,
+  /** Turn saat efek dijadwalkan; hitung mundur dimulai turn berikutnya. */
+  createdTurn: z.number().int().min(1).max(100),
   remainingTurns: z.number().int().min(1).max(40),
   effect: effectRuleSchema,
 });
@@ -99,6 +104,8 @@ export const gameStateSchema = z
     cabinetName: z.string().trim().max(40).optional(),
     rulesetVersion: versionSchema,
     rulesetMigratedFrom: versionSchema.optional(),
+    /** Seed PRNG kampanye; stream per turn = `seed:turn`. */
+    seed: z.string().min(1).max(100),
     turn: z.number().int().min(1).max(100),
     maxTurns: z.number().int().min(1).max(100),
     status: z.enum(['active', 'completed']),
@@ -112,6 +119,8 @@ export const gameStateSchema = z
     pendingCommands: z.array(pendingCommandSchema),
     pendingEvents: z.array(pendingEventSchema),
     lobbyThisTurn: z.array(idSchema),
+    /** commandId yang sudah diterima pada turn berjalan; dikosongkan tiap akhir kuartal. */
+    commandIdsThisTurn: z.array(commandIdSchema),
     policyCooldowns: z.record(z.string(), nonNegativeInt),
     eventCooldowns: z.record(z.string(), nonNegativeInt),
     flags: flagsSchema,
@@ -198,22 +207,44 @@ export const ledgerKindSchema = z.enum([
   'POLICY',
   'VOTE',
   'EVENT',
+  'FLAG',
   'SYSTEM',
 ]);
+
+export type LedgerKind = z.infer<typeof ledgerKindSchema>;
+
+export const ledgerSourceTypeSchema = z.enum([
+  'POLICY',
+  'EVENT',
+  'LOBBY',
+  'VOTE',
+  'BASELINE',
+  'MINISTRY',
+  'SYSTEM',
+]);
+
+export type LedgerSourceType = z.infer<typeof ledgerSourceTypeSchema>;
+
+/** Satuan nilai before/delta/after: persepuluhan, miliar, poin effectiveness, atau flag (0/1). */
+export const ledgerUnitSchema = z.enum(['tenths', 'billion', 'points', 'flag']);
+
+export type LedgerUnit = z.infer<typeof ledgerUnitSchema>;
 
 export const ledgerEntrySchema = z.object({
   id: z.string().min(1).max(100),
   turn: z.number().int().min(1).max(100),
+  /** Urutan penerapan dalam satu turn, mulai 0. */
+  order: z.number().int().min(0),
   kind: ledgerKindSchema,
-  reasonCode: z.string().min(1).max(64),
+  sourceType: ledgerSourceTypeSchema,
   sourceId: z.string().min(1).max(64).optional(),
-  policyId: idSchema.optional(),
-  factionId: idSchema.optional(),
-  ministryId: idSchema.optional(),
-  eventId: idSchema.optional(),
-  indicator: z.string().min(1).max(40).optional(),
-  deltaTenths: z.number().int().optional(),
-  amountBillion: z.number().int().optional(),
+  reasonCode: z.string().min(1).max(64),
+  /** Indikator, factionId, ministryId, flag, atau `treasury`. */
+  target: z.string().min(1).max(64).optional(),
+  unit: ledgerUnitSchema.optional(),
+  before: z.number().int().optional(),
+  delta: z.number().int().optional(),
+  after: z.number().int().optional(),
   message: z.string().max(300).optional(),
 });
 
@@ -241,6 +272,37 @@ export const resolvedEventSchema = z.object({
   choiceId: z.string().min(1).max(20),
 });
 
+export const indicatorCauseSchema = z.object({
+  sourceType: ledgerSourceTypeSchema,
+  sourceId: z.string().min(1).max(64).optional(),
+  reasonCode: z.string().min(1).max(64),
+  deltaTenths: z.number().int(),
+});
+
+export type IndicatorCause = z.infer<typeof indicatorCauseSchema>;
+
+const indicatorDeltasSchema = z.object({
+  approval: z.number().int(),
+  stability: z.number().int(),
+  fiscalHealth: z.number().int(),
+  growthPct: z.number().int(),
+  inflationPct: z.number().int(),
+  unemploymentPct: z.number().int(),
+  welfare: z.number().int(),
+  trust: z.number().int(),
+});
+
+const indicatorCausesSchema = z.object({
+  approval: z.array(indicatorCauseSchema).max(3),
+  stability: z.array(indicatorCauseSchema).max(3),
+  fiscalHealth: z.array(indicatorCauseSchema).max(3),
+  growthPct: z.array(indicatorCauseSchema).max(3),
+  inflationPct: z.array(indicatorCauseSchema).max(3),
+  unemploymentPct: z.array(indicatorCauseSchema).max(3),
+  welfare: z.array(indicatorCauseSchema).max(3),
+  trust: z.array(indicatorCauseSchema).max(3),
+});
+
 export const turnReportSchema = z.object({
   turn: z.number().int().min(1).max(100),
   year: z.number().int().min(2000).max(2200),
@@ -250,6 +312,12 @@ export const turnReportSchema = z.object({
   indicatorsAfter: indicatorsSchema,
   treasuryBeforeBillion: z.number().int(),
   treasuryAfterBillion: z.number().int(),
+  treasuryDeltaBillion: z.number().int(),
+  indicatorDeltas: indicatorDeltasSchema,
+  /** Maksimal 3 penyebab terbesar (|delta|) per indikator dari ledger. */
+  topCauses: indicatorCausesSchema,
+  policiesPassed: z.array(idSchema),
+  policiesFailed: z.array(idSchema),
   ledger: z.array(ledgerEntrySchema),
   votes: z.array(voteOutcomeSchema),
   resolvedEvents: z.array(resolvedEventSchema),
