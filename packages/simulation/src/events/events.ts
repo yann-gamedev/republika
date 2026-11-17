@@ -1,9 +1,6 @@
-import type { GameDefinitions, GameState } from '@republika/shared';
+import type { GameState } from '@republika/shared';
 
-import type { DefinitionIndex } from '../core/definitions.js';
-import type { Ledger } from '../core/ledger.js';
 import { compareIds } from '../core/order.js';
-import type { Rng } from '../core/rng.js';
 import type { EffectContext } from '../policies/effects.js';
 import { applyOnsetEffects } from '../policies/lifecycle.js';
 
@@ -42,18 +39,4 @@ export function applyEventResponses(work: GameState, context: EffectContext): Re
   const resolvedIds = new Set(resolved.map((item) => item.eventId));
   work.pendingEvents = work.pendingEvents.filter((item) => !resolvedIds.has(item.eventId));
   return resolved;
-}
-
-/**
- * Langkah 11: memilih event untuk kuartal berikutnya. Stub Tahap 2 — selalu
- * kosong; seleksi berbobot dengan PRNG diisi di Tahap 3.
- */
-export function selectNextEvents(
-  _work: GameState,
-  _defs: GameDefinitions,
-  _index: DefinitionIndex,
-  _rng: Rng,
-  _ledger: Ledger,
-): string[] {
-  return [];
 }

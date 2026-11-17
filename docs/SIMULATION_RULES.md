@@ -1,4 +1,4 @@
-# Aturan Simulasi — REPUBLIKA (Tahap 2)
+# Aturan Simulasi — REPUBLIKA (ruleset 2)
 
 Dokumen ini menjelaskan cara engine menghitung satu kuartal, ditulis untuk penulis konten. Anda tidak perlu membaca kode untuk memperkirakan efek sebuah kebijakan. Acuan normatif tetap `AGENT.md` §5; bila ada beda, `AGENT.md` yang menang dan dokumen ini wajib diperbaiki.
 
@@ -63,7 +63,7 @@ Saat pemain menekan **Akhiri Kuartal**, engine menjalankan 12 langkah ini dengan
 8. **Dinamika dasar (baseline)** — lihat §8.
 9. **Efektivitas kementerian** — lihat §7.
 10. **Normalize** — semua nilai dipotong ke batas.
-11. **Pilih event berikutnya** — _belum aktif di Tahap 2_ (selalu kosong; diisi Tahap 3).
+11. **Pilih event berikutnya** — event untuk kuartal depan diundi (lihat §9). Tidak ada undian setelah kuartal terakhir.
 12. **Laporan** — laporan kuartal dibuat, kuartal maju. Di kuartal terakhir kampanye ditandai selesai.
 
 Akibat urutan ini: efek kebijakan dari langkah 6–7 terjadi **sebelum** baseline, sehingga baseline langsung "menarik" sebagian efek itu kembali pada kuartal yang sama (lihat contoh di §10).
@@ -143,12 +143,28 @@ Parameter di `baseline.json`. Semua rumus memakai nilai setelah efek kebijakan (
 
 Contoh pada keadaan awal fixture (persetujuan 58, inflasi 3,4, pertumbuhan 4,8, pengangguran 5,6): inflasi −0,1; pengangguran −0,345 → −0,3; persetujuan −0,8; pertumbuhan −0,16 → −0,2.
 
-## 9. Event (sebagian, Tahap 2)
+## 9. Event
 
-- Event yang tiba di kuartal N **wajib ditanggapi** sebelum kuartal N bisa diakhiri.
+**Kapan muncul.** Di akhir kuartal N (langkah 11) engine mengundi event untuk kuartal N+1. Event itu tampil sebagai "nota dinas" di kuartal N+1 dan **wajib ditanggapi** sebelum kuartal N+1 bisa diakhiri.
+
+**Siapa yang boleh ikut undian** (semua harus terpenuhi):
+
+1. Semua syarat `eligibility` terpenuhi. Syarat dicek terhadap keadaan akhir kuartal N, **tetapi `TURN_AT_LEAST` memakai nomor kuartal kedatangan**. `TURN_AT_LEAST: 3` berarti paling cepat muncul di kuartal 3.
+2. Tidak sedang cooldown.
+3. Bila `uniquePerCampaign: true`, belum pernah muncul di kampanye ini.
+4. Tidak sedang menunggu tanggapan.
+
+**Cara undian.** Kandidat diurutkan menurut ID, lalu dipilih acak sesuai bobot `triggerWeight`. Peluang sebuah event = bobotnya ÷ jumlah bobot semua kandidat. Contoh fixture kuartal 2: Banjir (10) dan Demo (30) → 25% dan 75%. Jumlah event per kuartal maksimal `maxEventsPerQuarter` (default 1); bila lebih dari 1, event yang sudah terpilih tidak diundi lagi.
+
+**Keacakan tetap bisa diulang.** Undian memakai seed kampanye + nomor kuartal. Kampanye dengan seed sama dan keputusan sama selalu mendapat event yang sama.
+
+**Cooldown event.** Event yang terpilih langsung mendapat cooldown `cooldownTurns`. Hitung mundur mulai kuartal kedatangan. Contoh: Banjir (cooldown 4) diundi di akhir K1, tiba di K2, cooldown habis di akhir K5, sehingga paling cepat tiba lagi di K6.
+
+**Tanggapan.**
+
 - Efek opsi event tidak memakai pengali kementerian maupun modifier.
 - Efek `PER_TURN` pada opsi event diterapkan **sekali** (event tidak punya durasi). Efek `DELAYED` dijadwalkan seperti kebijakan.
-- Pemilihan event acak berbobot (PRNG ber-seed) belum aktif; diisi Tahap 3.
+- Tanggapan diterapkan di langkah 2, sebelum lobi dan voting. Jadi efek event ke dukungan fraksi ikut memengaruhi voting kuartal yang sama.
 
 ## 10. Contoh lengkap: Reformasi Subsidi Energi (fixture)
 

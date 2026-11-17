@@ -7,7 +7,7 @@ import { applyCommand, type PlayerCommand } from '../src/core/commands.js';
 import { hashState } from '../src/core/hash.js';
 import { indicatorBounds } from '../src/core/math.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
-import { EVENT_FLOOD, defs, newState } from './helpers.js';
+import { defs, newState, respondAll } from './helpers.js';
 import { runScript } from './scenario.js';
 
 describe('determinisme', () => {
@@ -47,7 +47,7 @@ const stepArb = fc.oneof(
 
 const turnArb = fc.record({
   steps: fc.array(stepArb, { maxLength: 6 }),
-  event: fc.option(fc.constantFrom('A', 'B'), { nil: undefined }),
+  event: fc.constantFrom('A', 'B'),
 });
 
 describe('property: 4 kuartal acak', () => {
@@ -60,13 +60,9 @@ describe('property: 4 kuartal acak', () => {
           let state: GameState = newState(seed);
           let previousTurn = state.turn;
           turns.forEach((turn, position) => {
-            if (turn.event !== undefined) {
-              state = {
-                ...state,
-                pendingEvents: [
-                  { eventId: EVENT_FLOOD, arrivedTurn: state.turn, resolvedChoiceId: turn.event },
-                ],
-              };
+            // Event dipilih engine; tanggapi semua dengan pilihan acak A/B.
+            for (const response of respondAll(state, () => turn.event, `t${position}`)) {
+              state = applyCommand(state, response, defs).state;
             }
             turn.steps.forEach((step, index) => {
               const commandId = `t${position}-c${index}`;
@@ -123,6 +119,9 @@ describe('anggaran performa §5.17', () => {
     const started = performance.now();
     for (let quarter = 1; quarter <= 20; quarter += 1) {
       const policyId = policyIds[quarter % policyIds.length] ?? policyIds[0] ?? '';
+      for (const response of respondAll(state, () => 'B', `r${quarter}`)) {
+        state = applyCommand(state, response, defs).state;
+      }
       state = applyCommand(
         state,
         { type: 'ENACT_POLICY', commandId: `p${quarter}`, policyId },

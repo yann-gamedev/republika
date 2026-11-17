@@ -21,11 +21,12 @@ import {
   POLICY_SOCIAL,
   defs,
   newState,
+  quietDefs,
 } from './helpers.js';
 import { runScript } from './scenario.js';
 
 function endQuarter(state: GameState, commandId = 'end') {
-  return resolveTurn(state, { type: 'END_QUARTER', commandId }, defs);
+  return resolveTurn(state, { type: 'END_QUARTER', commandId }, quietDefs);
 }
 
 function enact(state: GameState, policyId: string, commandId = policyId): GameState {

@@ -3,6 +3,7 @@ import type { RawContentBundle } from '@republika/shared';
 import archetypes from './archetypes.json';
 import baseline from './baseline.json';
 import eventFlood from './events/EVT-FX-001.json';
+import eventProtest from './events/EVT-FX-002.json';
 import factionOne from './factions/FAC-FX-01.json';
 import factionTwo from './factions/FAC-FX-02.json';
 import factionThree from './factions/FAC-FX-03.json';
@@ -23,6 +24,6 @@ export const sliceFixtureBundle: RawContentBundle = {
   factions: [factionOne, factionTwo, factionThree],
   ministries,
   policies: [policyEnergy, policyFiscal, policySocial],
-  events: [eventFlood],
+  events: [eventFlood, eventProtest],
   archetypes,
 };

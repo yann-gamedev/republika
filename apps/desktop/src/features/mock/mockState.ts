@@ -264,6 +264,7 @@ const baseMockState = {
   // kebijakan yang bisa diajukan. Cooldown tetap dirender bila state memuatnya.
   policyCooldowns: {},
   eventCooldowns: { [floodEvent.id]: 1 },
+  eventsFired: [floodEvent.id, protestEvent.id],
   flags: ['PLACEHOLDER_FLOOD_HANDLED'],
   delayedEffects: [
     {
