@@ -1,24 +1,17 @@
+import { ministryMultiplier } from '@republika/simulation';
+
 import { PageHeader } from '@/app/PageHeader';
+import { useGameState } from '@/app/useGame';
+import { definitions, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import {
-  mockDefinitions,
-  mockMinisterNames,
-  mockPolicyName,
-  mockStartYear,
-} from '@/features/mock/mockState';
 import { formatDecimal, formatInteger } from '@/format/formatters';
-import { useAppStore } from '@/store/useAppStore';
 import { Badge } from '@/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { Progress } from '@/ui/components/progress';
 import { IconCabinet } from '@/ui/icons';
 
-function ministryMultiplier(effectiveness: number): number {
-  return 0.8 + (0.4 * (effectiveness - 40)) / 50;
-}
-
 export default function CabinetPage() {
-  const state = useAppStore((store) => store.gameState);
+  const state = useGameState();
 
   const averageEffectiveness =
     state.ministries.length === 0
@@ -53,13 +46,13 @@ export default function CabinetPage() {
 
       <div className="grid gap-4 xl:grid-cols-2">
         {state.ministries.map((ministryState) => {
-          const definition = mockDefinitions.ministries.find(
+          const definition = definitions.ministries.find(
             (ministry) => ministry.id === ministryState.ministryId,
           );
           if (definition === undefined) return null;
 
           const activePolicies = state.activePolicies.filter((active) => {
-            const policy = mockDefinitions.policies.find((item) => item.id === active.policyId);
+            const policy = definitions.policies.find((item) => item.id === active.policyId);
             return policy !== undefined && definition.categories.includes(policy.category);
           });
           const multiplier = ministryMultiplier(ministryState.effectiveness);
@@ -93,10 +86,12 @@ export default function CabinetPage() {
                 <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-border/40 pt-4">
                   <div>
                     <dt className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                      {copy.cabinet.lead}
+                      {copy.cabinet.domain}
                     </dt>
                     <dd className="mt-1 font-serif text-base">
-                      {mockMinisterNames[definition.id] ?? copy.cabinet.noLead}
+                      {definition.categories
+                        .map((category) => copy.policies.categoryLabels[category])
+                        .join(', ')}
                     </dd>
                   </div>
                   <div>
@@ -124,7 +119,7 @@ export default function CabinetPage() {
                               aria-hidden="true"
                               className="inline-block h-px w-3 bg-primary/60"
                             />
-                            {mockPolicyName(active.policyId)}
+                            {policyName(active.policyId)}
                           </span>
                           <span className="numeric text-muted-foreground">
                             {copy.policies.activeUntil(active.remainingTurns)}
@@ -134,10 +129,6 @@ export default function CabinetPage() {
                     </ul>
                   )}
                 </div>
-
-                <p className="mt-4 text-[0.62rem] leading-relaxed text-muted-foreground/70">
-                  {copy.cabinet.since} · {copy.game.turnLabel(mockStartYear, 1)}
-                </p>
               </CardContent>
             </Card>
           );

@@ -1,49 +1,30 @@
 import { Link } from 'react-router-dom';
 
-import { INDICATOR_DOMAINS, INDICATOR_KEYS, type IndicatorKey } from '@republika/shared';
+import { INDICATOR_DOMAINS, INDICATOR_KEYS, type PendingCommand } from '@republika/shared';
+import { ministryMultiplier } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
 import { campaignQuarter, campaignYear } from '@/app/time';
+import { displayIndicator, isFavourable, useGameState } from '@/app/useGame';
+import { definitions, eventTitle, factionName, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import {
-  mockDefinitions,
-  mockLatestReport,
-  mockMinisterNames,
-  mockPolicyName,
-  mockPreviousIndicators,
-  mockStartYear,
-  mockTrend,
-} from '@/features/mock/mockState';
+import { reasonText } from '@/features/report/reasonText';
 import {
   formatDecimal,
-  formatIndicator,
   formatInteger,
-  formatPercentTenths,
   formatRupiahTriliun,
   formatSignedIndicator,
   formatSignedRupiahTriliun,
 } from '@/format/formatters';
-import { useAppStore } from '@/store/useAppStore';
+import { gameController } from '@/store/controller';
+import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { Progress } from '@/ui/components/progress';
 import { Hemicycle } from '@/ui/charts/Hemicycle';
-import { LineChart } from '@/ui/charts/LineChart';
 import { IconChevronRight, IconCoins } from '@/ui/icons';
 import { cn } from '@/ui/lib/utils';
-
-function displayIndicator(key: IndicatorKey, valueTenths: number): string {
-  return INDICATOR_DOMAINS[key].unit === 'percent'
-    ? formatPercentTenths(valueTenths)
-    : formatIndicator(valueTenths);
-}
-
-function isFavourable(key: IndicatorKey, delta: number): boolean {
-  if (delta === 0) return false;
-  if (key === 'inflationPct' || key === 'unemploymentPct') return delta < 0;
-  return delta > 0;
-}
 
 function SectionHeading({ title, note }: { title: string; note?: string }) {
   return (
@@ -58,23 +39,33 @@ function SectionHeading({ title, note }: { title: string; note?: string }) {
   );
 }
 
+function queueLabel(command: PendingCommand): string {
+  return command.type === 'ENACT_POLICY'
+    ? copy.dashboard.queueEnact(policyName(command.policyId))
+    : copy.dashboard.queueLobby(factionName(command.factionId));
+}
+
 export default function DashboardPage() {
-  const state = useAppStore((store) => store.gameState);
-  const year = campaignYear(state.turn, mockStartYear);
+  const state = useGameState();
+  const lastReport = useGameStore((store) => store.lastReport);
+  const year = campaignYear(state.turn, definitions.scenario.startYear);
   const quarter = campaignQuarter(state.turn);
-  const pendingEvent = mockDefinitions.events.find((event) =>
-    state.pendingEvents.some((pending) => pending.eventId === event.id),
-  );
+  const unanswered = state.pendingEvents.filter((event) => event.resolvedChoiceId === null);
 
-  const deltaFor = (key: IndicatorKey): number =>
-    state.indicators[key] - mockPreviousIndicators[key];
-
-  const coalitionSeats = mockDefinitions.factions.reduce((total, faction) => {
+  const supporters = definitions.factions.filter((faction) => {
     const support = state.factions.find((item) => item.factionId === faction.id);
-    return (support?.supportTenths ?? faction.initialSupportTenths) >= 500
-      ? total + faction.seats
-      : total;
-  }, 0);
+    return (support?.supportTenths ?? faction.initialSupportTenths) >= 500;
+  });
+  const supporterSeats = supporters.reduce((total, faction) => total + faction.seats, 0);
+
+  const cancel = (pendingCommandId: string) => {
+    const result = gameController.dispatch({
+      type: 'CANCEL_PENDING',
+      commandId: gameController.newCommandId(),
+      pendingCommandId,
+    });
+    if (result.ok) gameController.notify(copy.dashboard.cancelled);
+  };
 
   return (
     <>
@@ -82,18 +73,20 @@ export default function DashboardPage() {
         kicker={copy.dashboard.kicker}
         title={copy.dashboard.title}
         subtitle={copy.dashboard.subtitle}
-        actions={<Badge variant="outline">{copy.game.mockBadge}</Badge>}
+        actions={
+          <Badge variant="secondary">{copy.dashboard.quarterOf(state.turn, state.maxTurns)}</Badge>
+        }
       />
 
-      {state.pendingEvents.length > 0 && (
+      {unanswered.length > 0 && (
         <div className="mb-5 flex flex-wrap items-center gap-5 border border-maroon/50 bg-maroon/10 px-5 py-4">
           <span className="grid h-10 w-10 shrink-0 place-items-center border border-maroon/50 bg-maroon/20 font-serif text-lg text-red-200">
             !
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-foreground">
-              {copy.dashboard.eventBannerTitle}
-              {pendingEvent !== undefined && ` · ${pendingEvent.title}`}
+              {copy.dashboard.eventBannerTitle} ·{' '}
+              {unanswered.map((event) => eventTitle(event.eventId)).join(', ')}
             </p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               {copy.dashboard.eventBannerBody}
@@ -108,17 +101,16 @@ export default function DashboardPage() {
       <section>
         <SectionHeading
           title={copy.dashboard.indicatorSection}
-          note={copy.dashboard.indicatorTrend}
+          note={copy.game.turnLabel(year, quarter)}
         />
         <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           {INDICATOR_KEYS.map((key) => {
-            const domain = INDICATOR_DOMAINS[key];
-            const value = state.indicators[key];
-            const delta = deltaFor(key);
+            const delta = lastReport?.indicatorDeltas[key] ?? 0;
             const favourable = isFavourable(key, delta);
             return (
               <div
                 key={key}
+                data-testid={`indicator-${key}`}
                 className="relative border border-border/60 bg-card/45 px-4 py-4 transition-colors hover:border-primary/30 hover:bg-card/70"
               >
                 <span
@@ -126,10 +118,10 @@ export default function DashboardPage() {
                   aria-hidden="true"
                 />
                 <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-                  {domain.shortLabel}
+                  {INDICATOR_DOMAINS[key].shortLabel}
                 </p>
                 <p className="numeric mt-3 font-serif text-[1.9rem] leading-none text-foreground">
-                  {displayIndicator(key, value)}
+                  {displayIndicator(key, state.indicators[key])}
                 </p>
                 <p
                   className={cn(
@@ -151,132 +143,96 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <div className="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]">
-        <Card>
-          <CardHeader className="flex-row items-start justify-between gap-4">
-            <div>
-              <p className="institutional-label">{copy.dashboard.indicatorTrend}</p>
-              <CardTitle className="mt-2">{copy.dashboard.chartAria}</CardTitle>
-            </div>
-            <Badge variant="secondary">{copy.common.turn}</Badge>
-          </CardHeader>
-          <CardContent>
-            <LineChart
-              ariaLabel={copy.dashboard.chartAria}
-              labels={mockTrend.map((point) =>
-                copy.dashboard.quarterTick(point.year, point.quarter),
+      <div className="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
+        <div className="space-y-5">
+          <Card>
+            <CardHeader className="flex-row items-start justify-between gap-3">
+              <div>
+                <p className="institutional-label">{copy.dashboard.queueNote}</p>
+                <CardTitle className="mt-2">{copy.dashboard.queueTitle}</CardTitle>
+              </div>
+              <span className="numeric text-xs text-muted-foreground">
+                {state.actionPointsRemaining}/{state.actionPointsPerTurn} {copy.common.ap}
+              </span>
+            </CardHeader>
+            <CardContent className="space-y-3" data-testid="command-queue">
+              {state.pendingCommands.length === 0 && (
+                <p className="text-sm text-muted-foreground">{copy.dashboard.queueEmpty}</p>
               )}
-              series={[
-                {
-                  id: 'approval',
-                  label: copy.dashboard.approval,
-                  color: 'hsl(41 42% 58%)',
-                  values: mockTrend.map((point) => point.approvalTenths),
-                },
-                {
-                  id: 'trust',
-                  label: copy.dashboard.trust,
-                  color: 'hsl(2 44% 60%)',
-                  values: mockTrend.map((point) => point.trustTenths),
-                },
-              ]}
-              formatValue={formatIndicator}
-            />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <p className="institutional-label">{copy.dashboard.coalitionSection}</p>
-            <CardTitle className="mt-2">{copy.dashboard.coalitionSeats(coalitionSeats)}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Hemicycle
-              ariaLabel={copy.parliament.hemicycleAria}
-              centerValue={formatInteger(100)}
-              centerLabel={copy.common.seats}
-              groups={mockDefinitions.factions.map((faction) => ({
-                id: faction.id,
-                label: faction.name,
-                seats: faction.seats,
-                color: faction.color,
-              }))}
-            />
-            <div className="mt-4 space-y-2 border-t border-border/50 pt-4">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">{copy.parliament.coalition}</span>
-                <span className="numeric">{copy.parliament.coalitionSeats(coalitionSeats)}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">{copy.parliament.opposition}</span>
-                <span className="numeric">
-                  {copy.parliament.oppositionSeats(100 - coalitionSeats)}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">{copy.parliament.threshold}</span>
-                <span className="numeric">{copy.parliament.thresholdValue}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,1fr)]">
-        <Card>
-          <CardHeader className="flex-row items-start justify-between gap-3">
-            <div>
-              <p className="institutional-label">{copy.dashboard.cabinetSection}</p>
-              <CardTitle className="mt-2">{copy.cabinet.title}</CardTitle>
-            </div>
-            <Button asChild size="sm" variant="ghost">
-              <Link to="/game/cabinet">
-                {copy.cabinet.title}
-                <IconChevronRight className="h-3.5 w-3.5" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {state.ministries.map((ministryState) => {
-              const definition = mockDefinitions.ministries.find(
-                (ministry) => ministry.id === ministryState.ministryId,
-              );
-              if (definition === undefined) return null;
-              const multiplier = 0.8 + (0.4 * (ministryState.effectiveness - 40)) / 50;
-              const activeCount = state.activePolicies.filter((policy) => {
-                const policyDefinition = mockDefinitions.policies.find(
-                  (item) => item.id === policy.policyId,
-                );
-                return policyDefinition?.category === definition.categories[0];
-              }).length;
-              return (
-                <div key={definition.id} className="grid grid-cols-[minmax(0,1fr)_88px] gap-4">
+              {state.pendingCommands.map((command) => (
+                <div
+                  key={command.commandId}
+                  className="flex items-center justify-between gap-4 border-t border-border/40 pt-3 first:border-t-0 first:pt-0"
+                >
                   <div>
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <p className="text-sm">{definition.name}</p>
-                      <span className="text-[0.62rem] uppercase tracking-[0.12em] text-muted-foreground">
-                        {copy.cabinet.multiplierValue(formatDecimal(multiplier))}
-                      </span>
-                    </div>
-                    <Progress className="mt-2" value={ministryState.effectiveness} />
-                    <p className="mt-1.5 text-[0.65rem] text-muted-foreground">
-                      {mockMinisterNames[definition.id] ?? copy.cabinet.noLead} ·{' '}
-                      {copy.dashboard.ministryPolicyCount(activeCount)}
+                    <p className="text-sm leading-snug">{queueLabel(command)}</p>
+                    <p className="mt-1 text-[0.65rem] text-muted-foreground">
+                      {command.apCost} {copy.common.ap}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="numeric font-serif text-2xl leading-none">
-                      {formatInteger(ministryState.effectiveness)}
-                    </p>
-                    <p className="mt-1 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-                      {copy.common.effectiveness}
-                    </p>
-                  </div>
+                  <Button size="sm" variant="ghost" onClick={() => cancel(command.commandId)}>
+                    {copy.dashboard.cancel}
+                  </Button>
                 </div>
-              );
-            })}
-          </CardContent>
-        </Card>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex-row items-start justify-between gap-3">
+              <div>
+                <p className="institutional-label">{copy.dashboard.cabinetSection}</p>
+                <CardTitle className="mt-2">{copy.cabinet.title}</CardTitle>
+              </div>
+              <Button asChild size="sm" variant="ghost">
+                <Link to="/game/cabinet">
+                  {copy.cabinet.title}
+                  <IconChevronRight className="h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {state.ministries.map((ministryState) => {
+                const definition = definitions.ministries.find(
+                  (ministry) => ministry.id === ministryState.ministryId,
+                );
+                if (definition === undefined) return null;
+                const activeCount = state.activePolicies.filter((policy) => {
+                  const category = definitions.policies.find(
+                    (item) => item.id === policy.policyId,
+                  )?.category;
+                  return category !== undefined && definition.categories.includes(category);
+                }).length;
+                return (
+                  <div key={definition.id} className="grid grid-cols-[minmax(0,1fr)_88px] gap-4">
+                    <div>
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <p className="text-sm">{definition.name}</p>
+                        <span className="text-[0.62rem] uppercase tracking-[0.12em] text-muted-foreground">
+                          {copy.cabinet.multiplierValue(
+                            formatDecimal(ministryMultiplier(ministryState.effectiveness)),
+                          )}
+                        </span>
+                      </div>
+                      <Progress className="mt-2" value={ministryState.effectiveness} />
+                      <p className="mt-1.5 text-[0.65rem] text-muted-foreground">
+                        {copy.dashboard.ministryPolicyCount(activeCount)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="numeric font-serif text-2xl leading-none">
+                        {formatInteger(ministryState.effectiveness)}
+                      </p>
+                      <p className="mt-1 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
+                        {copy.common.effectiveness}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        </div>
 
         <div className="space-y-5">
           <Card>
@@ -301,10 +257,12 @@ export default function DashboardPage() {
                   className="flex items-start justify-between gap-4 border-t border-border/40 pt-3 first:border-t-0 first:pt-0"
                 >
                   <div>
-                    <p className="text-sm leading-snug">{mockPolicyName(policy.policyId)}</p>
+                    <p className="text-sm leading-snug">{policyName(policy.policyId)}</p>
                     <p className="mt-1 text-[0.65rem] text-muted-foreground">
                       {copy.policies.activeUntil(policy.remainingTurns)} ·{' '}
-                      {formatRupiahTriliun(policy.perTurnCostBillion)}
+                      {policy.perTurnCostBillion === 0
+                        ? copy.policies.noPerTurn
+                        : `${formatRupiahTriliun(policy.perTurnCostBillion)} ${copy.policies.perTurn.toLowerCase()}`}
                     </p>
                   </div>
                   <Badge variant="success">{copy.common.active}</Badge>
@@ -315,40 +273,82 @@ export default function DashboardPage() {
 
           <Card>
             <CardHeader>
-              <p className="institutional-label">{copy.dashboard.latestReport}</p>
+              <p className="institutional-label">{copy.dashboard.coalitionSection}</p>
               <CardTitle className="mt-2">
-                {copy.dashboard.latestReportMeta(
-                  mockLatestReport.turn,
-                  mockLatestReport.year,
-                  mockLatestReport.quarter,
-                )}
+                {copy.dashboard.coalitionSeats(supporterSeats)}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {mockLatestReport.summary[0]}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[0.68rem]">
-                <span className="text-red-300/80">
-                  {copy.dashboard.approval}{' '}
-                  {formatSignedIndicator(mockLatestReport.approvalDeltaTenths)}
-                </span>
-                <span className="text-red-300/80">
-                  {copy.common.treasury}{' '}
-                  {formatSignedRupiahTriliun(mockLatestReport.treasuryDeltaBillion)}
-                </span>
+              <Hemicycle
+                ariaLabel={copy.parliament.hemicycleAria}
+                centerValue={formatInteger(supporterSeats)}
+                centerLabel={copy.common.seats}
+                groups={definitions.factions.map((faction) => ({
+                  id: faction.id,
+                  label: faction.name,
+                  seats: faction.seats,
+                  color: faction.color,
+                }))}
+              />
+              <div className="mt-4 space-y-2 border-t border-border/50 pt-4 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">{copy.dashboard.supportersNote}</span>
+                  <span className="numeric">{copy.parliament.coalitionSeats(supporterSeats)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">{copy.parliament.threshold}</span>
+                  <span className="numeric">{copy.parliament.thresholdValue}</span>
+                </div>
               </div>
-              <Button asChild size="sm" variant="link" className="mt-3 h-auto px-0">
-                <Link to="/game/history">{copy.nav.history}</Link>
-              </Button>
             </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <p className="institutional-label">{copy.dashboard.latestReport}</p>
+              <CardTitle className="mt-2">
+                {lastReport === null
+                  ? copy.dashboard.noReport
+                  : copy.dashboard.latestReportMeta(
+                      lastReport.turn,
+                      lastReport.year,
+                      lastReport.quarter,
+                    )}
+              </CardTitle>
+            </CardHeader>
+            {lastReport !== null && (
+              <CardContent>
+                <ul className="space-y-1.5 text-xs text-muted-foreground">
+                  {(['approval', 'fiscalHealth', 'trust'] as const).map((key) => {
+                    const cause = lastReport.topCauses[key][0];
+                    return (
+                      <li key={key}>
+                        {copy.dashboard.topCause(
+                          INDICATOR_DOMAINS[key].shortLabel,
+                          formatSignedIndicator(lastReport.indicatorDeltas[key]),
+                        )}
+                        {cause !== undefined &&
+                          ` — ${reasonText(cause.reasonCode, cause.sourceId)}`}
+                      </li>
+                    );
+                  })}
+                  <li>
+                    {copy.common.treasury}{' '}
+                    {formatSignedRupiahTriliun(lastReport.treasuryDeltaBillion)}
+                  </li>
+                </ul>
+                <Button asChild size="sm" variant="link" className="mt-3 h-auto px-0">
+                  <Link to="/game/report">{copy.dashboard.reportCta}</Link>
+                </Button>
+              </CardContent>
+            )}
           </Card>
 
           <Card>
             <CardHeader className="flex-row items-start justify-between gap-3">
               <div>
                 <p className="institutional-label">{copy.dashboard.budgetTitle}</p>
-                <CardTitle className="mt-2 numeric">
+                <CardTitle className="numeric mt-2">
                   {formatRupiahTriliun(state.treasuryBillion)}
                 </CardTitle>
               </div>
@@ -363,14 +363,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between gap-4 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground/60">
-        <span>{copy.dashboard.briefingTitle}</span>
-        <span>
-          {copy.game.turnLabel(year, quarter)} ·{' '}
-          {copy.dashboard.pendingCount(state.pendingEvents.length)}
-        </span>
       </div>
     </>
   );

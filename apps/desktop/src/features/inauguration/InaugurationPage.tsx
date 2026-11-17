@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { mockStartYear } from '@/features/mock/mockState';
-import { useAppStore } from '@/store/useAppStore';
-import { Badge } from '@/ui/components/badge';
+import { gameController } from '@/store/controller';
+import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/ui/components/button';
 import { Input } from '@/ui/components/input';
 import { Label } from '@/ui/components/label';
@@ -14,10 +14,13 @@ import { validateInauguration, type InaugurationErrors } from './validation';
 
 export default function InaugurationPage() {
   const navigate = useNavigate();
-  const startNewGame = useAppStore((store) => store.startNewGame);
+  const startYear = definitions.scenario.startYear;
   const [presidentName, setPresidentName] = useState('');
   const [cabinetName, setCabinetName] = useState('');
   const [errors, setErrors] = useState<InaugurationErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [sworn, setSworn] = useState(false);
+  const inaugurated = useGameStore((store) => store.state);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -26,9 +29,49 @@ export default function InaugurationPage() {
       setErrors(nextErrors);
       return;
     }
-    startNewGame(presidentName.trim(), cabinetName.trim());
-    navigate('/game/dashboard');
+    setSubmitting(true);
+    void gameController
+      .startCampaign({ presidentName: presidentName.trim(), cabinetName: cabinetName.trim() })
+      .then((result) => {
+        setSubmitting(false);
+        if (result.ok) setSworn(true);
+        else setErrors({ presidentName: result.message });
+      });
   };
+
+  if (sworn && inaugurated !== null) {
+    return (
+      <main className="grid min-h-screen place-items-center px-10 py-8">
+        <section
+          aria-live="polite"
+          className="ceremony-enter relative w-full max-w-[640px] bg-paper px-12 py-14 text-center text-ink shadow-document"
+        >
+          <Seal label={copy.menu.sealLabel} className="mx-auto h-24 w-24 text-maroon/75" />
+          <p className="mt-8 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-ink/55">
+            {copy.inauguration.ceremonyKicker}
+          </p>
+          <h1 className="mt-3 font-serif text-[2.6rem] leading-tight">
+            {copy.inauguration.ceremonyTitle(inaugurated.presidentName)}
+          </h1>
+          {inaugurated.cabinetName !== undefined && (
+            <p className="mt-2 font-serif text-lg italic text-ink/70">
+              {copy.inauguration.ceremonyCabinet(inaugurated.cabinetName)}
+            </p>
+          )}
+          <div className="mx-auto mt-8 h-px w-24 bg-ink/25" />
+          <p className="mx-auto mt-6 max-w-md font-serif text-base italic leading-relaxed text-ink/80">
+            “{copy.inauguration.oath}”
+          </p>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink/65">
+            {copy.inauguration.ceremonyBody(startYear)}
+          </p>
+          <Button autoFocus size="lg" className="mt-10" onClick={() => navigate('/game/dashboard')}>
+            {copy.inauguration.ceremonyEnter}
+          </Button>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen px-10 py-8">
@@ -125,8 +168,8 @@ export default function InaugurationPage() {
                 </p>
               </div>
 
-              <Button type="submit" size="lg" className="w-full sm:w-auto">
-                {copy.inauguration.submit}
+              <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={submitting}>
+                {submitting ? copy.inauguration.submitting : copy.inauguration.submit}
               </Button>
             </form>
           </section>
@@ -169,7 +212,7 @@ export default function InaugurationPage() {
                     <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/50">
                       {copy.common.turn}
                     </dt>
-                    <dd className="text-sm">{copy.game.turnLabel(mockStartYear, 1)}</dd>
+                    <dd className="text-sm">{copy.game.turnLabel(startYear, 1)}</dd>
                   </div>
                 </dl>
 
@@ -181,9 +224,6 @@ export default function InaugurationPage() {
                     <span className="font-serif text-2xl italic text-ink/35">
                       {presidentName.trim() || '…'}
                     </span>
-                    <Badge variant="outline" className="border-ink/25 text-ink/60">
-                      {copy.app.mockData}
-                    </Badge>
                   </div>
                 </div>
               </div>
