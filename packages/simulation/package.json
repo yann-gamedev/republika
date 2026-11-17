@@ -13,5 +13,11 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@republika/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@republika/game-data": "workspace:*"
   }
 }
