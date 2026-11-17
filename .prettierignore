@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+pnpm-lock.yaml
+.agents/
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+docs/source/
