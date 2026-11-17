@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:e2e": "pnpm build:web && playwright test",
     "content:check": "pnpm --filter @republika/game-data content:check",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",

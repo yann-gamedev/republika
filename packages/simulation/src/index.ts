@@ -18,3 +18,4 @@ export * from './economy/baseline.js';
 export * from './events/events.js';
 export * from './politics/ministries.js';
 export * from './report/buildReport.js';
+export * from './policies/projection.js';
