@@ -1,0 +1,159 @@
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+}
+
+@font-face {
+  font-family: 'Source Serif 4 Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 900;
+  src: url('./assets/fonts/source-serif-4-latin-wght-normal.woff2') format('woff2-variations');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 216 32% 8%;
+    --foreground: 39 30% 88%;
+    --card: 216 28% 10%;
+    --card-foreground: 39 30% 88%;
+    --popover: 216 28% 10%;
+    --popover-foreground: 39 30% 88%;
+    --primary: 41 42% 58%;
+    --primary-foreground: 216 32% 8%;
+    --secondary: 215 22% 16%;
+    --secondary-foreground: 39 24% 84%;
+    --muted: 215 20% 14%;
+    --muted-foreground: 39 12% 62%;
+    --accent: 41 30% 20%;
+    --accent-foreground: 41 42% 78%;
+    --destructive: 2 48% 42%;
+    --destructive-foreground: 39 30% 92%;
+    --border: 39 18% 24%;
+    --input: 39 15% 22%;
+    --ring: 41 42% 58%;
+    --radius: 0.25rem;
+    --paper: 39 30% 86%;
+    --ink: 216 32% 10%;
+    --gold: 41 42% 58%;
+    --maroon: 2 40% 34%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-feature-settings:
+      'cv02' 1,
+      'cv03' 1,
+      'cv04' 1,
+      'cv11' 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    min-width: 1280px;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 15% -10%, hsl(var(--gold) / 0.09), transparent 60%),
+      radial-gradient(ellipse 45% 40% at 100% 100%, hsl(var(--maroon) / 0.14), transparent 65%),
+      linear-gradient(180deg, hsl(216 32% 9%) 0%, hsl(216 34% 7%) 100%);
+    background-attachment: fixed;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-medium tracking-tight;
+  }
+
+  ::selection {
+    background: hsl(var(--gold) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(216 30% 8%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(39 18% 26%);
+    border: 2px solid hsl(216 30% 8%);
+    border-radius: 999px;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--gold) / 0.75);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .institutional-label {
+    @apply text-[0.65rem] font-semibold uppercase tracking-institutional text-muted-foreground;
+  }
+
+  .rule-line {
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--gold) / 0.55),
+      hsl(var(--border) / 0.9) 22%,
+      transparent 100%
+    );
+    height: 1px;
+  }
+
+  .paper-panel {
+    background-image:
+      linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent 42%),
+      linear-gradient(180deg, hsl(var(--card)), hsl(216 30% 9%));
+    box-shadow: inset 0 1px 0 hsl(var(--gold) / 0.06);
+  }
+
+  .grid-paper {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.18) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.18) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .numeric {
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.02em;
+  }
+
+  .vertical-rule {
+    background: linear-gradient(180deg, transparent, hsl(var(--gold) / 0.45), transparent);
+    width: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@republika/balance-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "CLI balancing Monte Carlo (diisi pada Tahap 5).",
+  "scripts": {}
+}

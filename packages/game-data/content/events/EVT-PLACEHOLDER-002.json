@@ -1,0 +1,46 @@
+{
+  "id": "EVT-PLACEHOLDER-002",
+  "version": 1,
+  "title": "Unjuk Rasa Mahasiswa Placeholder",
+  "body": "Kelompok mahasiswa fiktif menuntut transparansi anggaran setelah bencana sebelumnya.",
+  "eligibility": [{ "type": "FLAG_SET", "flag": "PLACEHOLDER_FLOOD_HANDLED" }],
+  "triggerWeight": 8,
+  "cooldownTurns": 4,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Buka dialog terbuka",
+      "hint": "Menyerap energi protes dengan biaya kecil.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -2,
+          "reasonCode": "PLACEHOLDER_DIALOGUE_COST"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "PLACEHOLDER_DIALOGUE_SUPPORT"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Biarkan berjalan tertib",
+      "hint": "Tidak mengeluarkan biaya, tetapi ketegangan menumpuk.",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "PLACEHOLDER_TENSION_BUILDUP"
+        }
+      ]
+    }
+  ]
+}

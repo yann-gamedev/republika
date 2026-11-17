@@ -1,0 +1,30 @@
+[
+  {
+    "id": "MIN-PLACEHOLDER-FISCAL",
+    "version": 1,
+    "name": "Kementerian Keuangan Placeholder",
+    "categories": ["FISCAL"],
+    "initialEffectiveness": 65
+  },
+  {
+    "id": "MIN-PLACEHOLDER-SOCIAL",
+    "version": 1,
+    "name": "Kementerian Sosial Placeholder",
+    "categories": ["SOCIAL"],
+    "initialEffectiveness": 60
+  },
+  {
+    "id": "MIN-PLACEHOLDER-ENERGY",
+    "version": 1,
+    "name": "Kementerian Energi Placeholder",
+    "categories": ["ENERGY"],
+    "initialEffectiveness": 55
+  },
+  {
+    "id": "MIN-PLACEHOLDER-GOVERNANCE",
+    "version": 1,
+    "name": "Kementerian Dalam Negeri Placeholder",
+    "categories": ["GOVERNANCE"],
+    "initialEffectiveness": 60
+  }
+]

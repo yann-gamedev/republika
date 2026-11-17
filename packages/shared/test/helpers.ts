@@ -1,0 +1,46 @@
+import type { GameState } from '@republika/shared';
+
+export function createGameState(): GameState {
+  return {
+    stateVersion: 1,
+    presidentName: 'Arunika Wicaksana',
+    cabinetName: 'Kabinet Cakrawala',
+    rulesetVersion: 1,
+    turn: 1,
+    maxTurns: 4,
+    status: 'active',
+    actionPointsPerTurn: 2,
+    actionPointsRemaining: 2,
+    treasuryBillion: 150_000,
+    indicators: {
+      approval: 583,
+      stability: 621,
+      fiscalHealth: 552,
+      growthPct: 48,
+      inflationPct: 34,
+      unemploymentPct: 56,
+      welfare: 544,
+      trust: 531,
+    },
+    factions: [{ factionId: 'FAC-PLACEHOLDER-01', supportTenths: 550 }],
+    ministries: [{ ministryId: 'MIN-PLACEHOLDER-FISCAL', effectiveness: 65 }],
+    activePolicies: [],
+    pendingCommands: [],
+    pendingEvents: [],
+    lobbyThisTurn: [],
+    policyCooldowns: {},
+    eventCooldowns: {},
+    flags: [],
+    delayedEffects: [],
+    campaignStats: {
+      policiesEnacted: 0,
+      policiesByCategory: { FISCAL: 0, SOCIAL: 0, ENERGY: 0, GOVERNANCE: 0 },
+      votesHeld: 0,
+      votesFailed: 0,
+      lobbies: 0,
+      eventsResolved: 0,
+      totalDeficitBillion: 0,
+      totalPolicySpendingBillion: 0,
+    },
+  };
+}

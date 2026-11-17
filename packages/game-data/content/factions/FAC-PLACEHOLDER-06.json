@@ -1,0 +1,13 @@
+{
+  "id": "FAC-PLACEHOLDER-06",
+  "version": 1,
+  "name": "Fraksi Placeholder Enam",
+  "shortName": "P6",
+  "seats": 14,
+  "color": "#7A6A52",
+  "ideologyTags": ["regionalis"],
+  "baseSupport": 51,
+  "initialSupport": 51,
+  "policyPreferences": { "FISCAL": -1, "SOCIAL": 1, "ENERGY": 0, "GOVERNANCE": 2 },
+  "description": "Fraksi contoh yang memperjuangkan anggaran daerah."
+}

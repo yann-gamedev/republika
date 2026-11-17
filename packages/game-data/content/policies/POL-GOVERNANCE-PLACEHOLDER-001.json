@@ -1,0 +1,39 @@
+{
+  "id": "POL-GOVERNANCE-PLACEHOLDER-001",
+  "version": 1,
+  "name": "Reformasi Birokrasi Placeholder",
+  "description": "Template kebijakan tata kelola. Ganti seluruh isi sebelum rilis.",
+  "category": "GOVERNANCE",
+  "apCost": 1,
+  "fiscalCostTrillion": 3,
+  "perTurnCostTrillion": 1,
+  "needsVote": false,
+  "durationTurns": 4,
+  "cooldownTurns": 2,
+  "requirements": [],
+  "conflicts": [],
+  "effects": [
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "stability",
+      "delta": 3,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_BUREAUCRACY_ORDER"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "fiscalHealth",
+      "delta": 1,
+      "timing": "PER_TURN",
+      "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": -2,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_RED_TAPE_DISCONTENT"
+    }
+  ],
+  "modifiers": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "FAC-PLACEHOLDER-02",
+  "version": 1,
+  "name": "Fraksi Placeholder Dua",
+  "shortName": "P2",
+  "seats": 18,
+  "color": "#B04A3A",
+  "ideologyTags": ["populis"],
+  "baseSupport": 50,
+  "initialSupport": 50,
+  "policyPreferences": { "FISCAL": -2, "SOCIAL": 2, "ENERGY": -1, "GOVERNANCE": 0 },
+  "description": "Fraksi contoh yang menekankan bantuan langsung."
+}

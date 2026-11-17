@@ -1,0 +1,51 @@
+{
+  "id": "EVT-PLACEHOLDER-001",
+  "version": 1,
+  "title": "Banjir Besar Placeholder",
+  "body": "Hujan ekstrem merendam wilayah pesisir fiktif. Pemerintah daerah meminta dukungan darurat.",
+  "eligibility": [{ "type": "TURN_AT_LEAST", "value": 1 }],
+  "triggerWeight": 10,
+  "cooldownTurns": 6,
+  "uniquePerCampaign": false,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Cairkan dana darurat penuh",
+      "hint": "Rakyat terbantu, kas terkuras.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -6,
+          "reasonCode": "PLACEHOLDER_EMERGENCY_FUND"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "PLACEHOLDER_SWIFT_RESPONSE"
+        },
+        {
+          "type": "SET_FLAG",
+          "flag": "PLACEHOLDER_FLOOD_HANDLED",
+          "reasonCode": "PLACEHOLDER_FLOOD_RESPONSE"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Serahkan ke anggaran daerah",
+      "hint": "Hemat, tetapi terlihat lepas tangan.",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "PLACEHOLDER_SEEN_AS_ABSENT"
+        }
+      ]
+    }
+  ]
+}

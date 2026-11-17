@@ -1,0 +1,21 @@
+[
+  {
+    "id": "ARC-PLACEHOLDER-FISCAL",
+    "version": 1,
+    "priority": 10,
+    "name": "Teknokrat Fiskal Placeholder",
+    "description": "Contoh arketipe berbasis disiplin anggaran.",
+    "conditions": [
+      { "stat": "final.fiscalHealth", "op": ">=", "value": 70 },
+      { "stat": "avg.approval", "op": "<", "value": 50 }
+    ]
+  },
+  {
+    "id": "ARC-PLACEHOLDER-FALLBACK",
+    "version": 1,
+    "priority": 0,
+    "name": "Pemerintahan Seimbang",
+    "description": "Arketipe cadangan bila tidak ada kondisi yang cocok.",
+    "conditions": []
+  }
+]
