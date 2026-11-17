@@ -93,6 +93,9 @@ test('semua layar muat pada jendela minimum', async ({ page }) => {
   await gotoHash(page, 'game/dashboard');
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
   await page.screenshot({ path: 'test-results/dashboard-1280.png', fullPage: true });
+  await gotoHash(page, 'game/policies');
+  await expect(page.getByRole('heading', { name: copy.policies.title, exact: true })).toBeVisible();
+  await page.screenshot({ path: 'test-results/policies-1280.png', fullPage: true });
   for (const scale of [90, 110, 125]) {
     await gotoHash(page, 'settings');
     await page.getByRole('button', { name: new RegExp(`${scale}%`) }).click();

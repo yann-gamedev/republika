@@ -47,7 +47,7 @@ export default function InaugurationPage() {
           className="ceremony-enter relative w-full max-w-[640px] bg-paper px-12 py-14 text-center text-ink shadow-document"
         >
           <Seal label={copy.menu.sealLabel} className="mx-auto h-24 w-24 text-maroon/75" />
-          <p className="mt-8 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-ink/55">
+          <p className="mt-8 text-[0.62rem] font-semibold uppercase tracking-[0.24em] text-ink/75">
             {copy.inauguration.ceremonyKicker}
           </p>
           <h1 className="mt-3 font-serif text-[2.6rem] leading-tight">
@@ -62,7 +62,7 @@ export default function InaugurationPage() {
           <p className="mx-auto mt-6 max-w-md font-serif text-base italic leading-relaxed text-ink/80">
             “{copy.inauguration.oath}”
           </p>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink/65">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-ink/75">
             {copy.inauguration.ceremonyBody(startYear)}
           </p>
           <Button autoFocus size="lg" className="mt-10" onClick={() => navigate('/game/dashboard')}>
@@ -183,7 +183,7 @@ export default function InaugurationPage() {
               <div className="relative">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-ink/55">
+                    <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-ink/75">
                       {copy.inauguration.previewLabel}
                     </p>
                     <p className="mt-2 font-serif text-2xl leading-tight">
@@ -197,19 +197,19 @@ export default function InaugurationPage() {
 
                 <dl className="mt-6 space-y-4">
                   <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/50">
+                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/75">
                       {copy.inauguration.presidentLabel}
                     </dt>
                     <dd className="font-serif text-lg">{presidentName.trim() || '…'}</dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/50">
+                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/75">
                       {copy.inauguration.cabinetLabel}
                     </dt>
                     <dd className="font-serif text-lg">{cabinetName.trim() || '…'}</dd>
                   </div>
                   <div className="flex items-baseline justify-between gap-4">
-                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/50">
+                    <dt className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/75">
                       {copy.common.turn}
                     </dt>
                     <dd className="text-sm">{copy.game.turnLabel(startYear, 1)}</dd>
@@ -217,7 +217,7 @@ export default function InaugurationPage() {
                 </dl>
 
                 <div className="mt-8 border-t border-ink/15 pt-5">
-                  <p className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/50">
+                  <p className="text-[0.62rem] uppercase tracking-[0.16em] text-ink/75">
                     {copy.inauguration.oath}
                   </p>
                   <div className="mt-6 flex items-end justify-between">

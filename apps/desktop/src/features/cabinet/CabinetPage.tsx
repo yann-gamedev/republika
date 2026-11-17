@@ -13,6 +13,7 @@ import { gameController } from '@/store/controller';
 import { Badge } from '@/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { Progress } from '@/ui/components/progress';
+import { Term } from '@/ui/components/term';
 import { IconCabinet } from '@/ui/icons';
 
 const HISTORY_LIMIT = 6;
@@ -68,7 +69,7 @@ export default function CabinetPage() {
       <div className="mb-6 flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-border/50 py-4">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
           <IconCabinet className="h-4 w-4 text-primary/70" />
-          {copy.cabinet.effectiveness}
+          <Term explanation={copy.glossary.effectiveness}>{copy.cabinet.effectiveness}</Term>
         </span>
         <span className="numeric font-serif text-2xl leading-none">
           {formatInteger(averageEffectiveness)}
@@ -118,7 +119,11 @@ export default function CabinetPage() {
                     {copy.cabinet.multiplierValue(formatDecimal(multiplier))}
                   </span>
                 </div>
-                <Progress className="mt-2" value={ministryState.effectiveness} />
+                <Progress
+                  className="mt-2"
+                  value={ministryState.effectiveness}
+                  aria-label={`${definition.name} · ${copy.common.effectiveness}`}
+                />
 
                 <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-border/40 pt-4">
                   <div>

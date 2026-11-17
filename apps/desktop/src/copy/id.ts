@@ -119,7 +119,7 @@ export const copy = {
       `${pending} keputusan akan diproses. Sisa ${ap} AP tidak terbawa ke kuartal berikutnya.`,
     endQuarterConfirm: 'Akhiri Kuartal',
     campaignCompleted: 'Masa jabatan selesai',
-    shortcutHint: 'Pintasan: 1–6 pindah halaman',
+    shortcutHint: 'Pintasan: 1–6 pindah halaman · ? bantuan',
     saveFailed: 'Autosave gagal',
     noCampaignRedirect: 'Belum ada kampanye. Mulai atau lanjutkan dari menu utama.',
     endQuarterBlocked: 'Selesaikan peristiwa yang menunggu sebelum mengakhiri kuartal.',
@@ -164,7 +164,7 @@ export const copy = {
     budgetTitle: 'Disiplin Anggaran',
     budgetBody: 'Kas negara masih cukup untuk satu reformasi besar, tetapi ruang fiskal menipis.',
     budgetLabel: 'Kas tersedia',
-    deltaFromLast: (value: string) => `${value} dari kuartal lalu`,
+    deltaFromLast: (arrow: string, value: string) => `${arrow} ${value} dari kuartal lalu`,
     deltaFlat: 'Stabil dari kuartal lalu',
     quarterTick: (year: number, quarter: number) => `K${quarter} ${year}`,
     activeCount: (count: number) => `${count} kebijakan aktif`,
@@ -216,6 +216,7 @@ export const copy = {
     sortCost: 'Biaya total',
     sortCategory: 'Kategori',
     noResults: 'Tidak ada kebijakan yang cocok dengan filter.',
+    statusLabels: ['Diajukan', 'Tersedia', 'Aktif', 'Jeda', 'Terkunci'] as const,
     projection: 'Proyeksi selama berlaku',
     projectionNote: 'Rentang 75–125% dari perkiraan; belum termasuk dinamika dasar dan peristiwa.',
     projectionEmpty: 'Tidak mengubah indikator secara langsung.',
@@ -371,6 +372,8 @@ export const copy = {
     loading: 'Membuka arsip laporan…',
     chartTitle: 'Perjalanan indikator',
     chartAria: (label: string) => `Grafik garis ${label} per kuartal`,
+    chartSummary: (label: string, start: string, end: string, quarters: number) =>
+      `Grafik garis ${label}: ${start} di awal, ${end} setelah ${quarters} kuartal`,
     timeline: 'Linimasa',
     selectIndicator: 'Indikator',
     empty: 'Belum ada laporan.',
@@ -522,6 +525,34 @@ export const copy = {
   contentReasons: {} as Record<string, string>,
   reasonFallback: (source: string) => `Dampak ${source}`,
   reasonUnknown: (code: string) => `Penyebab ${code}`,
+  glossary: {
+    approval:
+      'Persentase warga yang menyetujui kinerja pemerintah. Cenderung kembali ke 50 bila tidak dijaga.',
+    stability: 'Ketenangan politik dan keamanan. Rendah berarti protes dan ketegangan meningkat.',
+    fiscalHealth:
+      'Kesehatan fiskal: kemampuan anggaran menanggung kebijakan tanpa utang berlebihan. Turun 3,0 per kuartal bila kas negatif.',
+    growthPct: 'Pertumbuhan ekonomi tahunan. Di atas 2,5% menurunkan pengangguran.',
+    inflationPct:
+      'Kenaikan harga umum. Cenderung kembali ke 3,0%; terlalu tinggi menekan persetujuan.',
+    unemploymentPct: 'Persentase angkatan kerja yang menganggur. Lebih rendah lebih baik.',
+    welfare: 'Kesejahteraan rumah tangga: akses layanan dasar, daya beli, dan perlindungan sosial.',
+    trust: 'Kepercayaan publik pada lembaga negara. Turun bila parlemen menolak usulan presiden.',
+    effectiveness:
+      'Efektivitas kementerian (40–90). Mengalikan dampak indikator kebijakan sebidang dari ×0,80 hingga ×1,20; biaya kas tidak terpengaruh.',
+    ap: 'Poin aksi kuartal ini. Mengajukan kebijakan dan melobi memakai AP; menjawab peristiwa gratis.',
+  },
+  shortcuts: {
+    title: 'Pintasan keyboard',
+    open: 'Tekan ? untuk daftar pintasan',
+    items: [
+      ['1–6', 'Dashboard, Kebijakan, Parlemen, Kabinet, Peristiwa, Riwayat'],
+      ['?', 'Buka atau tutup daftar pintasan'],
+      ['/', 'Cari kebijakan (di halaman Kebijakan)'],
+      ['Enter', 'Konfirmasi dialog'],
+      ['Esc', 'Tutup dialog'],
+      ['Tab', 'Pindah fokus; istilah bergaris titik menampilkan penjelasan'],
+    ] as ReadonlyArray<readonly [string, string]>,
+  },
   commandErrors: {
     CAMPAIGN_COMPLETED: 'Masa jabatan sudah berakhir. Tidak ada keputusan baru yang bisa diambil.',
     DUPLICATE_COMMAND: 'Perintah ini sudah diproses.',

@@ -12,6 +12,7 @@ import {
 } from '@/format/formatters';
 import { Badge } from '@/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
+import { deltaArrow } from '@/ui/components/term';
 import { cn } from '@/ui/lib/utils';
 
 import { reasonText } from './reasonText';
@@ -85,6 +86,7 @@ export function ReportView({ report }: { report: TurnReport }) {
                             : 'text-red-300/85',
                       )}
                     >
+                      <span aria-hidden="true">{deltaArrow(delta)} </span>
                       {formatSignedIndicator(delta)}
                     </td>
                     <td className="py-2.5 pl-3">

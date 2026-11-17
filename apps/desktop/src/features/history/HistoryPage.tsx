@@ -16,6 +16,7 @@ import { gameController } from '@/store/controller';
 import { Badge } from '@/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { LineChart } from '@/ui/charts/LineChart';
+import { deltaArrow } from '@/ui/components/term';
 import { cn } from '@/ui/lib/utils';
 
 export default function HistoryPage() {
@@ -68,7 +69,10 @@ export default function HistoryPage() {
       />
 
       {reports === null ? (
-        <p className="text-sm text-muted-foreground">{copy.history.loading}</p>
+        <div aria-busy="true" aria-label={copy.history.loading} className="space-y-4">
+          <div className="h-64 animate-pulse bg-secondary/30 motion-reduce:animate-none" />
+          <div className="h-40 animate-pulse bg-secondary/20 motion-reduce:animate-none" />
+        </div>
       ) : reports.length === 0 ? (
         <div className="border border-dashed border-border/60 px-5 py-8 text-center text-sm text-muted-foreground">
           {copy.history.empty}
@@ -106,7 +110,12 @@ export default function HistoryPage() {
             </CardHeader>
             <CardContent>
               <LineChart
-                ariaLabel={copy.history.chartAria(INDICATOR_DOMAINS[indicator].label)}
+                ariaLabel={copy.history.chartSummary(
+                  INDICATOR_DOMAINS[indicator].label,
+                  displayIndicator(indicator, series[0] ?? 0),
+                  displayIndicator(indicator, series.at(-1) ?? 0),
+                  reports.length,
+                )}
                 labels={labels}
                 series={[
                   {
@@ -143,6 +152,7 @@ export default function HistoryPage() {
                       </span>
                       <span className="numeric text-[0.62rem] text-muted-foreground">
                         {INDICATOR_DOMAINS[indicator].shortLabel}{' '}
+                        {deltaArrow(report.indicatorDeltas[indicator])}{' '}
                         {formatSignedIndicator(report.indicatorDeltas[indicator])}
                       </span>
                     </button>

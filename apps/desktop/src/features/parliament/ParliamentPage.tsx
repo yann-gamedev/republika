@@ -159,7 +159,11 @@ export default function ParliamentPage() {
                   </span>
                   <span className="numeric text-xs">{formatIndicator(item.supportTenths)}</span>
                 </div>
-                <Progress className="mt-1.5" value={item.supportTenths / 10} />
+                <Progress
+                  className="mt-1.5"
+                  value={item.supportTenths / 10}
+                  aria-label={copy.parliament.supportBar(item.faction.name)}
+                />
               </div>
             ))}
             <p className="border-t border-border/50 pt-3 text-[0.65rem] leading-relaxed text-muted-foreground">

@@ -7,7 +7,7 @@ interface ConfirmDialogProps {
   readonly title: string;
   readonly children?: ReactNode;
   readonly confirmLabel: string;
-  readonly cancelLabel: string;
+  readonly cancelLabel?: string;
   readonly onConfirm: () => void;
   readonly onCancel: () => void;
   /** Label tombol sekunder opsional (mis. "Pakai cadangan"). */
@@ -68,9 +68,11 @@ export function ConfirmDialog({
           <div className="mt-3 text-sm leading-relaxed text-muted-foreground">{children}</div>
         )}
         <div className="mt-6 flex flex-wrap justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={onCancel}>
-            {cancelLabel}
-          </Button>
+          {cancelLabel !== undefined && (
+            <Button variant="ghost" size="sm" onClick={onCancel}>
+              {cancelLabel}
+            </Button>
+          )}
           {secondaryLabel !== undefined && onSecondary !== undefined && (
             <Button variant="outline" size="sm" onClick={onSecondary} disabled={busy}>
               {secondaryLabel}
