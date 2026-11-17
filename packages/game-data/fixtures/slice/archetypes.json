@@ -1,0 +1,10 @@
+[
+  {
+    "id": "ARC-FX-FALLBACK",
+    "version": 1,
+    "priority": 0,
+    "name": "Pemerintahan Seimbang",
+    "description": "Arketipe cadangan fixture.",
+    "conditions": []
+  }
+]

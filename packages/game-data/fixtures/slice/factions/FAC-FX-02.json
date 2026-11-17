@@ -1,0 +1,13 @@
+{
+  "id": "FAC-FX-02",
+  "version": 1,
+  "name": "Fraksi Kerakyatan (fixture)",
+  "shortName": "RKY",
+  "seats": 38,
+  "color": "#7A2E2E",
+  "ideologyTags": ["populis"],
+  "baseSupport": 48,
+  "initialSupport": 48,
+  "policyPreferences": { "FISCAL": -1, "SOCIAL": 2, "ENERGY": -2, "GOVERNANCE": 0 },
+  "description": "Fraksi fixture yang memperjuangkan bantuan langsung."
+}

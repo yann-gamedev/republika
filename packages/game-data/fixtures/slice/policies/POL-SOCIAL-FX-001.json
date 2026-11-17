@@ -1,0 +1,46 @@
+{
+  "id": "POL-SOCIAL-FX-001",
+  "version": 1,
+  "name": "Bantuan Langsung Tunai (fixture)",
+  "description": "Kebijakan fixture: persetujuan dan kesejahteraan naik, kas terkuras.",
+  "category": "SOCIAL",
+  "apCost": 1,
+  "fiscalCostTrillion": 6,
+  "perTurnCostTrillion": 2,
+  "needsVote": true,
+  "durationTurns": 3,
+  "cooldownTurns": 1,
+  "requirements": [{ "type": "TREASURY_AT_LEAST", "valueTrillion": 5 }],
+  "conflicts": [],
+  "effects": [
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": 4,
+      "timing": "IMMEDIATE",
+      "reasonCode": "FX_BLT_APPROVAL"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "welfare",
+      "delta": 2,
+      "timing": "PER_TURN",
+      "reasonCode": "FX_BLT_WELFARE"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "inflationPct",
+      "delta": 0.2,
+      "timing": "DELAYED",
+      "delayTurns": 1,
+      "reasonCode": "FX_BLT_DEMAND_PULL"
+    },
+    {
+      "type": "CHANGE_FACTION_SUPPORT",
+      "ideologyTag": "populis",
+      "delta": 5,
+      "reasonCode": "FX_BLT_POPULIST_PRAISE"
+    }
+  ],
+  "modifiers": []
+}

@@ -9,6 +9,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./fixtures": {
+      "types": "./fixtures/slice/index.ts",
+      "default": "./fixtures/slice/index.ts"
     }
   },
   "scripts": {

@@ -1,8 +1,64 @@
-# Progres REPUBLIKA — Tahap 1
+# Progres REPUBLIKA
+
+## Tahap 2 — Engine simulasi inti
+
+Tanggal: 17 November 2026, Windows x64.
+
+### Status
+
+**Implementasi 2.1–2.6 selesai dan terverifikasi lokal; menunggu review pemilik (gate di bawah).** Tidak melanjutkan ke Tahap 3. Gate akhir Tahap 1 (CI GitHub, instalasi artifact, RAM) masih terbuka dan tidak disentuh tahap ini.
+
+| Bagian                 | Hasil                                                                                                                                                                                           | Commit               |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| 2.1 Primitif           | PRNG sfc32 + cyrb128 (stream `seed:turn`), `roundTenths`/`applyMultiplier`/`clampToDomain`, sort ID stabil, hash JSON kanonis. Snapshot 1000 angka.                                             | `d3689ff`, `955f85d` |
+| 2.2 Command & AP       | `applyCommand` 4 command, 15 kode error stabil + tabel pesan Indonesia, requirement, `createInitialState`, `validateEndQuarter`. Property test AP. Fixture konten slice.                        | `e5f9f2e`            |
+| 2.3 Efek & ledger      | Interpreter `EffectRule` exhaustive; ledger `before/delta/after/unit/sourceType/sourceId/reasonCode/order`; modifier membaca snapshot; pengali kementerian eff 40/65/90 teruji.                 | `7a2eac9`            |
+| 2.4 Voting & lobi      | `predictVote`, `applyLobbies`, `resolveVotes`; 51 lolos/50 gagal, lobi membalik fraksi di ambang, property total kursi 100.                                                                     | `f7f95ed`            |
+| 2.5 Orkestrator        | `resolveTurn` urutan §5.10, siklus kebijakan, baseline §5.9, kementerian, normalize/`CLAMPED`, laporan (delta, top 3 penyebab, lolos/gagal, kas). Fixture hash 4 kuartal + rekonsiliasi ledger. | `86b8b80`            |
+| 2.6 Proyeksi & dokumen | `projectPolicy` (rentang 75–125%, biaya pasti, prediksi voting), uji determinisme lintas file, property 4 kuartal acak, coverage di CI, `SIMULATION_RULES.md`, `DECISIONS.md`.                  | commit 2.6           |
+
+Catatan riwayat: commit 2.1 sempat berisi snapshot yang diformat Prettier sehingga test gagal; diperbaiki di `955f85d` (folder fixture dikecualikan dari Prettier, `.gitattributes` mengunci LF).
+
+### Bukti verifikasi lokal (keadaan akhir)
+
+| Perintah             | Hasil                                                                                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm lint`          | Lulus, 0 warning.                                                                                                                                |
+| `pnpm typecheck`     | Lulus semua package.                                                                                                                             |
+| `pnpm test`          | 172 test dalam 18 file lulus (simulasi 106 test, 7 file).                                                                                        |
+| `pnpm test:coverage` | `packages/simulation/src` lines 97,42%, branches 95,52%, functions 98,36% (ambang 90% lines).                                                    |
+| `pnpm content:check` | Lulus, 16 JSON, 18 peringatan placeholder (tidak berubah).                                                                                       |
+| `pnpm test:e2e`      | Build Vite lulus, 2 test Playwright lulus.                                                                                                       |
+| Performa             | Test anggaran: rata-rata resolve 1 kuartal (20 kuartal fixture) < 50 ms lulus. Pengukuran Windows 11 di app nyata belum relevan sebelum Tahap 3. |
+| Gate fixture         | Mengubah efek `FX_VAT_BACKLASH` −3 → −3,5 di fixture membuat 3 test gagal (hash 4 kuartal ×2, proyeksi); setelah dikembalikan semua lulus.       |
+
+### Perubahan di luar `packages/simulation`
+
+- `packages/shared`: skema state/ledger/laporan diperluas (lihat `DECISIONS.md` → Tahap 2); `roundTenths` dibuat tahan galat float.
+- `packages/game-data/fixtures/slice/`: konten fixture uji (bukan konten rilis), diekspor sebagai `@republika/game-data/fixtures`.
+- `apps/desktop`: data mock dan `HistoryPage` disesuaikan dengan bentuk ledger baru; tampilan tidak berubah fungsinya.
+- Dev-dependency `@vitest/coverage-v8` 3.2.7 (tidak ikut runtime). Tidak ada dependensi runtime eksternal baru; engine hanya bergantung pada `@republika/shared` (workspace).
+- CI: langkah `pnpm test:coverage` ditambahkan.
+- `content/`, `prompts/`, dan `packages/simulation/test/fixtures/saves/` tidak disentuh. `__fixtures__/` dibuat sesuai perintah prompt 2.6.
+
+### Belum dikerjakan (sesuai lingkup)
+
+Pemilihan event berbobot (stub kosong, Tahap 3), arketipe (Tahap 4), `GameController`, UI yang memakai engine, save file. `content/` masih placeholder sehingga belum ada angka balancing.
+
+### Gate akhir Tahap 2 — tindakan pemilik
+
+- [x] Semua test hijau dan coverage ≥ 90% (bukti di atas).
+- [ ] Baca `docs/SIMULATION_RULES.md`. Apakah aturannya sesuai keinginan Anda? Perhatikan khususnya keputusan di `DECISIONS.md` → Tahap 2 (PER_TURN mulai kuartal lolos, cara hitung DELAYED/cooldown, snapshot awal kuartal, reversi dukungan fraksi). Koreksi sekarang, sebelum ada UI.
+- [ ] Ubah satu angka efek kebijakan, lalu jalankan `pnpm test`. Karena `content/` masih placeholder, fixture engine memakai `packages/game-data/fixtures/slice/policies/*.json`; ubah angka di sana, pastikan test `slice-4q` gagal, lalu kembalikan (`git checkout -- packages/game-data/fixtures`). Agent sudah mencobanya sekali (lihat tabel bukti).
+- [ ] Isi konten Tahap 2 di `content/` (lihat `PANDUAN-KONTEN.md`) bila ingin engine diuji dengan angka Anda sendiri.
+
+---
+
+## Tahap 1 — Fondasi (arsip)
 
 Tanggal bukti lokal: 17 November 2026, Windows x64.
 
-## Status
+### Status
 
 **Implementasi fondasi tersedia; gate akhir Tahap 1 belum ditutup.** Menunggu CI GitHub aktual, instalasi artifact oleh pemilik, RAM awal, dan review visual/native. Tidak melanjutkan Tahap 2.
 
@@ -16,7 +72,7 @@ Tanggal bukti lokal: 17 November 2026, Windows x64.
 
 Identifier permanen `id.republika.game` sudah dikonfirmasi pemilik. UI mock menggambarkan kampanye 20 kuartal; skenario konten placeholder tetap 4 kuartal. Aksi mock mencatat pilihan/feedback tanpa mengubah `GameState`. Belum ada engine, save filesystem, autosave, migrasi, atau persistensi settings.
 
-## Bukti verifikasi lokal
+### Bukti verifikasi lokal
 
 | Perintah/pemeriksaan                                                     | Hasil                                                                                                                                                                   |
 | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -43,7 +99,7 @@ Hash konten:
 
 Warning nonfatal: konfigurasi Vitest workspace deprecated; belum dimigrasikan karena bukan blocker Tahap 1. Pemeriksaan Prettier terarah untuk kode/config/dokumentasi yang dikerjakan lulus. `prettier --check .` masih menandai format `AGENT.md` dan `prompts/**` bawaan; file aturan/prompt tersebut sengaja tidak diformat ulang.
 
-## Ukuran dan performa
+### Ukuran dan performa
 
 Installer lokal final:
 
@@ -64,11 +120,11 @@ Build Vite: entry JS sekitar 415,98 kB (gzip 128,14 kB); total 17 chunk JS 512.9
 | Cold start sampai menu                         | Belum diukur.                                             |
 | Resolusi kuartal dan ukuran save 20 kuartal    | Belum berlaku pada fondasi mock.                          |
 
-## Dokumentasi
+### Dokumentasi
 
 PDF sumber tersedia di `docs/source/REPUBLIKA_GDD_TDD_v0.1.pdf`, bukan hilang. Konversi mencakup 9/9 halaman: GDD halaman 1–4 (§1–§5), TDD halaman 1 dan 5–9 (§6–§11). Sampul/daftar isi bersama diduplikasi; teks dibandingkan dengan ekstraksi sumber. Pemeriksaan visual PDF belum dilakukan. Rancangan web/API/DB historis dipertahankan dengan catatan wajib bahwa addendum v0.3 menimpa.
 
-## Gate akhir dan tindakan pemilik
+### Gate akhir dan tindakan pemilik
 
 - [ ] Tambahkan remote GitHub yang dipilih pemilik, push commit, lalu catat URL run `checks` dan `desktop` yang hijau. Saat laporan ini dibuat belum ada remote/push/run GitHub.
 - [ ] Unduh artifact `republika-windows-x64` dari run tersebut, instal, lalu buka aplikasi di Windows. Catat ukuran artifact aktual; jangan mengganti bukti ini dengan executable lokal.
@@ -86,6 +142,6 @@ PDF sumber tersedia di `docs/source/REPUBLIKA_GDD_TDD_v0.1.pdf`, bukan hilang. K
 | RAM awal total + WebView2        | Pending |
 | Persetujuan visual               | Pending |
 
-## Catatan riwayat kerja
+### Catatan riwayat kerja
 
 Repo awal belum memiliki commit. Pekerjaan terlanjur terkumpul sebelum commit per bagian; pengelompokan commit penutupan mengikuti 1.1–1.5, bukan klaim bahwa setiap snapshot antara sudah diuji terpisah. Bukti perintah di atas berlaku untuk keadaan akhir fondasi. Tidak membuat release/tag atau menginstal aplikasi atas nama pemilik.

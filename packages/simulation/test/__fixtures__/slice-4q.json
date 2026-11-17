@@ -1,0 +1,26 @@
+{
+  "seed": "fixture-4q",
+  "stateHashes": [
+    "7d96357bd649877613a1abc0b201b449",
+    "64879bfff037dd3561e67136086eefd9",
+    "939f3202989bbaf5dddb53941db942be",
+    "d3f4ab78dbf8cd3fb02a1cc46c74915f"
+  ],
+  "reportHashes": [
+    "27a5e7aa7a09f1335bef9d98a2cc0d6f",
+    "524f866d582081cac7a6c5d4381e955f",
+    "312bec7f1c2f8cdb01c0b2852c9de94a",
+    "9b59dc57e77e6684ca240e06c8acf2a4"
+  ],
+  "finalIndicators": {
+    "approval": 528,
+    "stability": 620,
+    "fiscalHealth": 580,
+    "growthPct": 48,
+    "inflationPct": 34,
+    "unemploymentPct": 40,
+    "welfare": 529,
+    "trust": 490
+  },
+  "finalTreasuryBillion": 18000
+}
