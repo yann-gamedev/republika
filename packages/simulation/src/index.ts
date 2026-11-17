@@ -7,3 +7,6 @@ export * from './core/definitions.js';
 export * from './core/errors.js';
 export * from './core/initialState.js';
 export * from './core/requirements.js';
+export * from './core/clone.js';
+export * from './core/ledger.js';
+export * from './policies/effects.js';
