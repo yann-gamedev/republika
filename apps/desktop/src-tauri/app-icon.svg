@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="72%">
+      <stop offset="0%" stop-color="#172433"/>
+      <stop offset="100%" stop-color="#0b1119"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e2c183"/>
+      <stop offset="100%" stop-color="#9a7838"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="180" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="402" fill="none" stroke="#c9a35f" stroke-opacity="0.22" stroke-width="6"/>
+  <circle cx="512" cy="512" r="360" fill="none" stroke="#c9a35f" stroke-opacity="0.55" stroke-width="8"/>
+  <circle cx="512" cy="512" r="310" fill="none" stroke="#c9a35f" stroke-opacity="0.22" stroke-width="6"/>
+  <g stroke="#c9a35f">
+    <g stroke-width="8">
+      <line x1="512" y1="104" x2="512" y2="146"/>
+      <line x1="716" y1="156" x2="694" y2="192"/>
+      <line x1="868" y1="308" x2="832" y2="330"/>
+      <line x1="920" y1="512" x2="878" y2="512"/>
+      <line x1="868" y1="716" x2="832" y2="694"/>
+      <line x1="716" y1="868" x2="694" y2="832"/>
+      <line x1="512" y1="920" x2="512" y2="878"/>
+      <line x1="308" y1="868" x2="330" y2="832"/>
+      <line x1="156" y1="716" x2="192" y2="694"/>
+      <line x1="104" y1="512" x2="146" y2="512"/>
+      <line x1="156" y1="308" x2="192" y2="330"/>
+      <line x1="308" y1="156" x2="330" y2="192"/>
+    </g>
+    <g stroke-width="4" stroke-opacity="0.45">
+      <line x1="612" y1="110" x2="605" y2="150"/>
+      <line x1="807" y1="210" x2="780" y2="241"/>
+      <line x1="914" y1="410" x2="874" y2="420"/>
+      <line x1="914" y1="614" x2="874" y2="604"/>
+      <line x1="807" y1="814" x2="780" y2="783"/>
+      <line x1="612" y1="914" x2="605" y2="874"/>
+      <line x1="412" y1="914" x2="419" y2="874"/>
+      <line x1="217" y1="814" x2="244" y2="783"/>
+      <line x1="110" y1="614" x2="150" y2="604"/>
+      <line x1="110" y1="410" x2="150" y2="420"/>
+      <line x1="217" y1="210" x2="244" y2="241"/>
+      <line x1="412" y1="110" x2="419" y2="150"/>
+    </g>
+  </g>
+  <circle cx="512" cy="512" r="250" fill="#c9a35f" fill-opacity="0.05" stroke="url(#gold)" stroke-width="10"/>
+  <path d="M512 282 L554 414 L694 414 L581 496 L625 628 L512 546 L399 628 L443 496 L330 414 L470 414 Z"
+        fill="none" stroke="url(#gold)" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M512 355 L536 424 L609 424 L550 466 L573 532 L512 490 L451 532 L474 466 L415 424 L488 424 Z"
+        fill="#c9a35f" fill-opacity="0.14"/>
+  <line x1="380" y1="706" x2="644" y2="706" stroke="#c9a35f" stroke-opacity="0.6" stroke-width="8"/>
+  <line x1="424" y1="744" x2="600" y2="744" stroke="#c9a35f" stroke-opacity="0.32" stroke-width="6"/>
+  <circle cx="512" cy="512" r="16" fill="#d9b775"/>
+</svg>
