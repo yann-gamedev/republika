@@ -10,3 +10,5 @@ export * from './core/requirements.js';
 export * from './core/clone.js';
 export * from './core/ledger.js';
 export * from './policies/effects.js';
+export * from './policies/lifecycle.js';
+export * from './politics/voting.js';
