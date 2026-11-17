@@ -2,3 +2,8 @@ export * from './core/hash.js';
 export * from './core/math.js';
 export * from './core/order.js';
 export * from './core/rng.js';
+export * from './core/commands.js';
+export * from './core/definitions.js';
+export * from './core/errors.js';
+export * from './core/initialState.js';
+export * from './core/requirements.js';

@@ -1,10 +1,11 @@
-import type {
-  GameDefinitions,
-  Indicators,
-  LedgerEntry,
-  PolicyCategory,
-  TurnReport,
-  VoteOutcome,
+import {
+  INDICATOR_KEYS,
+  type GameDefinitions,
+  type Indicators,
+  type LedgerEntry,
+  type PolicyCategory,
+  type TurnReport,
+  type VoteOutcome,
 } from '@republika/shared';
 
 import {
@@ -120,34 +121,45 @@ const LEDGER_ONE: readonly LedgerEntry[] = [
   {
     id: 'LEDGER-001-01',
     turn: 1,
+    order: 0,
     kind: 'POLICY',
+    sourceType: 'POLICY',
     reasonCode: 'POLICY_ENACTED',
-    policyId: socialPolicy.id,
+    sourceId: socialPolicy.id,
     message: 'Bantuan sosial tepat sasaran mulai berlaku.',
   },
   {
     id: 'LEDGER-001-02',
     turn: 1,
+    order: 1,
     kind: 'VOTE',
+    sourceType: 'VOTE',
     reasonCode: 'VOTE_PASSED',
-    policyId: socialPolicy.id,
+    sourceId: socialPolicy.id,
     message: 'Voting kebijakan sosial lolos di parlemen.',
   },
   {
     id: 'LEDGER-001-03',
     turn: 1,
+    order: 2,
     kind: 'INDICATOR',
+    sourceType: 'POLICY',
     reasonCode: 'AID_SUPPORT',
-    indicator: 'approval',
-    deltaTenths: 40,
+    target: 'approval',
+    unit: 'tenths',
+    delta: 40,
     message: 'Bantuan langsung menopang persetujuan publik.',
   },
   {
     id: 'LEDGER-001-04',
     turn: 1,
+    order: 3,
     kind: 'TREASURY',
+    sourceType: 'SYSTEM',
     reasonCode: 'POLICY_COST',
-    amountBillion: -6_000,
+    target: 'treasury',
+    unit: 'billion',
+    delta: -6_000,
     message: 'Biaya awal penyaluran bantuan sosial.',
   },
 ];
@@ -156,25 +168,34 @@ const LEDGER_TWO: readonly LedgerEntry[] = [
   {
     id: 'LEDGER-002-01',
     turn: 2,
+    order: 0,
     kind: 'EVENT',
+    sourceType: 'EVENT',
     reasonCode: 'PLACEHOLDER_EMERGENCY_FUND',
-    ...(floodEvent !== undefined ? { eventId: floodEvent.id } : {}),
-    amountBillion: -6_000,
+    ...(floodEvent !== undefined ? { sourceId: floodEvent.id } : {}),
+    target: 'treasury',
+    unit: 'billion',
+    delta: -6_000,
     message: 'Dana darurat pencairan banjir pesisir.',
   },
   {
     id: 'LEDGER-002-02',
     turn: 2,
+    order: 1,
     kind: 'INDICATOR',
+    sourceType: 'POLICY',
     reasonCode: 'SWIFT_RESPONSE',
-    indicator: 'approval',
-    deltaTenths: 40,
+    target: 'approval',
+    unit: 'tenths',
+    delta: 40,
     message: 'Respons cepat dianggap membantu korban.',
   },
   {
     id: 'LEDGER-002-03',
     turn: 2,
+    order: 2,
     kind: 'SYSTEM',
+    sourceType: 'BASELINE',
     reasonCode: 'BASELINE',
     message: 'Dinamika dasar kuartal diterapkan.',
   },
@@ -184,26 +205,35 @@ const LEDGER_THREE: readonly LedgerEntry[] = [
   {
     id: 'LEDGER-003-01',
     turn: 3,
+    order: 0,
     kind: 'VOTE',
+    sourceType: 'VOTE',
     reasonCode: 'VOTE_PASSED',
-    policyId: fiscalPolicy.id,
+    sourceId: fiscalPolicy.id,
     message: 'Pembaruan pajak konsumsi lolos dengan 51 kursi.',
   },
   {
     id: 'LEDGER-003-02',
     turn: 3,
+    order: 1,
     kind: 'INDICATOR',
+    sourceType: 'POLICY',
     reasonCode: 'REVENUE_STRENGTH',
-    indicator: 'fiscalHealth',
-    deltaTenths: 20,
+    target: 'fiscalHealth',
+    unit: 'tenths',
+    delta: 20,
     message: 'Basis penerimaan baru memperkuat kesehatan fiskal.',
   },
   {
     id: 'LEDGER-003-03',
     turn: 3,
+    order: 2,
     kind: 'TREASURY',
+    sourceType: 'BASELINE',
     reasonCode: 'BASELINE_REVENUE',
-    amountBillion: 3_000,
+    target: 'treasury',
+    unit: 'billion',
+    delta: 3_000,
     message: 'Penerimaan kuartalan masuk ke kas negara.',
   },
 ];
@@ -212,34 +242,45 @@ const LEDGER_FOUR: readonly LedgerEntry[] = [
   {
     id: 'LEDGER-004-01',
     turn: 4,
+    order: 0,
     kind: 'POLICY',
+    sourceType: 'POLICY',
     reasonCode: 'POLICY_ENACTED',
-    policyId: energyPolicy.id,
+    sourceId: energyPolicy.id,
     message: 'Reformasi subsidi energi mulai dijalankan.',
   },
   {
     id: 'LEDGER-004-02',
     turn: 4,
+    order: 1,
     kind: 'TREASURY',
+    sourceType: 'SYSTEM',
     reasonCode: 'POLICY_COST',
-    amountBillion: -8_000,
+    target: 'treasury',
+    unit: 'billion',
+    delta: -8_000,
     message: 'Biaya awal reformasi energi.',
   },
   {
     id: 'LEDGER-004-03',
     turn: 4,
+    order: 2,
     kind: 'INDICATOR',
+    sourceType: 'POLICY',
     reasonCode: 'ENERGY_PRICE_PASS_THROUGH',
-    indicator: 'inflationPct',
-    deltaTenths: 20,
+    target: 'inflationPct',
+    unit: 'tenths',
+    delta: 20,
     message: 'Penyesuaian harga terasa pada inflasi kuartal ini.',
   },
   {
     id: 'LEDGER-004-04',
     turn: 4,
+    order: 3,
     kind: 'MINISTRY',
+    sourceType: 'MINISTRY',
     reasonCode: 'ENERGY_REFORM',
-    ...(energyMinistry !== undefined ? { ministryId: energyMinistry.id } : {}),
+    ...(energyMinistry !== undefined ? { target: energyMinistry.id } : {}),
     message: 'Kementerian Energi menambah beban kerja reformasi.',
   },
 ];
@@ -248,41 +289,85 @@ const LEDGER_FIVE: readonly LedgerEntry[] = [
   {
     id: 'LEDGER-005-01',
     turn: 5,
+    order: 0,
     kind: 'VOTE',
+    sourceType: 'VOTE',
     reasonCode: 'VOTE_PASSED',
-    policyId: fiscalPolicy.id,
+    sourceId: fiscalPolicy.id,
     message: 'Fraksi tengah menerima lanjutan kebijakan fiskal.',
   },
   {
     id: 'LEDGER-005-02',
     turn: 5,
+    order: 1,
     kind: 'TREASURY',
+    sourceType: 'SYSTEM',
     reasonCode: 'POLICY_MAINTENANCE',
-    amountBillion: -2_000,
+    target: 'treasury',
+    unit: 'billion',
+    delta: -2_000,
     message: 'Belanja sosial rutin dibayarkan.',
   },
   {
     id: 'LEDGER-005-03',
     turn: 5,
+    order: 2,
     kind: 'INDICATOR',
+    sourceType: 'POLICY',
     reasonCode: 'APPROVAL_DRIFT',
-    indicator: 'approval',
-    deltaTenths: -10,
+    target: 'approval',
+    unit: 'tenths',
+    delta: -10,
     message: 'Harga kebutuhan pokok menekan persetujuan publik.',
   },
   {
     id: 'LEDGER-005-04',
     turn: 5,
+    order: 3,
     kind: 'SYSTEM',
+    sourceType: 'BASELINE',
     reasonCode: 'BASELINE',
     message: 'Dinamika dasar kuartal diterapkan.',
   },
 ];
 
+type MockReportBase = Omit<
+  TurnReport,
+  'treasuryDeltaBillion' | 'indicatorDeltas' | 'topCauses' | 'policiesPassed' | 'policiesFailed'
+>;
+
+function withDerivedFields(report: MockReportBase): TurnReport {
+  const indicatorDeltas = Object.fromEntries(
+    INDICATOR_KEYS.map((key) => [key, report.indicatorsAfter[key] - report.indicatorsBefore[key]]),
+  ) as TurnReport['indicatorDeltas'];
+  const topCauses = Object.fromEntries(
+    INDICATOR_KEYS.map((key) => [
+      key,
+      report.ledger
+        .filter((entry) => entry.kind === 'INDICATOR' && entry.target === key)
+        .map((entry) => ({
+          sourceType: entry.sourceType,
+          ...(entry.sourceId !== undefined ? { sourceId: entry.sourceId } : {}),
+          reasonCode: entry.reasonCode,
+          deltaTenths: entry.delta ?? 0,
+        }))
+        .slice(0, 3),
+    ]),
+  ) as TurnReport['topCauses'];
+  return {
+    ...report,
+    treasuryDeltaBillion: report.treasuryAfterBillion - report.treasuryBeforeBillion,
+    indicatorDeltas,
+    topCauses,
+    policiesPassed: report.votes.filter((vote) => vote.passed).map((vote) => vote.policyId),
+    policiesFailed: report.votes.filter((vote) => !vote.passed).map((vote) => vote.policyId),
+  };
+}
+
 export function createMockHistory(
   presidentName: string = mockGameState.presidentName,
 ): TurnReport[] {
-  return [
+  const reports: MockReportBase[] = [
     {
       turn: 1,
       year: 2031,
@@ -375,6 +460,7 @@ export function createMockHistory(
       summary: [...mockLatestSummary],
     },
   ];
+  return reports.map(withDerivedFields);
 }
 
 export const mockHistory = createMockHistory();

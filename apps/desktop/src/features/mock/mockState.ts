@@ -198,6 +198,7 @@ const MOCK_MINISTRY_EFFECTIVENESS = [67, 61, 58, 63] as const;
 const baseMockState = {
   stateVersion: GAME_STATE_VERSION,
   rulesetVersion: definitions.scenario.rulesetVersion,
+  seed: 'mock-seed',
   // DECISION: mock UI memakai kampanye 20 kuartal agar tata letak teruji,
   // sementara konten Tahap 1 masih vertical slice 4 kuartal.
   turn: 6,
@@ -230,12 +231,14 @@ const baseMockState = {
       enactedTurn: 4,
       remainingTurns: 3,
       perTurnCostBillion: energyPolicy.perTurnCostBillion,
+      lastTickedTurn: 5,
     },
     {
       policyId: socialPolicy.id,
       enactedTurn: 4,
       remainingTurns: 2,
       perTurnCostBillion: socialPolicy.perTurnCostBillion,
+      lastTickedTurn: 5,
     },
   ],
   pendingCommands: [
@@ -253,6 +256,7 @@ const baseMockState = {
       resolvedChoiceId: null,
     },
   ],
+  commandIdsThisTurn: ['mock-command-001'],
   lobbyThisTurn: [
     mockDefinitions.factions[2]?.id ?? mockDefinitions.factions[0]?.id ?? 'FAC-UNKNOWN-01',
   ],
@@ -263,7 +267,9 @@ const baseMockState = {
   flags: ['PLACEHOLDER_FLOOD_HANDLED'],
   delayedEffects: [
     {
+      sourceType: 'POLICY' as const,
       sourceId: energyPolicy.id,
+      createdTurn: 4,
       remainingTurns: 1,
       effect: {
         type: 'MODIFY_INDICATOR' as const,

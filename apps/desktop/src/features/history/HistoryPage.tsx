@@ -4,6 +4,7 @@ import {
   INDICATOR_DOMAINS,
   INDICATOR_KEYS,
   type IndicatorKey,
+  type LedgerEntry,
   type TurnReport,
 } from '@republika/shared';
 
@@ -32,10 +33,10 @@ function indicatorValue(key: IndicatorKey, valueTenths: number): string {
     : formatIndicator(valueTenths);
 }
 
-function ledgerAmount(kind: string, amountBillion?: number, deltaTenths?: number): string | null {
-  if (amountBillion !== undefined) return formatSignedRupiahTriliun(amountBillion);
-  if (deltaTenths !== undefined) return formatSignedIndicator(deltaTenths);
-  if (kind === 'SYSTEM') return null;
+function ledgerAmount(entry: LedgerEntry): string | null {
+  if (entry.delta === undefined) return null;
+  if (entry.unit === 'billion') return formatSignedRupiahTriliun(entry.delta);
+  if (entry.unit === 'tenths') return formatSignedIndicator(entry.delta);
   return null;
 }
 
@@ -210,7 +211,7 @@ function ReportDetail({ report }: { report: TurnReport }) {
           ) : (
             <ul className="mt-2 divide-y divide-border/40 border border-border/50">
               {report.ledger.map((entry) => {
-                const amount = ledgerAmount(entry.kind, entry.amountBillion, entry.deltaTenths);
+                const amount = ledgerAmount(entry);
                 return (
                   <li
                     key={entry.id}
