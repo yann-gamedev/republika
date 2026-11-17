@@ -1,0 +1,20 @@
+{
+  "rulesetVersion": 1,
+  "maxTurns": 4,
+  "actionPointsPerTurn": 2,
+  "maxEventsPerQuarter": 1,
+  "lobbyCostTrillion": 2,
+  "lobbySupportBonus": 15,
+  "startYear": 2031,
+  "initialIndicators": {
+    "approval": 58,
+    "stability": 62,
+    "fiscalHealth": 55,
+    "growthPct": 4.8,
+    "inflationPct": 3.4,
+    "unemploymentPct": 5.6,
+    "welfare": 50,
+    "trust": 52
+  },
+  "initialTreasuryTrillion": 150
+}

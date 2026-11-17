@@ -1,0 +1,13 @@
+{
+  "id": "FAC-PLACEHOLDER-01",
+  "version": 1,
+  "name": "Fraksi Placeholder Satu",
+  "shortName": "P1",
+  "seats": 20,
+  "color": "#8C6A3F",
+  "ideologyTags": ["teknokrat", "pro-pasar"],
+  "baseSupport": 55,
+  "initialSupport": 55,
+  "policyPreferences": { "FISCAL": 2, "SOCIAL": -1, "ENERGY": 1, "GOVERNANCE": 0 },
+  "description": "Fraksi contoh yang mengutamakan disiplin anggaran."
+}

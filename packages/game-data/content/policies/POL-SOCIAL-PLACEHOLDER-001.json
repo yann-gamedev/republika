@@ -1,0 +1,32 @@
+{
+  "id": "POL-SOCIAL-PLACEHOLDER-001",
+  "version": 1,
+  "name": "Bantuan Sosial Placeholder",
+  "description": "Template kebijakan sosial. Ganti seluruh isi sebelum rilis.",
+  "category": "SOCIAL",
+  "apCost": 1,
+  "fiscalCostTrillion": 6,
+  "perTurnCostTrillion": 2,
+  "needsVote": true,
+  "durationTurns": 3,
+  "cooldownTurns": 1,
+  "requirements": [],
+  "conflicts": [],
+  "effects": [
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": 4,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_AID_SUPPORT"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "welfare",
+      "delta": 5,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_AID_REACH"
+    }
+  ],
+  "modifiers": []
+}

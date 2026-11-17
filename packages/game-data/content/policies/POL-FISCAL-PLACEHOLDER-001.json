@@ -1,0 +1,32 @@
+{
+  "id": "POL-FISCAL-PLACEHOLDER-001",
+  "version": 1,
+  "name": "Reformasi Pajak Placeholder",
+  "description": "Template kebijakan fiskal. Ganti seluruh isi sebelum rilis.",
+  "category": "FISCAL",
+  "apCost": 1,
+  "fiscalCostTrillion": 0,
+  "perTurnCostTrillion": 0,
+  "needsVote": true,
+  "durationTurns": 4,
+  "cooldownTurns": 2,
+  "requirements": [],
+  "conflicts": [],
+  "effects": [
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "fiscalHealth",
+      "delta": 2,
+      "timing": "PER_TURN",
+      "reasonCode": "PLACEHOLDER_REVENUE"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": -3,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_TAX_BACKLASH"
+    }
+  ],
+  "modifiers": []
+}

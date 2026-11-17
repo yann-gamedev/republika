@@ -1,0 +1,13 @@
+{
+  "id": "FAC-PLACEHOLDER-05",
+  "version": 1,
+  "name": "Fraksi Placeholder Lima",
+  "shortName": "P5",
+  "seats": 15,
+  "color": "#3B6EA5",
+  "ideologyTags": ["nasionalis"],
+  "baseSupport": 54,
+  "initialSupport": 54,
+  "policyPreferences": { "FISCAL": 0, "SOCIAL": 1, "ENERGY": 1, "GOVERNANCE": 1 },
+  "description": "Fraksi contoh yang mengutamakan kemandirian ekonomi."
+}

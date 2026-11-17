@@ -1,0 +1,58 @@
+{
+  "id": "POL-ENERGY-PLACEHOLDER-001",
+  "version": 1,
+  "name": "Reformasi Subsidi Energi Placeholder",
+  "description": "Template kebijakan energi. Ganti seluruh isi sebelum rilis.",
+  "category": "ENERGY",
+  "apCost": 1,
+  "fiscalCostTrillion": 8,
+  "perTurnCostTrillion": 0,
+  "needsVote": true,
+  "durationTurns": 4,
+  "cooldownTurns": 2,
+  "requirements": [{ "type": "POLICY_NOT_ACTIVE", "policyId": "POL-SOCIAL-PLACEHOLDER-001" }],
+  "conflicts": [],
+  "effects": [
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "inflationPct",
+      "delta": 0.4,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_ENERGY_PASS_THROUGH"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "approval",
+      "delta": -4,
+      "timing": "IMMEDIATE",
+      "reasonCode": "PLACEHOLDER_FUEL_DISCONTENT"
+    },
+    {
+      "type": "MODIFY_INDICATOR",
+      "target": "welfare",
+      "delta": 3,
+      "timing": "DELAYED",
+      "delayTurns": 2,
+      "reasonCode": "PLACEHOLDER_TARGETED_AID"
+    },
+    {
+      "type": "CHANGE_FACTION_SUPPORT",
+      "ideologyTag": "populis",
+      "delta": -5,
+      "reasonCode": "PLACEHOLDER_POPULIST_BACKLASH"
+    },
+    {
+      "type": "MODIFY_MINISTRY_EFFECTIVENESS",
+      "ministryId": "MIN-PLACEHOLDER-ENERGY",
+      "delta": 1,
+      "reasonCode": "PLACEHOLDER_ENERGY_REFORM"
+    }
+  ],
+  "modifiers": [
+    {
+      "when": [{ "type": "INDICATOR_AT_LEAST", "target": "inflationPct", "value": 6 }],
+      "appliesTo": "approval",
+      "multiplier": 1.5
+    }
+  ]
+}

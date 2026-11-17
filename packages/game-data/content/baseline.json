@@ -1,0 +1,14 @@
+{
+  "inflationTargetPct": 3.0,
+  "inflationReversion": 0.25,
+  "growthTargetPct": 4.0,
+  "growthReversion": 0.2,
+  "okunCoefficient": 0.15,
+  "okunNeutralGrowthPct": 2.5,
+  "approvalAnchor": 50,
+  "approvalReversion": 0.1,
+  "baseRevenueTrillionPerTurn": 40,
+  "baseSpendingTrillionPerTurn": 38,
+  "negativeTreasuryFiscalHealthPenalty": 3,
+  "factionSupportReversion": 0.1
+}
