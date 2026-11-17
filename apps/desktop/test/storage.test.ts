@@ -2,22 +2,28 @@ import { describe, expect, it } from 'vitest';
 
 import { APP_VERSION, SAVE_FORMAT_VERSION, saveFileSchema, type SaveFile } from '@republika/shared';
 
+import { createInitialState } from '@republika/simulation';
+
+import { contentHash, definitions } from '../src/content/gameContent';
 import { MemoryStorage } from '../src/platform/MemoryStorage';
-import { createMockHistory } from '../src/features/mock/mockHistory';
-import { mockContentHash, mockGameState } from '../src/features/mock/mockState';
 import { validateInauguration } from '../src/features/inauguration/validation';
+
+const sampleState = createInitialState(definitions.scenario, definitions, {
+  presidentName: 'Arunika Wicaksana',
+  seed: 'contoh',
+});
 
 function createSave(): SaveFile {
   return saveFileSchema.parse({
     saveFormatVersion: SAVE_FORMAT_VERSION,
     appVersion: APP_VERSION,
-    rulesetVersion: mockGameState.rulesetVersion,
-    contentHash: mockContentHash,
+    rulesetVersion: sampleState.rulesetVersion,
+    contentHash,
     savedAt: '2026-01-01T00:00:00.000Z',
     label: 'Kampanye contoh',
-    state: mockGameState,
+    state: sampleState,
     history: {
-      reports: createMockHistory(mockGameState.presidentName),
+      reports: [],
       ledger: [],
     },
   });
@@ -40,7 +46,7 @@ describe('MemoryStorage', () => {
     const slots = await storage.listSlots();
     expect(slots).toHaveLength(1);
     expect(slots[0]?.slot).toBe('slot-1');
-    expect(slots[0]?.turn).toBe(mockGameState.turn);
+    expect(slots[0]?.turn).toBe(sampleState.turn);
   });
 
   it('menyimpan pengaturan dan mengembalikan null untuk slot kosong', async () => {

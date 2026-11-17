@@ -1,5 +1,58 @@
 # Progres REPUBLIKA
 
+## Tahap 3 — Vertical slice (4 kuartal bisa dimainkan)
+
+Tanggal: 17 November 2026, Windows 11 x64. Branch `feat/stage-3-vertical-slice`.
+
+### Status
+
+**Implementasi 3.1–3.5 selesai dan terverifikasi lokal; menunggu playtest pemilik (gate di bawah).** Tidak melanjutkan ke Tahap 4.
+
+| Bagian                          | Hasil                                                                                                                                                                                                                                                                         | Commit     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 3.1 Event engine                | `events/select.ts`: syarat, cooldown, `uniquePerCampaign` (field baru `eventsFired`), urut ID, `weightedPick` stream turn, maks `maxEventsPerQuarter`; tersambung ke langkah 11. Ruleset fixture 1 → 2, snapshot diperbarui.                                                  | `f01d99e`  |
+| 3.2 Controller & store          | `GameController` (startCampaign, dispatch, endQuarter, loadFromSave, continueCampaign/continueFromBackup, loadHistory); store tipis `state`/`lastReport`/`uiStatus`/toast; seed, ID command, dan waktu dari `platform/entropy.ts`.                                            | `6bc433e`  |
+| 3.3 File & autosave             | Rust `save_atomic`/`read_text`/`list_saves`, tolak traversal (test Rust); `TauriFileStorage` nyata; autosave + `autosave.bak.json`; kontrak storage untuk memori dan Node fs.                                                                                                 | `42a450f`  |
+| 3.4 UI utama                    | Pelantikan + momen sumpah, Menu → Lanjutkan + dialog "Save rusak", Dashboard, Kebijakan (✓/✗, proyeksi ↑/↓, biaya pasti, alasan tombol nonaktif), Parlemen (perkiraan voting, lobi), pintasan `1–6`/`Enter`/`Esc`.                                                            | `7796c9a`  |
+| 3.5 Peristiwa, laporan, riwayat | Nota dinas dengan konsekuensi kualitatif, "Akhiri Kuartal" terkunci + penjelasan; Laporan Kuartal (delta + 3 penyebab dari ledger, voting, event baru); Riwayat (linimasa + `LineChart` per indikator, dimuat dari save); ringkasan akhir slice; mock dihapus; E2E 4 kuartal. | commit 3.5 |
+
+### Bukti verifikasi lokal
+
+| Perintah                          | Hasil                                                                                                                                                                                |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm lint`, `pnpm typecheck`     | Lulus, 0 warning.                                                                                                                                                                    |
+| `pnpm test`                       | 204 test dalam 20 file lulus (engine 118, desktop termasuk controller + kontrak storage).                                                                                            |
+| `pnpm test:coverage`              | `packages/simulation` lines 97,64%.                                                                                                                                                  |
+| `cargo test --locked` (src-tauri) | 2 test lulus (path biasa diterima; `..`, absolut, drive, `\` ditolak). `cargo fmt`/`clippy` bersih.                                                                                  |
+| `pnpm test:e2e`                   | 4 test Playwright lulus, termasuk alur penuh: pelantikan → ajukan kebijakan → lobi → akhiri kuartal → laporan → jawab 2 peristiwa → ringkasan akhir → Riwayat 4 laporan.             |
+| `pnpm content:check`              | Lulus, hash konten tidak berubah (`3ed0ca96…`).                                                                                                                                      |
+| `pnpm build`                      | Lulus. Installer NSIS **3,06 MiB** (3.210.567 byte). Entry JS 448,6 kB (gzip 138,5 kB), total 21 chunk JS 544.070 byte.                                                              |
+| JS heap setelah 4 kuartal         | **±16,1 MB** (`performance.memory.usedJSHeapSize` di Chromium Playwright pada build Vite, MemoryStorage). Ini pendekatan otomatis, bukan pengukuran DevTools manual; target ≤ 30 MB. |
+
+### Tindakan pemilik
+
+1. **Naikkan `rulesetVersion` di `packages/game-data/content/scenario.json` dari 1 ke 2.** Agent tidak mengubahnya karena area konten dilindungi. Engine tetap berjalan, tetapi label ruleset di Pengaturan dan save masih menunjukkan 1.
+2. **Tulis kalimat laporan untuk `reasonCode` konten** di `apps/desktop/src/copy/id.ts` → `contentReasons`. Sampai diisi, laporan menampilkan "Dampak {nama kebijakan/peristiwa}". Kode yang ada di konten sekarang:
+   `PLACEHOLDER_AID_REACH`, `PLACEHOLDER_AID_SUPPORT`, `PLACEHOLDER_BUREAUCRACY_ORDER`, `PLACEHOLDER_BUREAUCRACY_SAVINGS`, `PLACEHOLDER_DIALOGUE_COST`, `PLACEHOLDER_DIALOGUE_SUPPORT`, `PLACEHOLDER_EMERGENCY_FUND`, `PLACEHOLDER_ENERGY_PASS_THROUGH`, `PLACEHOLDER_ENERGY_REFORM`, `PLACEHOLDER_FLOOD_RESPONSE`, `PLACEHOLDER_FUEL_DISCONTENT`, `PLACEHOLDER_POPULIST_BACKLASH`, `PLACEHOLDER_RED_TAPE_DISCONTENT`, `PLACEHOLDER_REVENUE`, `PLACEHOLDER_SEEN_AS_ABSENT`, `PLACEHOLDER_SWIFT_RESPONSE`, `PLACEHOLDER_TARGETED_AID`, `PLACEHOLDER_TAX_BACKLASH`, `PLACEHOLDER_TENSION_BUILDUP`.
+3. **Konten Tahap 3** (2 event + 3 fraksi sementara) belum ditulis; slice saat ini memakai placeholder (6 fraksi, 2 event).
+4. **Verifikasi manual save di Windows** (tidak bisa diotomasi agent):
+   1. Jalankan installer `apps/desktop/src-tauri/target/release/bundle/nsis/REPUBLIKA_0.1.0_x64-setup.exe` (atau `pnpm dev`).
+   2. Mulai Baru → isi nama → Ucapkan Sumpah Jabatan.
+   3. Mainkan 2 kuartal (ajukan kebijakan, akhiri kuartal, jawab peristiwa bila ada).
+   4. Pastikan `Documents/REPUBLIKA/saves/autosave.json` dan `autosave.bak.json` ada, serta folder `logs/`.
+   5. Tutup app → buka lagi → **Lanjutkan**. Kuartal, kas, dan indikator harus sama dengan sebelum ditutup; Riwayat berisi 2 laporan.
+   6. Uji save rusak: tutup app, ubah isi `autosave.json` menjadi teks acak, buka → Lanjutkan → harus muncul dialog "Save rusak" dengan tombol **Pakai cadangan** yang memuat kuartal sebelumnya.
+5. **Playtest** minimal 3 kali dan isi `docs/PLAYTEST-SLICE.md` (template sudah disiapkan), termasuk RAM dari Task Manager setelah 4 kuartal.
+
+### Gate akhir Tahap 3
+
+- [x] E2E hijau dan JS heap tercatat.
+- [ ] Verifikasi manual tutup-buka-Lanjutkan di Windows (langkah 4 di atas).
+- [ ] Playtest 3 kali + `docs/PLAYTEST-SLICE.md` terisi.
+- [ ] RAM total setelah 4 kuartal dicatat.
+
+---
+
 ## Tahap 2 — Engine simulasi inti
 
 Tanggal: 17 November 2026, Windows x64.

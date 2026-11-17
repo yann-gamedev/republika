@@ -102,7 +102,7 @@ export function GameLayout() {
   const confirmEnd = useCallback(() => {
     setConfirmOpen(false);
     void gameController.endQuarter().then((result) => {
-      if (result.ok) navigate('/game/dashboard');
+      if (result.ok) navigate('/game/report');
     });
   }, [navigate]);
 
@@ -233,7 +233,7 @@ export function GameLayout() {
               </div>
 
               {completed ? (
-                <Button size="sm" variant="outline" onClick={() => navigate('/game/dashboard')}>
+                <Button size="sm" variant="outline" onClick={() => navigate('/game/report')}>
                   {copy.game.campaignCompleted}
                 </Button>
               ) : (
