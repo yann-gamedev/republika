@@ -1,10 +1,12 @@
 import { POLICY_CATEGORIES } from '@republika/shared';
+import { predictVote } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
+import { PREVIEW_COMMAND_ID, previewCommand, useGameState } from '@/app/useGame';
+import { definitions, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { mockDefinitions } from '@/features/mock/mockState';
 import { formatIndicator, formatInteger, formatRupiahTriliun } from '@/format/formatters';
-import { useAppStore } from '@/store/useAppStore';
+import { gameController } from '@/store/controller';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
@@ -16,11 +18,9 @@ import { cn } from '@/ui/lib/utils';
 const COALITION_SUPPORT = 500;
 
 export default function ParliamentPage() {
-  const state = useAppStore((store) => store.gameState);
-  const mockSelections = useAppStore((store) => store.mockSelections);
-  const recordMockChoice = useAppStore((store) => store.recordMockChoice);
+  const state = useGameState();
 
-  const factions = mockDefinitions.factions.map((faction) => {
+  const factions = definitions.factions.map((faction) => {
     const factionState = state.factions.find((item) => item.factionId === faction.id);
     return {
       faction,
@@ -33,8 +33,34 @@ export default function ParliamentPage() {
     0,
   );
   const totalSeats = factions.reduce((total, item) => total + item.faction.seats, 0);
-  const lobbyCost = formatRupiahTriliun(mockDefinitions.scenario.lobbyCostBillion);
-  const lobbyBonus = formatIndicator(mockDefinitions.scenario.lobbySupportBonusTenths);
+  const lobbyCost = formatRupiahTriliun(definitions.scenario.lobbyCostBillion);
+  const lobbyBonus = formatIndicator(definitions.scenario.lobbySupportBonusTenths);
+
+  // Bonus lobi yang sudah diantrekan ikut dihitung dalam perkiraan voting.
+  const lobbyBonuses = Object.fromEntries(
+    state.pendingCommands.flatMap((command) =>
+      command.type === 'LOBBY_FACTION'
+        ? [[command.factionId, definitions.scenario.lobbySupportBonusTenths] as const]
+        : [],
+    ),
+  );
+  const lobbiedIds = new Set(Object.keys(lobbyBonuses));
+  const queuedVotes = state.pendingCommands.flatMap((command) => {
+    if (command.type !== 'ENACT_POLICY') return [];
+    const policy = definitions.policies.find((item) => item.id === command.policyId);
+    return policy?.needsVote === true
+      ? [predictVote(state, command.policyId, definitions, lobbyBonuses)]
+      : [];
+  });
+
+  const lobby = (factionId: string, name: string) => {
+    const result = gameController.dispatch({
+      type: 'LOBBY_FACTION',
+      commandId: gameController.newCommandId(),
+      factionId,
+    });
+    if (result.ok) gameController.notify(copy.parliament.lobbied(name));
+  };
 
   return (
     <>
@@ -56,7 +82,7 @@ export default function ParliamentPage() {
               ariaLabel={copy.parliament.hemicycleAria}
               centerValue={formatInteger(totalSeats)}
               centerLabel={copy.common.seats}
-              groups={mockDefinitions.factions.map((faction) => ({
+              groups={definitions.factions.map((faction) => ({
                 id: faction.id,
                 label: faction.name,
                 seats: faction.seats,
@@ -119,6 +145,50 @@ export default function ParliamentPage() {
         </Card>
       </div>
 
+      <Card className="mt-5" data-testid="vote-preview">
+        <CardHeader>
+          <p className="institutional-label">{copy.parliament.threshold}</p>
+          <CardTitle className="mt-2">{copy.parliament.votePreviewTitle}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {queuedVotes.length === 0 && (
+            <p className="text-sm text-muted-foreground">{copy.parliament.votePreviewEmpty}</p>
+          )}
+          {queuedVotes.map((vote) => (
+            <div
+              key={vote.policyId}
+              className="border-t border-border/40 pt-3 first:border-t-0 first:pt-0"
+            >
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm">{policyName(vote.policyId)}</p>
+                <Badge variant={vote.passed ? 'success' : 'destructive'}>
+                  {copy.parliament.votePreviewRow(vote.yesSeats)}
+                </Badge>
+              </div>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {vote.byFaction.map((item) => {
+                  const faction = definitions.factions.find((f) => f.id === item.factionId);
+                  return (
+                    <span
+                      key={item.factionId}
+                      className={cn(
+                        'border px-1.5 py-0.5 text-[0.62rem]',
+                        item.vote === 'FOR'
+                          ? 'border-emerald-800/50 text-emerald-300/85'
+                          : 'border-maroon/50 text-red-300/80',
+                      )}
+                    >
+                      {faction?.shortName ?? item.factionId} ·{' '}
+                      {copy.parliament.scoreLabel(formatIndicator(item.scoreTenths))}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
       <section className="mt-8">
         <div className="mb-4 flex items-end justify-between gap-4">
           <h2 className="font-serif text-xl leading-none">{copy.parliament.kicker}</h2>
@@ -129,9 +199,12 @@ export default function ParliamentPage() {
 
         <div className="grid gap-3 xl:grid-cols-2">
           {factions.map(({ faction, supportTenths }) => {
-            const lobbied =
-              state.lobbyThisTurn.includes(faction.id) ||
-              mockSelections[`lobby:${faction.id}`] !== undefined;
+            const lobbied = lobbiedIds.has(faction.id) || state.lobbyThisTurn.includes(faction.id);
+            const blockedCode = previewCommand(state, {
+              type: 'LOBBY_FACTION',
+              commandId: PREVIEW_COMMAND_ID,
+              factionId: faction.id,
+            });
             const inCoalition = supportTenths >= COALITION_SUPPORT;
             return (
               <article
@@ -216,11 +289,10 @@ export default function ParliamentPage() {
                   </div>
                   <Button
                     size="sm"
-                    variant={lobbied ? 'outline' : 'default'}
-                    disabled={lobbied}
-                    onClick={() =>
-                      recordMockChoice(`lobby:${faction.id}`, faction.id, copy.parliament.lobbyMock)
-                    }
+                    variant={blockedCode !== null ? 'outline' : 'default'}
+                    disabled={blockedCode !== null}
+                    title={blockedCode !== null ? copy.commandErrors[blockedCode] : undefined}
+                    onClick={() => lobby(faction.id, faction.name)}
                   >
                     <IconVote className="h-3.5 w-3.5" />
                     {lobbied ? copy.parliament.lobbyDone : copy.parliament.lobby}

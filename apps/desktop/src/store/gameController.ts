@@ -173,6 +173,11 @@ export class GameController {
     return result.save.history;
   }
 
+  /** Umpan balik singkat untuk aksi yang berhasil. */
+  notify(message: string, tone: Toast['tone'] = 'success'): void {
+    this.toast(tone, message);
+  }
+
   dismissToast(): void {
     this.deps.store.setState({ toast: null });
   }

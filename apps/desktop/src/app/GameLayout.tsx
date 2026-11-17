@@ -1,14 +1,16 @@
-import type { ComponentType, SVGProps } from 'react';
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { useCallback, useEffect, useState, type ComponentType, type SVGProps } from 'react';
+import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
 
+import { contentHash, definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { mockContentHash, mockStartYear } from '@/features/mock/mockState';
 import { formatRupiahTriliun } from '@/format/formatters';
-import { useAppStore } from '@/store/useAppStore';
+import { gameController } from '@/store/controller';
+import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
+import { ConfirmDialog } from '@/ui/components/dialog';
 import {
   IconCabinet,
   IconDashboard,
@@ -67,15 +69,50 @@ function NavEntry({ item, pendingEvents }: { item: NavItem; pendingEvents: numbe
   );
 }
 
-export function GameLayout() {
-  const state = useAppStore((store) => store.gameState);
-  const feedback = useAppStore((store) => store.feedback);
-  const clearFeedback = useAppStore((store) => store.clearFeedback);
-  const notify = useAppStore((store) => store.notify);
+/** Urutan halaman untuk pintasan angka 1-6. */
+const SHORTCUT_ROUTES = [...MAIN_NAV, ...ARCHIVE_NAV].map((item) => item.to);
 
-  const year = campaignYear(state.turn, mockStartYear);
+function isTypingTarget(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
+  );
+}
+
+export function GameLayout() {
+  const state = useGameStore((store) => store.state);
+  const toast = useGameStore((store) => store.toast);
+  const uiStatus = useGameStore((store) => store.uiStatus);
+  const navigate = useNavigate();
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.ctrlKey || event.metaKey || event.altKey || isTypingTarget(event.target)) return;
+      if (document.querySelector('[role="dialog"]') !== null) return;
+      const index = Number.parseInt(event.key, 10) - 1;
+      const route = SHORTCUT_ROUTES[index];
+      if (route !== undefined) navigate(route);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [navigate]);
+
+  const closeConfirm = useCallback(() => setConfirmOpen(false), []);
+  const confirmEnd = useCallback(() => {
+    setConfirmOpen(false);
+    void gameController.endQuarter().then((result) => {
+      if (result.ok) navigate('/game/dashboard');
+    });
+  }, [navigate]);
+
+  if (state === null) return <Navigate to="/" replace />;
+
+  const year = campaignYear(state.turn, definitions.scenario.startYear);
   const quarter = campaignQuarter(state.turn);
-  const blocked = state.pendingEvents.length > 0;
+  const unanswered = state.pendingEvents.filter((event) => event.resolvedChoiceId === null).length;
+  const completed = state.status === 'completed';
+  const blocked = unanswered > 0 || completed || uiStatus === 'busy';
   const apSlots = Array.from({ length: state.actionPointsPerTurn }, (_, index) => index);
 
   return (
@@ -97,14 +134,14 @@ export function GameLayout() {
           <p className="institutional-label px-4">{copy.nav.sectionMain}</p>
           <div className="mt-3 space-y-1">
             {MAIN_NAV.map((item) => (
-              <NavEntry key={item.to} item={item} pendingEvents={state.pendingEvents.length} />
+              <NavEntry key={item.to} item={item} pendingEvents={unanswered} />
             ))}
           </div>
 
           <p className="institutional-label mt-8 px-4">{copy.nav.sectionArchive}</p>
           <div className="mt-3 space-y-1">
             {ARCHIVE_NAV.map((item) => (
-              <NavEntry key={item.to} item={item} pendingEvents={state.pendingEvents.length} />
+              <NavEntry key={item.to} item={item} pendingEvents={unanswered} />
             ))}
           </div>
         </nav>
@@ -127,13 +164,17 @@ export function GameLayout() {
             </Link>
           </div>
           <div className="mt-4 flex items-center justify-between gap-2 px-2">
-            <Badge variant="outline">{copy.game.mockBadge}</Badge>
+            {uiStatus === 'saveFailed' ? (
+              <Badge variant="destructive">{copy.game.saveFailed}</Badge>
+            ) : (
+              <Badge variant="outline">{copy.app.offline}</Badge>
+            )}
             <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
               {copy.app.version(APP_VERSION)}
             </span>
           </div>
           <p className="mt-3 px-2 text-[0.65rem] leading-relaxed text-muted-foreground/70">
-            {copy.app.stageNote}
+            {copy.app.stageNote} · {copy.game.shortcutHint}
           </p>
         </div>
       </aside>
@@ -191,15 +232,31 @@ export function GameLayout() {
                 </p>
               </div>
 
-              <Button
-                size="sm"
-                variant={blocked ? 'outline' : 'default'}
-                disabled={blocked}
-                title={blocked ? copy.game.endQuarterBlocked : copy.game.endQuarterHint}
-                onClick={() => notify(copy.game.endQuarterHint)}
-              >
-                {copy.game.endQuarter}
-              </Button>
+              {completed ? (
+                <Button size="sm" variant="outline" onClick={() => navigate('/game/dashboard')}>
+                  {copy.game.campaignCompleted}
+                </Button>
+              ) : (
+                <div className="flex flex-col items-end">
+                  <Button
+                    size="sm"
+                    variant={blocked ? 'outline' : 'default'}
+                    disabled={blocked}
+                    title={unanswered > 0 ? copy.game.endQuarterBlocked : copy.game.endQuarterHint}
+                    onClick={() => setConfirmOpen(true)}
+                  >
+                    {copy.game.endQuarter}
+                  </Button>
+                  {unanswered > 0 && (
+                    <Link
+                      to="/game/events"
+                      className="mt-1 max-w-[220px] text-right text-[0.62rem] leading-snug text-red-200/80 hover:text-red-100"
+                    >
+                      {copy.game.endQuarterBlocked}
+                    </Link>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </header>
@@ -214,20 +271,35 @@ export function GameLayout() {
           <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/60">
             <span>{copy.menu.footerNote}</span>
             <span>
-              {copy.settings.contentHash} · {mockContentHash.slice(0, 12)}
+              {copy.settings.contentHash} · {contentHash.slice(0, 12)}
             </span>
           </div>
         </footer>
       </div>
 
-      {feedback !== null && (
+      <ConfirmDialog
+        open={confirmOpen}
+        title={copy.game.endQuarterConfirmTitle}
+        confirmLabel={copy.game.endQuarterConfirm}
+        cancelLabel={copy.common.cancel}
+        onConfirm={confirmEnd}
+        onCancel={closeConfirm}
+      >
+        {copy.game.endQuarterConfirmBody(state.pendingCommands.length, state.actionPointsRemaining)}
+      </ConfirmDialog>
+
+      {toast !== null && (
         <div
-          role="status"
-          className="fixed bottom-6 right-6 z-50 max-w-sm border border-primary/40 bg-card/95 p-4 shadow-document backdrop-blur"
+          key={toast.id}
+          role={toast.tone === 'error' ? 'alert' : 'status'}
+          className={cn(
+            'fixed bottom-6 right-6 z-50 max-w-sm border bg-card/95 p-4 shadow-document backdrop-blur',
+            toast.tone === 'error' ? 'border-maroon/70' : 'border-primary/40',
+          )}
         >
-          <p className="text-sm leading-relaxed text-foreground">{feedback}</p>
+          <p className="text-sm leading-relaxed text-foreground">{toast.message}</p>
           <div className="mt-3 flex justify-end">
-            <Button size="sm" variant="ghost" onClick={clearFeedback}>
+            <Button size="sm" variant="ghost" onClick={() => gameController.dismissToast()}>
               {copy.common.close}
             </Button>
           </div>
