@@ -1,5 +1,61 @@
 # Progres REPUBLIKA
 
+## Tahap 4 — Sistem lengkap dan konten MVP
+
+Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-4-mvp` (bertumpuk di atas `feat/stage-3-vertical-slice`, PR #2).
+
+### Status
+
+**Sistem dan tooling 4.1–4.7 selesai dan terverifikasi lokal. Playtest dan pemeriksaan manual dialihkan ke pemilik sesuai permintaan.** Konten final belum ditulis (masih placeholder: 6 fraksi, 4 kebijakan, 2 event, 2 arketipe, 4 kuartal). Sistem berjalan dengan konten yang ada dan `content:check` memberi peringatan untuk kekurangannya. Tidak melanjutkan ke Tahap 5.
+
+| Bagian                       | Hasil                                                                                                                                                                                                                                                                      | Commit    |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| 4.1 Perbaikan playtest       | `PLAYTEST-SLICE.md` belum diisi → 5 usulan dicatat di `OPEN_QUESTIONS.md`, aturan tidak diubah.                                                                                                                                                                            | `f43085d` |
+| 4.2 Parlemen penuh           | Drift dukungan fraksi = reversi ke dasar + `factionApprovalInfluence` × (persetujuan − 50), default 0,05 (parameter opsional di `baseline.json`). Ruleset fixture → 3. UI: tag ideologi, ikon suka/tidak suka, tren dukungan. Property test kursi 100 dan dukungan 0..100. | `e543674` |
+| 4.3 Kabinet                  | Riwayat effectiveness per kementerian dari ledger; label "Dipengaruhi {Kementerian} ×N" di kartu kebijakan memakai fungsi engine (diuji sama persis).                                                                                                                      | `026931b` |
+| 4.4 Skala konten             | `content:check`: jumlah di bawah target MVP, kebijakan tanpa sisi negatif, event/kebijakan mustahil, flag tak berpasangan. Test rantai event via flag dan 12 kebijakan/15 event/20 kuartal. Filter, urutan, dan pencarian kebijakan.                                       | `3c18ea1` |
+| 4.5 Kampanye & laporan akhir | `CAMPAIGN_COMPLETED`; statistik avg/min/max; arketipe berprioritas + fallback; 5 keputusan paling berdampak (ternormalisasi); halaman Laporan Akhir (tanpa skor, warna netral); E2E 20 kuartal.                                                                            | `1d15e82` |
+| 4.6 Polish & aksesibilitas   | Master-detail kebijakan, daftar pintasan `?`, `/` cari, glosarium tooltip, ikon ↑↓ + teks, skeleton, kontras, audit axe.                                                                                                                                                   | `3f9bd64` |
+| 4.7 CLI simulasi             | `pnpm sim` dengan 5 bot murni/deterministik, laporan markdown.                                                                                                                                                                                                             | `5d0808c` |
+
+### Bukti verifikasi lokal
+
+| Perintah                      | Hasil                                                                                                                                                                                                                                           |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`, `pnpm typecheck` | Lulus (termasuk paket baru `tools/sim`).                                                                                                                                                                                                        |
+| `pnpm test`                   | 241 test dalam 26 file lulus.                                                                                                                                                                                                                   |
+| `pnpm test:coverage`          | `packages/simulation/src` lines 97,64%.                                                                                                                                                                                                         |
+| `pnpm content:check`          | Lulus tanpa error; 23 peringatan (placeholder, jumlah di bawah target, `POL-SOCIAL-PLACEHOLDER-001` tanpa sisi negatif).                                                                                                                        |
+| `pnpm test:e2e`               | 6 test lulus: shell, slice 4 kuartal, **kampanye 20 kuartal sampai Laporan Akhir**, dan **audit axe tanpa pelanggaran serius/kritis** di semua halaman. Build E2E memakai `vite build --mode e2e` (maxTurns 20); build rilis tidak terpengaruh. |
+| JS heap setelah 20 kuartal    | 12,7–18,2 MB di tiga run (`performance.memory` Chromium Playwright, angka terkuantisasi dan dipengaruhi GC). Target ≤ 30 MB.                                                                                                                    |
+| `pnpm build`                  | Installer NSIS **3,07 MiB** (3.218.916 byte). Entry JS 459,8 kB (gzip 142,1 kB).                                                                                                                                                                |
+| `pnpm sim`                    | Satu kampanye 20 kuartal ±17 ms; `pnpm sim` end-to-end ±1,9 dtk; output identik untuk seed + strategi sama.                                                                                                                                     |
+
+Hasil `pnpm sim --seed=abc --turns=20` dengan konten placeholder: `random`, `greedy-approval`, `welfare`, `no-op` → **Pemerintahan Seimbang**; `austerity` → **Teknokrat Fiskal Placeholder**. Arketipe kurang bervariasi karena konten baru punya 1 aturan + fallback.
+
+### Catatan untuk penulis konten (dari simulasi)
+
+- Dengan baseline placeholder, pertumbuhan stabil di atas 2,5% sehingga **pengangguran turun terus sampai 0%** pada kampanye 20 kuartal (rumus Okun tanpa batas bawah alami). Pertimbangkan `okunNeutralGrowthPct`/`growthTargetPct` atau efek kebijakan yang menaikkan pengangguran.
+- `POL-SOCIAL-PLACEHOLDER-001` tidak punya sisi negatif selain biaya kas → diperingatkan "terlalu dominan?".
+- `contentHash` konten placeholder berubah walau JSON tidak diubah, karena parameter baseline baru (`factionApprovalInfluence`) ikut di-hash dengan nilai default.
+
+### Tindakan pemilik (playtest dialihkan ke Anda)
+
+1. **Main sementara:** `pnpm dev` (atau installer dari `pnpm build`). Untuk 20 kuartal, ubah `maxTurns` di `content/scenario.json` menjadi 20; kampanye 4 kuartal juga sudah cukup untuk mencoba Laporan Akhir.
+2. Isi `docs/PLAYTEST-MVP.md` (template tersedia), termasuk RAM dari Task Manager setelah 20 kuartal.
+3. Jalankan `pnpm sim` untuk 5 strategi dan catat arketipenya.
+4. Tinjau peringatan `pnpm content:check`.
+5. Masih terbuka dari Tahap 3: naikkan `rulesetVersion` di `content/scenario.json` (sekarang 1; aturan engine sudah ruleset 3), tulis kalimat `contentReasons`, dan isi `PLAYTEST-SLICE.md`.
+6. Putuskan usulan di `OPEN_QUESTIONS.md` → Tahap 4.1 (catat yang disetujui di `DECISIONS.md`).
+
+### Gate akhir Tahap 4
+
+- [ ] Main 1 kampanye penuh 20 kuartal; catat momen bosan/berulang di `docs/PLAYTEST-MVP.md`.
+- [ ] `pnpm sim` dengan 5 strategi: apakah arketipenya berbeda-beda?
+- [x] `content:check` tanpa error (peringatan perlu ditinjau pemilik).
+
+---
+
 ## Tahap 3 — Vertical slice (4 kuartal bisa dimainkan)
 
 Tanggal: 17 November 2026, Windows 11 x64. Branch `feat/stage-3-vertical-slice`.
