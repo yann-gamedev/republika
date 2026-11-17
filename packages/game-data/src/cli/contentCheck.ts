@@ -59,7 +59,7 @@ function main(): void {
     console.log(`  Arketipe: ${definitions.archetypes.length}`);
     console.log(`contentHash: ${result.contentHash}`);
     console.log(
-      `Konten valid. ${result.warnings.length > 0 ? `${result.warnings.length} peringatan placeholder.` : 'Tidak ada peringatan.'}`,
+      `Konten valid. ${result.warnings.length > 0 ? `${result.warnings.length} peringatan untuk ditinjau.` : 'Tidak ada peringatan.'}`,
     );
   }
 

@@ -23,6 +23,7 @@ import {
   convertScenario,
 } from './convert.js';
 import { validateContent } from './crossValidate.js';
+import { qualityWarnings } from './quality.js';
 import { computeContentHash } from './hash.js';
 
 export interface ParseContentResult {
@@ -135,6 +136,6 @@ export function parseRawContent(raw: RawContentBundle): ParseContentResult {
     definitions: issues.length === 0 ? definitions : null,
     contentHash,
     issues,
-    warnings: crossValidation.warnings,
+    warnings: [...crossValidation.warnings, ...qualityWarnings(definitions)],
   };
 }

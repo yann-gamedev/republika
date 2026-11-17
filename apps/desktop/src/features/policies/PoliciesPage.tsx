@@ -1,4 +1,12 @@
-import { INDICATOR_DOMAINS, type PolicyDefinition } from '@republika/shared';
+import { useState } from 'react';
+
+import {
+  INDICATOR_DOMAINS,
+  POLICY_CATEGORIES,
+  type GameState,
+  type PolicyCategory,
+  type PolicyDefinition,
+} from '@republika/shared';
 import { evaluateRequirement, projectPolicy } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
@@ -22,6 +30,50 @@ const names: ContentNames = { factionName, ministryName, policyName };
 
 function categoryLabel(policy: PolicyDefinition): string {
   return copy.policies.categoryLabels[policy.category];
+}
+
+type SortKey = 'status' | 'cost' | 'category';
+type CategoryFilter = 'ALL' | PolicyCategory;
+
+/** Urutan status: diajukan, tersedia, aktif, jeda, terkunci. */
+function statusRank(state: GameState, policy: PolicyDefinition): number {
+  if (state.pendingCommands.some((c) => c.type === 'ENACT_POLICY' && c.policyId === policy.id))
+    return 0;
+  if (state.activePolicies.some((active) => active.policyId === policy.id)) return 2;
+  if ((state.policyCooldowns[policy.id] ?? 0) > 0) return 3;
+  const blocked = previewCommand(state, {
+    type: 'ENACT_POLICY',
+    commandId: PREVIEW_COMMAND_ID,
+    policyId: policy.id,
+  });
+  return blocked === null ? 1 : 4;
+}
+
+export function filterAndSortPolicies(
+  state: GameState,
+  policies: readonly PolicyDefinition[],
+  options: { readonly query: string; readonly category: CategoryFilter; readonly sort: SortKey },
+): PolicyDefinition[] {
+  const query = options.query.trim().toLocaleLowerCase('id-ID');
+  const filtered = policies.filter(
+    (policy) =>
+      (options.category === 'ALL' || policy.category === options.category) &&
+      (query.length === 0 ||
+        `${policy.name} ${policy.description}`.toLocaleLowerCase('id-ID').includes(query)),
+  );
+  const byId = (a: PolicyDefinition, b: PolicyDefinition) =>
+    a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+  const totalCost = (policy: PolicyDefinition) =>
+    policy.fiscalCostBillion + policy.perTurnCostBillion * policy.durationTurns;
+  return [...filtered].sort((a, b) => {
+    if (options.sort === 'cost') return totalCost(a) - totalCost(b) || byId(a, b);
+    if (options.sort === 'category') {
+      return (
+        POLICY_CATEGORIES.indexOf(a.category) - POLICY_CATEGORIES.indexOf(b.category) || byId(a, b)
+      );
+    }
+    return statusRank(state, a) - statusRank(state, b) || byId(a, b);
+  });
 }
 
 function InfluenceLine({ category }: { category: PolicyDefinition['category'] }) {
@@ -54,7 +106,10 @@ export default function PoliciesPage() {
     ),
   );
   const activeById = new Map(state.activePolicies.map((policy) => [policy.policyId, policy]));
-  const catalog = [...definitions.policies].sort((a, b) => (a.id < b.id ? -1 : 1));
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState<CategoryFilter>('ALL');
+  const [sort, setSort] = useState<SortKey>('status');
+  const catalog = filterAndSortPolicies(state, definitions.policies, { query, category, sort });
 
   const enact = (policy: PolicyDefinition) => {
     const result = gameController.dispatch({
@@ -94,6 +149,60 @@ export default function PoliciesPage() {
             {copy.dashboard.activeCount(state.activePolicies.length)}
           </span>
         </div>
+
+        <div
+          role="search"
+          className="mb-4 flex flex-wrap items-end gap-3 border border-border/50 bg-card/25 px-4 py-3"
+        >
+          <label className="flex min-w-[220px] flex-1 flex-col gap-1 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+            {copy.policies.searchLabel}
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={copy.policies.searchPlaceholder}
+              className="h-9 border border-border bg-background/60 px-3 text-sm normal-case tracking-normal text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </label>
+          <div role="group" aria-label={copy.policies.category} className="flex flex-wrap gap-1.5">
+            {(['ALL', ...POLICY_CATEGORIES] as const).map((value) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={category === value}
+                onClick={() => setCategory(value)}
+                className={cn(
+                  'h-9 border px-3 text-xs transition-colors',
+                  category === value
+                    ? 'border-primary/60 bg-primary/10 text-primary'
+                    : 'border-border/60 text-muted-foreground hover:text-foreground',
+                )}
+              >
+                {value === 'ALL'
+                  ? copy.policies.allCategories
+                  : copy.policies.categoryLabels[value]}
+              </button>
+            ))}
+          </div>
+          <label className="flex flex-col gap-1 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+            {copy.policies.sortLabel}
+            <select
+              value={sort}
+              onChange={(event) => setSort(event.target.value as SortKey)}
+              className="h-9 border border-border bg-background/60 px-2 text-sm normal-case tracking-normal text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <option value="status">{copy.policies.sortStatus}</option>
+              <option value="cost">{copy.policies.sortCost}</option>
+              <option value="category">{copy.policies.sortCategory}</option>
+            </select>
+          </label>
+        </div>
+
+        {catalog.length === 0 && (
+          <div className="border border-dashed border-border/60 px-5 py-8 text-center text-sm text-muted-foreground">
+            {copy.policies.noResults}
+          </div>
+        )}
 
         <div className="grid gap-3 xl:grid-cols-2">
           {catalog.map((policy) => {

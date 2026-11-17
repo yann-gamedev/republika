@@ -14,3 +14,4 @@ export { validateContent } from './crossValidate.js';
 export { canonicalStringify, computeContentHash } from './hash.js';
 export { ContentValidationError, loadGameDefinitions } from './loadGameDefinitions.js';
 export { parseRawContent, type ParseContentResult } from './parseContent.js';
+export { CONTENT_TARGETS, contradiction, isDownside, qualityWarnings } from './quality.js';
