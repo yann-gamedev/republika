@@ -1,6 +1,6 @@
 /** Kode error command yang stabil (dipakai UI dan test; jangan diganti nama). */
 export const COMMAND_ERROR_CODES = [
-  'GAME_COMPLETED',
+  'CAMPAIGN_COMPLETED',
   'DUPLICATE_COMMAND',
   'UNKNOWN_POLICY',
   'ALREADY_ACTIVE',
@@ -21,7 +21,7 @@ export type CommandErrorCode = (typeof COMMAND_ERROR_CODES)[number];
 
 /** Pesan Indonesia untuk tiap kode error, terpisah dari logika validasi. */
 export const COMMAND_ERROR_MESSAGES: Readonly<Record<CommandErrorCode, string>> = {
-  GAME_COMPLETED: 'Masa jabatan sudah berakhir. Tidak ada keputusan baru yang bisa diambil.',
+  CAMPAIGN_COMPLETED: 'Masa jabatan sudah berakhir. Tidak ada keputusan baru yang bisa diambil.',
   DUPLICATE_COMMAND: 'Perintah ini sudah diproses.',
   UNKNOWN_POLICY: 'Kebijakan tidak ditemukan.',
   ALREADY_ACTIVE: 'Kebijakan ini sedang berjalan.',

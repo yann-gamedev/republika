@@ -15,12 +15,14 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "vitest run",
-    "test:e2e": "pnpm build:web && playwright test",
+    "test:e2e": "pnpm --filter @republika/desktop build:web:e2e && playwright test",
     "content:check": "pnpm --filter @republika/game-data content:check",
     "format": "prettier --write .",
-    "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90"
+    "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90",
+    "sim": "tsx tools/sim/src/cli.ts"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@eslint/js": "^9.27.0",
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.21",
@@ -30,6 +32,7 @@
     "fast-check": "^3.23.2",
     "globals": "^16.1.0",
     "prettier": "^3.5.3",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
     "vitest": "^3.2.4"

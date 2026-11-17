@@ -58,7 +58,7 @@ function pushTreasury(
  * Langkah 8: dinamika dasar AGENT §5.9. Semua rumus indikator membaca nilai
  * pada awal langkah baseline (setelah efek kebijakan), lalu diterapkan
  * berurutan: inflasi, pengangguran, persetujuan, pertumbuhan, kas, penalti
- * kas negatif, dan reversi dukungan fraksi.
+ * kas negatif, dan drift dukungan fraksi.
  */
 export function applyBaseline(
   work: GameState,
@@ -129,19 +129,23 @@ export function applyBaseline(
     );
   }
 
+  // Drift dukungan fraksi: kembali ke dukungan dasar, ditambah pengaruh
+  // persetujuan publik (dibaca dari awal langkah baseline).
+  const approvalPull =
+    fromTenths(start.approval - params.approvalAnchorTenths) * params.factionApprovalInfluence;
   for (const faction of index.factionsSorted) {
     const state = work.factions.find((item) => item.factionId === faction.id);
     if (state === undefined) continue;
-    const delta = roundTenths(
-      fromTenths(faction.baseSupportTenths - state.supportTenths) * params.factionSupportReversion,
-    );
+    const reversion =
+      fromTenths(faction.baseSupportTenths - state.supportTenths) * params.factionSupportReversion;
+    const delta = roundTenths(reversion + approvalPull);
     if (delta === 0) continue;
     const before = state.supportTenths;
     state.supportTenths = before + delta;
     ledger.push({
       kind: 'FACTION',
       sourceType: 'BASELINE',
-      reasonCode: 'BASELINE_SUPPORT_REVERSION',
+      reasonCode: 'BASELINE_SUPPORT_DRIFT',
       target: faction.id,
       unit: 'tenths',
       before,

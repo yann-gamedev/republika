@@ -1,16 +1,16 @@
 {
   "seed": "fixture-4q",
   "stateHashes": [
-    "d60860060223f7975396305957692d06",
-    "92c2227ec21796bb56e5b83e9b441d9f",
-    "cd8272d2d6aec3ef1e20137bb961e065",
-    "a5c591db139a006d98338bf6b05ab21e"
+    "feaff797770bea54a497222ce78bd278",
+    "9e39312f0444479fa7aab733f7e73d3a",
+    "7bf2d6a25e41acdb28353c3cdf8044ed",
+    "ff0b39f6c7bb84fcc82e8c55724cc77f"
   ],
   "reportHashes": [
-    "e6a1426bb800cbf396ec463372da7780",
-    "e7fa516cdea15c3429652d975ee2e1d7",
-    "1f69ed081ff34ebe7c7ab5aa774eb138",
-    "656d3f6de053d744417a28ae1ec80170"
+    "e48714dfdd64bc3d1da627113ae34389",
+    "c13c83ad6e75bd01d974ac94a49ec9d0",
+    "d969701e6caaf77bc49e4c21844e71a7",
+    "db984c661d0ec61c99f8c5b4ae678f53"
   ],
   "finalIndicators": {
     "approval": 513,

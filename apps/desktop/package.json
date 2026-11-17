@@ -9,7 +9,8 @@
     "build": "tauri build",
     "build:web": "tsc --noEmit -p tsconfig.json && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build:web:e2e": "tsc --noEmit -p tsconfig.json && vite build --mode e2e"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.6",

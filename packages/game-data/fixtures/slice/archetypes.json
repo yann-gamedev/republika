@@ -1,5 +1,49 @@
 [
   {
+    "id": "ARC-FX-AUSTERITY",
+    "version": 1,
+    "priority": 40,
+    "name": "Penjaga Kas (fixture)",
+    "description": "Kas tetap tebal dan kesehatan fiskal terjaga di akhir masa jabatan.",
+    "conditions": [
+      { "stat": "final.fiscalHealth", "op": ">=", "value": 60 },
+      { "stat": "final.treasury", "op": ">=", "value": 20 }
+    ]
+  },
+  {
+    "id": "ARC-FX-POPULIST",
+    "version": 1,
+    "priority": 30,
+    "name": "Pemerintahan Rakyat (fixture)",
+    "description": "Persetujuan publik rata-rata tinggi dengan banyak kebijakan sosial.",
+    "conditions": [
+      { "stat": "avg.approval", "op": ">", "value": 55 },
+      { "stat": "count.SOCIAL", "op": ">=", "value": 1 }
+    ]
+  },
+  {
+    "id": "ARC-FX-NEGOTIATOR",
+    "version": 1,
+    "priority": 20,
+    "name": "Juru Runding (fixture)",
+    "description": "Banyak melobi parlemen dan jarang kalah voting.",
+    "conditions": [
+      { "stat": "count.lobbies", "op": ">=", "value": 3 },
+      { "stat": "count.votesFailed", "op": "<=", "value": 1 }
+    ]
+  },
+  {
+    "id": "ARC-FX-CRISIS",
+    "version": 1,
+    "priority": 10,
+    "name": "Masa Sulit (fixture)",
+    "description": "Pernah melewati titik rendah kepercayaan publik dengan defisit besar.",
+    "conditions": [
+      { "stat": "min.trust", "op": "<", "value": 45 },
+      { "stat": "total.deficit", "op": ">", "value": 10 }
+    ]
+  },
+  {
     "id": "ARC-FX-FALLBACK",
     "version": 1,
     "priority": 0,

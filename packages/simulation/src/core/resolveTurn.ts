@@ -13,6 +13,7 @@ import {
 } from '../policies/lifecycle.js';
 import { updateMinistryEffectiveness } from '../politics/ministries.js';
 import { applyLobbies, resolveVotes } from '../politics/voting.js';
+import { accumulateIndicatorStats, evaluateArchetype } from '../report/archetype.js';
 import { buildReport } from '../report/buildReport.js';
 import { cloneState } from './clone.js';
 import { validateEndQuarter } from './commands.js';
@@ -90,6 +91,7 @@ export function resolveTurn(
   // 12. Laporan, statistik, dan maju ke kuartal berikutnya.
   const treasuryDrop = snapshot.treasuryBillion - work.treasuryBillion;
   if (treasuryDrop > 0) work.campaignStats.totalDeficitBillion += treasuryDrop;
+  accumulateIndicatorStats(work);
   const report = buildReport({
     before: snapshot,
     after: work,
@@ -118,6 +120,8 @@ export function resolveTurn(
   if (isFinal) {
     // DECISION: turn tidak melewati maxTurns (skema); kampanye ditandai selesai.
     work.status = 'completed';
+    const archetype = evaluateArchetype(work, defs.archetypes);
+    if (archetype !== undefined) work.archetypeId = archetype.id;
   } else {
     work.turn = state.turn + 1;
   }

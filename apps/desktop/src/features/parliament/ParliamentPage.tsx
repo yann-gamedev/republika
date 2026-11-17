@@ -5,8 +5,14 @@ import { PageHeader } from '@/app/PageHeader';
 import { PREVIEW_COMMAND_ID, previewCommand, useGameState } from '@/app/useGame';
 import { definitions, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { formatIndicator, formatInteger, formatRupiahTriliun } from '@/format/formatters';
+import {
+  formatIndicator,
+  formatInteger,
+  formatRupiahTriliun,
+  formatSignedIndicator,
+} from '@/format/formatters';
 import { gameController } from '@/store/controller';
+import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
@@ -17,8 +23,26 @@ import { cn } from '@/ui/lib/utils';
 
 const COALITION_SUPPORT = 500;
 
+/** Tren dukungan kuartal lalu: ikon + teks, tidak hanya warna. */
+function TrendText({ delta }: { delta: number | null }) {
+  if (delta === null || delta === 0) return null;
+  return (
+    <span
+      className={cn('ml-1.5 text-[0.65rem]', delta > 0 ? 'text-emerald-300/85' : 'text-red-300/85')}
+    >
+      {delta > 0 ? '↑' : '↓'} {formatSignedIndicator(delta)}
+      <span className="sr-only"> {copy.parliament.trendNote}</span>
+    </span>
+  );
+}
+
 export default function ParliamentPage() {
   const state = useGameState();
+  const lastReport = useGameStore((store) => store.lastReport);
+  const trendOf = (factionId: string): number | null => {
+    const item = lastReport?.factionSupport.find((entry) => entry.factionId === factionId);
+    return item === undefined ? null : item.afterTenths - item.beforeTenths;
+  };
 
   const factions = definitions.factions.map((faction) => {
     const factionState = state.factions.find((item) => item.factionId === faction.id);
@@ -135,7 +159,11 @@ export default function ParliamentPage() {
                   </span>
                   <span className="numeric text-xs">{formatIndicator(item.supportTenths)}</span>
                 </div>
-                <Progress className="mt-1.5" value={item.supportTenths / 10} />
+                <Progress
+                  className="mt-1.5"
+                  value={item.supportTenths / 10}
+                  aria-label={copy.parliament.supportBar(item.faction.name)}
+                />
               </div>
             ))}
             <p className="border-t border-border/50 pt-3 text-[0.65rem] leading-relaxed text-muted-foreground">
@@ -226,6 +254,16 @@ export default function ParliamentPage() {
                       />
                       <h3 className="truncate font-serif text-lg leading-tight">{faction.name}</h3>
                     </div>
+                    <ul className="mt-2 flex flex-wrap gap-1" aria-label={copy.parliament.ideology}>
+                      {faction.ideologyTags.map((tag) => (
+                        <li
+                          key={tag}
+                          className="border border-border/60 px-1.5 py-0.5 text-[0.6rem] text-muted-foreground"
+                        >
+                          #{tag}
+                        </li>
+                      ))}
+                    </ul>
                     <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                       {faction.description}
                     </p>
@@ -248,7 +286,10 @@ export default function ParliamentPage() {
                     <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
                       {copy.parliament.support}
                     </p>
-                    <p className="numeric mt-0.5 text-sm">{formatIndicator(supportTenths)}</p>
+                    <p className="numeric mt-0.5 text-sm">
+                      {formatIndicator(supportTenths)}
+                      <TrendText delta={trendOf(faction.id)} />
+                    </p>
                   </div>
                   <div>
                     <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
@@ -280,8 +321,19 @@ export default function ParliamentPage() {
                                   : 'border-border/60 text-muted-foreground',
                             )}
                           >
+                            <span aria-hidden="true">
+                              {value > 0 ? '▲ ' : value < 0 ? '▼ ' : '• '}
+                            </span>
                             {copy.policies.categoryLabels[category]} {value > 0 ? '+' : ''}
                             {formatInteger(value)}
+                            <span className="sr-only">
+                              {' '}
+                              {value > 0
+                                ? copy.parliament.likes
+                                : value < 0
+                                  ? copy.parliament.dislikes
+                                  : copy.parliament.neutralPref}
+                            </span>
                           </span>
                         );
                       })}

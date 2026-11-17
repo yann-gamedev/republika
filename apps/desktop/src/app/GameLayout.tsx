@@ -85,10 +85,16 @@ export function GameLayout() {
   const uiStatus = useGameStore((store) => store.uiStatus);
   const navigate = useNavigate();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.metaKey || event.altKey || isTypingTarget(event.target)) return;
+      if (event.key === '?') {
+        event.preventDefault();
+        setHelpOpen((open) => !open);
+        return;
+      }
       if (document.querySelector('[role="dialog"]') !== null) return;
       const index = Number.parseInt(event.key, 10) - 1;
       const route = SHORTCUT_ROUTES[index];
@@ -98,11 +104,21 @@ export function GameLayout() {
     return () => window.removeEventListener('keydown', onKey);
   }, [navigate]);
 
+  // Toast sukses/info tertutup sendiri (timer sekali jalan); toast error menunggu pengguna.
+  useEffect(() => {
+    if (toast === null || toast.tone === 'error') return undefined;
+    const timer = window.setTimeout(() => gameController.dismissToast(), 6000);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+
   const closeConfirm = useCallback(() => setConfirmOpen(false), []);
+  const closeHelp = useCallback(() => setHelpOpen(false), []);
   const confirmEnd = useCallback(() => {
     setConfirmOpen(false);
     void gameController.endQuarter().then((result) => {
-      if (result.ok) navigate('/game/report');
+      if (!result.ok) return;
+      const finished = gameController.state?.status === 'completed';
+      navigate(finished ? '/game/final' : '/game/report');
     });
   }, [navigate]);
 
@@ -233,7 +249,7 @@ export function GameLayout() {
               </div>
 
               {completed ? (
-                <Button size="sm" variant="outline" onClick={() => navigate('/game/report')}>
+                <Button size="sm" variant="outline" onClick={() => navigate('/game/final')}>
                   {copy.game.campaignCompleted}
                 </Button>
               ) : (
@@ -262,13 +278,13 @@ export function GameLayout() {
         </header>
 
         <main className="px-8 pb-16 pt-8">
-          <div className="mx-auto max-w-[1180px]">
+          <div className="mx-auto max-w-[1180px] 2xl:max-w-[1480px]">
             <Outlet />
           </div>
         </main>
 
         <footer className="border-t border-border/40 px-8 py-5">
-          <div className="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/60">
+          <div className="mx-auto flex max-w-[1180px] flex-wrap 2xl:max-w-[1480px] items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/60">
             <span>{copy.menu.footerNote}</span>
             <span>
               {copy.settings.contentHash} · {contentHash.slice(0, 12)}
@@ -276,6 +292,27 @@ export function GameLayout() {
           </div>
         </footer>
       </div>
+
+      <ConfirmDialog
+        open={helpOpen}
+        title={copy.shortcuts.title}
+        confirmLabel={copy.common.close}
+        onConfirm={closeHelp}
+        onCancel={closeHelp}
+      >
+        <dl className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-4 gap-y-2">
+          {copy.shortcuts.items.map(([key, description]) => (
+            <div key={key} className="contents">
+              <dt>
+                <kbd className="border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-xs text-foreground">
+                  {key}
+                </kbd>
+              </dt>
+              <dd>{description}</dd>
+            </div>
+          ))}
+        </dl>
+      </ConfirmDialog>
 
       <ConfirmDialog
         open={confirmOpen}

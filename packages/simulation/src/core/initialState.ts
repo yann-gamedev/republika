@@ -4,10 +4,24 @@ import {
   presidentNameSchema,
   type GameDefinitions,
   type GameState,
+  type Indicators,
   type ScenarioDefinition,
 } from '@republika/shared';
 
 import { sortById } from './order.js';
+
+function zeroIndicators(): Indicators {
+  return {
+    approval: 0,
+    stability: 0,
+    fiscalHealth: 0,
+    growthPct: 0,
+    inflationPct: 0,
+    unemploymentPct: 0,
+    welfare: 0,
+    trust: 0,
+  };
+}
 
 export interface InaugurationInput {
   readonly presidentName: string;
@@ -71,6 +85,10 @@ export function createInitialState(
       eventsResolved: 0,
       totalDeficitBillion: 0,
       totalPolicySpendingBillion: 0,
+      quartersPlayed: 0,
+      indicatorSums: zeroIndicators(),
+      indicatorMin: { ...scenario.initialIndicators },
+      indicatorMax: { ...scenario.initialIndicators },
     },
   };
 }

@@ -230,9 +230,9 @@ describe('baseline dan kementerian', () => {
       factions: newState().factions.map((faction) => ({ ...faction, supportTenths: 650 })),
     };
     const { ledger } = resolveOk(state);
-    const reversion = ledger.filter((entry) => entry.reasonCode === 'BASELINE_SUPPORT_REVERSION');
-    // Teknokrat dasar 55: (55 − 65) × 0,1 = −1,0
-    expect(reversion[0]).toMatchObject({ target: 'FAC-FX-01', delta: -10 });
+    const drift = ledger.filter((entry) => entry.reasonCode === 'BASELINE_SUPPORT_DRIFT');
+    // Teknokrat dasar 55: (55 − 65) × 0,1 = −1,0; persetujuan 58 → +0,05 × 8 = +0,4 → −0,6
+    expect(drift[0]).toMatchObject({ target: 'FAC-FX-01', delta: -6 });
   });
 
   it('effectiveness kementerian naik +1 per kebijakan sedomain yang berjalan', () => {

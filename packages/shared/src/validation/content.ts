@@ -348,6 +348,13 @@ export const baselineJsonSchema = z.object({
   baseSpendingTrillionPerTurn: nonNegativeTrillionSchema,
   negativeTreasuryFiscalHealthPenalty: decimalNumberSchema(0, 20, 3, 'Penalti kas negatif'),
   factionSupportReversion: decimalNumberSchema(0, 1, 3, 'Reversi dukungan fraksi'),
+  /**
+   * Pengaruh persetujuan publik terhadap dukungan semua fraksi per kuartal:
+   * Δ dukungan += pengaruh × (persetujuan − jangkar). Opsional; default 0,05.
+   */
+  factionApprovalInfluence: decimalNumberSchema(0, 1, 3, 'Pengaruh persetujuan ke fraksi').default(
+    0.05,
+  ),
 });
 
 export type BaselineJson = z.infer<typeof baselineJsonSchema>;
@@ -377,6 +384,7 @@ export interface BaselineParams {
   readonly baseSpendingBillion: number;
   readonly negativeTreasuryFiscalHealthPenaltyTenths: number;
   readonly factionSupportReversion: number;
+  readonly factionApprovalInfluence: number;
 }
 
 export interface PolicyDefinition {

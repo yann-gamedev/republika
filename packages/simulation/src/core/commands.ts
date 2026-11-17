@@ -51,7 +51,7 @@ export function conflictsWith(index: DefinitionIndex, policyId: string, otherId:
  * yang ditemukan, atau `null` bila boleh dilanjutkan.
  */
 function commonCheck(state: GameState, commandId: string): CommandErrorCode | null {
-  if (state.status === 'completed') return 'GAME_COMPLETED';
+  if (state.status === 'completed') return 'CAMPAIGN_COMPLETED';
   if (state.commandIdsThisTurn.includes(commandId)) return 'DUPLICATE_COMMAND';
   return null;
 }

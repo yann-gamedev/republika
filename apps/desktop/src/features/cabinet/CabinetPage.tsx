@@ -1,17 +1,55 @@
+import { useEffect, useState } from 'react';
+
+import type { LedgerEntry } from '@republika/shared';
 import { ministryMultiplier } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
 import { useGameState } from '@/app/useGame';
 import { definitions, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { formatDecimal, formatInteger } from '@/format/formatters';
+import { reasonText } from '@/features/report/reasonText';
+import { formatDecimal, formatInteger, formatSignedInteger } from '@/format/formatters';
+import { gameController } from '@/store/controller';
 import { Badge } from '@/ui/components/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { Progress } from '@/ui/components/progress';
+import { Term } from '@/ui/components/term';
 import { IconCabinet } from '@/ui/icons';
+
+const HISTORY_LIMIT = 6;
+
+/** Perubahan effectiveness per kementerian dari ledger history (dimuat saat halaman dibuka). */
+function useMinistryHistory(turn: number): ReadonlyMap<string, readonly LedgerEntry[]> | null {
+  const [history, setHistory] = useState<ReadonlyMap<string, readonly LedgerEntry[]> | null>(null);
+  useEffect(() => {
+    let alive = true;
+    void gameController.loadHistory().then((loaded) => {
+      if (!alive) return;
+      const byMinistry = new Map<string, LedgerEntry[]>();
+      for (const report of loaded.reports) {
+        for (const entry of report.ledger) {
+          if (
+            entry.kind !== 'MINISTRY' ||
+            entry.target === undefined ||
+            entry.delta === undefined
+          ) {
+            continue;
+          }
+          byMinistry.set(entry.target, [...(byMinistry.get(entry.target) ?? []), entry]);
+        }
+      }
+      setHistory(byMinistry);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [turn]);
+  return history;
+}
 
 export default function CabinetPage() {
   const state = useGameState();
+  const history = useMinistryHistory(state.turn);
 
   const averageEffectiveness =
     state.ministries.length === 0
@@ -31,7 +69,7 @@ export default function CabinetPage() {
       <div className="mb-6 flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-border/50 py-4">
         <span className="flex items-center gap-2 text-xs text-muted-foreground">
           <IconCabinet className="h-4 w-4 text-primary/70" />
-          {copy.cabinet.effectiveness}
+          <Term explanation={copy.glossary.effectiveness}>{copy.cabinet.effectiveness}</Term>
         </span>
         <span className="numeric font-serif text-2xl leading-none">
           {formatInteger(averageEffectiveness)}
@@ -81,7 +119,11 @@ export default function CabinetPage() {
                     {copy.cabinet.multiplierValue(formatDecimal(multiplier))}
                   </span>
                 </div>
-                <Progress className="mt-2" value={ministryState.effectiveness} />
+                <Progress
+                  className="mt-2"
+                  value={ministryState.effectiveness}
+                  aria-label={`${definition.name} · ${copy.common.effectiveness}`}
+                />
 
                 <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-border/40 pt-4">
                   <div>
@@ -126,6 +168,37 @@ export default function CabinetPage() {
                           </span>
                         </li>
                       ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="mt-4 border-t border-border/40 pt-4">
+                  <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
+                    {copy.cabinet.historyTitle}
+                  </p>
+                  {history === null ? (
+                    <div className="mt-2 h-10 animate-pulse bg-secondary/30 motion-reduce:animate-none" />
+                  ) : (history.get(definition.id) ?? []).length === 0 ? (
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {copy.cabinet.historyEmpty}
+                    </p>
+                  ) : (
+                    <ul className="mt-2 space-y-1 text-xs">
+                      {(history.get(definition.id) ?? [])
+                        .slice(-HISTORY_LIMIT)
+                        .reverse()
+                        .map((entry) => (
+                          <li key={entry.id} className="flex justify-between gap-3">
+                            <span className="text-muted-foreground">
+                              {copy.cabinet.historyTurn(entry.turn)} ·{' '}
+                              {reasonText(entry.reasonCode, entry.sourceId)}
+                            </span>
+                            <span className="numeric">
+                              {formatSignedInteger(entry.delta ?? 0)} →{' '}
+                              {formatInteger(entry.after ?? 0)}
+                            </span>
+                          </li>
+                        ))}
                     </ul>
                   )}
                 </div>

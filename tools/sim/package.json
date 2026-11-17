@@ -3,6 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "CLI simulasi (diisi pada Tahap 2).",
-  "scripts": {}
+  "description": "CLI simulasi kampanye dengan bot untuk penulis konten.",
+  "scripts": {
+    "sim": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@republika/game-data": "workspace:*",
+    "@republika/shared": "workspace:*",
+    "@republika/simulation": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4"
+  }
 }

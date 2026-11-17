@@ -1,5 +1,13 @@
 import { INDICATOR_DOMAINS, type GameState, type IndicatorKey } from '@republika/shared';
-import { applyCommand, type CommandErrorCode, type PlayerCommand } from '@republika/simulation';
+import {
+  applyCommand,
+  domainEffectiveness,
+  indexDefinitions,
+  ministryMultiplier,
+  type CommandErrorCode,
+  type PlayerCommand,
+} from '@republika/simulation';
+import type { PolicyCategory } from '@republika/shared';
 
 import { definitions } from '@/content/gameContent';
 import { formatIndicator, formatPercentTenths } from '@/format/formatters';
@@ -37,4 +45,20 @@ export function isFavourable(key: IndicatorKey, delta: number): boolean {
   if (delta === 0) return false;
   if (key === 'inflationPct' || key === 'unemploymentPct') return delta < 0;
   return delta > 0;
+}
+
+/**
+ * Kementerian yang memengaruhi kategori kebijakan beserta pengalinya. Nilai
+ * diambil dari fungsi engine (`domainEffectiveness`, `ministryMultiplier`),
+ * bukan disalin, sehingga selalu sama dengan perhitungan resolusi.
+ */
+export function ministryInfluence(
+  state: GameState,
+  category: PolicyCategory,
+): { readonly name: string; readonly multiplier: number } | null {
+  const index = indexDefinitions(definitions);
+  const ministry = index.ministryByCategory.get(category);
+  const effectiveness = domainEffectiveness(state, index, category);
+  if (ministry === undefined || effectiveness === null) return null;
+  return { name: ministry.name, multiplier: ministryMultiplier(effectiveness) };
 }

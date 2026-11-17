@@ -96,6 +96,18 @@ export function buildReport(input: ReportInput): TurnReport {
     treasuryDeltaBillion: after.treasuryBillion - before.treasuryBillion,
     indicatorDeltas,
     topCauses: causes,
+    factionSupport: after.factions.map((faction) => ({
+      factionId: faction.factionId,
+      beforeTenths: Math.max(
+        0,
+        Math.min(
+          1000,
+          before.factions.find((item) => item.factionId === faction.factionId)?.supportTenths ??
+            faction.supportTenths,
+        ),
+      ),
+      afterTenths: faction.supportTenths,
+    })),
     policiesPassed: [...input.policiesPassed],
     policiesFailed: [...input.policiesFailed],
     ledger: [...input.ledger],

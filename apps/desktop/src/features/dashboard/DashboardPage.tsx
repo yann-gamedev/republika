@@ -22,6 +22,7 @@ import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { Progress } from '@/ui/components/progress';
+import { Term, deltaArrow } from '@/ui/components/term';
 import { Hemicycle } from '@/ui/charts/Hemicycle';
 import { IconChevronRight, IconCoins } from '@/ui/icons';
 import { cn } from '@/ui/lib/utils';
@@ -118,7 +119,7 @@ export default function DashboardPage() {
                   aria-hidden="true"
                 />
                 <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-                  {INDICATOR_DOMAINS[key].shortLabel}
+                  <Term explanation={copy.glossary[key]}>{INDICATOR_DOMAINS[key].shortLabel}</Term>
                 </p>
                 <p className="numeric mt-3 font-serif text-[1.9rem] leading-none text-foreground">
                   {displayIndicator(key, state.indicators[key])}
@@ -135,7 +136,7 @@ export default function DashboardPage() {
                 >
                   {delta === 0
                     ? copy.dashboard.deltaFlat
-                    : copy.dashboard.deltaFromLast(formatSignedIndicator(delta))}
+                    : copy.dashboard.deltaFromLast(deltaArrow(delta), formatSignedIndicator(delta))}
                 </p>
               </div>
             );
@@ -214,7 +215,11 @@ export default function DashboardPage() {
                           )}
                         </span>
                       </div>
-                      <Progress className="mt-2" value={ministryState.effectiveness} />
+                      <Progress
+                        className="mt-2"
+                        value={ministryState.effectiveness}
+                        aria-label={`${definition.name} · ${copy.common.effectiveness}`}
+                      />
                       <p className="mt-1.5 text-[0.65rem] text-muted-foreground">
                         {copy.dashboard.ministryPolicyCount(activeCount)}
                       </p>

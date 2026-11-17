@@ -1,4 +1,4 @@
-# Aturan Simulasi — REPUBLIKA (ruleset 2)
+# Aturan Simulasi — REPUBLIKA (ruleset 3)
 
 Dokumen ini menjelaskan cara engine menghitung satu kuartal, ditulis untuk penulis konten. Anda tidak perlu membaca kode untuk memperkirakan efek sebuah kebijakan. Acuan normatif tetap `AGENT.md` §5; bila ada beda, `AGENT.md` yang menang dan dokumen ini wajib diperbaiki.
 
@@ -131,15 +131,17 @@ Kedua pengali membaca keadaan **di awal kuartal** (sebelum langkah apa pun), buk
 
 Parameter di `baseline.json`. Semua rumus memakai nilai setelah efek kebijakan (awal langkah 8), dihitung bersamaan, lalu dibulatkan ke 1 desimal.
 
-| Yang berubah     | Rumus                                                        | Arti                                             |
-| ---------------- | ------------------------------------------------------------ | ------------------------------------------------ |
-| Inflasi          | `(target − inflasi) × 0,25`                                  | Kembali 25% menuju 3,0%                          |
-| Pengangguran     | `−0,15 × (pertumbuhan − 2,5)`                                | Pertumbuhan di atas 2,5% menurunkan pengangguran |
-| Persetujuan      | `(50 − persetujuan) × 0,1`                                   | Kembali 10% menuju 50                            |
-| Pertumbuhan      | `(4,0 − pertumbuhan) × 0,2`                                  | Kembali 20% menuju 4,0%                          |
-| Kas              | `+ pendapatan − belanja − biaya per kuartal kebijakan aktif` |                                                  |
-| Kesehatan Fiskal | `−3,0` bila kas < 0 setelah langkah di atas                  | Penalti per kuartal                              |
-| Dukungan fraksi  | `(dukungan dasar − dukungan) × 0,1`                          | Kembali 10% menuju `baseSupport`                 |
+| Yang berubah     | Rumus                                                           | Arti                                                                                       |
+| ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Inflasi          | `(target − inflasi) × 0,25`                                     | Kembali 25% menuju 3,0%                                                                    |
+| Pengangguran     | `−0,15 × (pertumbuhan − 2,5)`                                   | Pertumbuhan di atas 2,5% menurunkan pengangguran                                           |
+| Persetujuan      | `(50 − persetujuan) × 0,1`                                      | Kembali 10% menuju 50                                                                      |
+| Pertumbuhan      | `(4,0 − pertumbuhan) × 0,2`                                     | Kembali 20% menuju 4,0%                                                                    |
+| Kas              | `+ pendapatan − belanja − biaya per kuartal kebijakan aktif`    |                                                                                            |
+| Kesehatan Fiskal | `−3,0` bila kas < 0 setelah langkah di atas                     | Penalti per kuartal                                                                        |
+| Dukungan fraksi  | `(dukungan dasar − dukungan) × 0,1 + 0,05 × (persetujuan − 50)` | Kembali 10% menuju `baseSupport`, lalu semua fraksi ikut bergeser mengikuti suasana publik |
+
+**Drift dukungan fraksi (ruleset 3).** Pengaruh persetujuan diatur `factionApprovalInfluence` di `baseline.json` (opsional, default 0,05). Persetujuan yang dipakai adalah nilai di awal langkah baseline. Contoh: dukungan 65, dasar 55, persetujuan 58 → (55 − 65) × 0,1 + 0,05 × 8 = −1,0 + 0,4 = **−0,6**. Persetujuan publik 70 menambah +1,0 dukungan per kuartal ke **semua** fraksi; persetujuan 40 mengurangi −0,5.
 
 Contoh pada keadaan awal fixture (persetujuan 58, inflasi 3,4, pertumbuhan 4,8, pengangguran 5,6): inflasi −0,1; pengangguran −0,345 → −0,3; persetujuan −0,8; pertumbuhan −0,16 → −0,2.
 
@@ -191,6 +193,29 @@ Keadaan awal: Kementerian Energi efektivitas 55 → pengali 0,92. Inflasi 3,4 (<
 - Laporan kuartal berisi perubahan tiap indikator, **3 penyebab terbesar** per indikator (perubahan dengan `reasonCode` sama dari sumber yang sama dijumlahkan), kebijakan lolos/gagal, hasil voting, dan perubahan kas.
 - Nilai akhir selalu bisa direkonstruksi: nilai awal + jumlah semua perubahan di ledger (termasuk `CLAMPED`). Ini diuji otomatis.
 
-## 13. Determinisme
+## 13. Akhir kampanye, statistik, dan arketipe
+
+- Kampanye selesai setelah kuartal `maxTurns` diresolusi. Semua aksi lalu ditolak dengan `CAMPAIGN_COMPLETED`, dan permainan menuju **Laporan Akhir Masa Jabatan**. Autosave tetap menyimpan kampanye yang selesai, jadi laporannya bisa dibuka lagi lewat **Lanjutkan**.
+- Setiap akhir kuartal, nilai akhir 8 indikator dicatat ke statistik kampanye: jumlah (untuk rata-rata), minimum, dan maksimum. Minimum/maksimum juga memperhitungkan nilai awal kampanye.
+- **Arketipe** dipilih dari `archetypes.json`: diurut menurut `priority` (besar dulu, lalu ID). Arketipe pertama yang **semua** syaratnya terpenuhi dipakai. Arketipe tanpa syarat ("Pemerintahan Seimbang") menjadi cadangan.
+- Statistik yang boleh dipakai di `conditions[].stat` (satuan tampilan):
+
+| Statistik                                                                                   | Arti                                           |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `final.<indikator>`                                                                         | Nilai di akhir kampanye                        |
+| `avg.<indikator>`                                                                           | Rata-rata nilai akhir tiap kuartal             |
+| `min.<indikator>`, `max.<indikator>`                                                        | Nilai terendah/tertinggi (termasuk nilai awal) |
+| `final.treasury`                                                                            | Kas akhir (triliun)                            |
+| `count.policiesEnacted`, `count.FISCAL`, `count.SOCIAL`, `count.ENERGY`, `count.GOVERNANCE` | Jumlah kebijakan yang berlaku                  |
+| `count.votesHeld`, `count.votesPassed`, `count.votesFailed`                                 | Voting                                         |
+| `count.lobbies`, `count.eventsResolved`                                                     | Lobi dan peristiwa dijawab                     |
+| `total.deficit`                                                                             | Jumlah penurunan kas per kuartal (triliun)     |
+| `total.policySpending`                                                                      | Biaya awal + rutin + lobi (triliun)            |
+
+`<indikator>`: `approval`, `stability`, `fiscalHealth`, `growthPct`, `inflationPct`, `unemploymentPct`, `welfare`, `trust`. Nama lain tidak dikenal: aturannya tidak pernah cocok dan `content:check` memberi peringatan `ARCHETYPE_UNKNOWN_STAT`.
+
+- **Lima keputusan paling berdampak**: semua perubahan indikator dari kebijakan dan peristiwa dijumlah per sumber. Setiap |perubahan| dibagi rentang indikatornya (mis. 100 untuk persetujuan, 55 untuk inflasi) agar persen dan indeks setara. Laporan akhir tidak memberi skor tunggal maupun label baik/buruk.
+
+## 14. Determinisme
 
 Keadaan + aksi + seed + konten yang sama selalu menghasilkan hasil yang sama persis. Test menyimpan sidik jari (hash) hasil 4 kuartal skrip tetap di `packages/simulation/test/__fixtures__/slice-4q.json`. Mengubah satu angka di fixture konten membuat test itu gagal; itu tanda fixture bekerja. Fixture hanya diperbarui bila aturan sengaja diubah, dan `rulesetVersion` dinaikkan.

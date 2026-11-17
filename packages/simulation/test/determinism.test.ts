@@ -95,6 +95,11 @@ describe('property: 4 kuartal acak', () => {
             expect(next.turn).toBeGreaterThanOrEqual(previousTurn);
             if (position < 3) expect(next.turn).toBe(previousTurn + 1);
             previousTurn = next.turn;
+            for (const faction of next.factions) {
+              expect(faction.supportTenths).toBeGreaterThanOrEqual(0);
+              expect(faction.supportTenths).toBeLessThanOrEqual(1000);
+            }
+            expect(defs.factions.reduce((sum, faction) => sum + faction.seats, 0)).toBe(100);
             for (const vote of result.report.votes) {
               expect(vote.seatsFor + vote.seatsAgainst).toBe(100);
             }

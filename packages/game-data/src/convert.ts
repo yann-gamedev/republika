@@ -246,6 +246,7 @@ export function convertBaseline(baseline: BaselineJson): BaselineParams {
       baseline.negativeTreasuryFiscalHealthPenalty,
     ),
     factionSupportReversion: baseline.factionSupportReversion,
+    factionApprovalInfluence: baseline.factionApprovalInfluence,
   };
 }
 
