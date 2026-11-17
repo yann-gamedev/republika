@@ -65,6 +65,9 @@ importers:
       '@republika/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@republika/simulation':
+        specifier: workspace:*
+        version: link:../../packages/simulation
       '@tauri-apps/api':
         specifier: ^2.5.0
         version: 2.12.5
