@@ -318,6 +318,10 @@ export const turnReportSchema = z.object({
   indicatorDeltas: indicatorDeltasSchema,
   /** Maksimal 3 penyebab terbesar (|delta|) per indikator dari ledger. */
   topCauses: indicatorCausesSchema,
+  /** Dukungan tiap fraksi sebelum/sesudah kuartal (untuk tren di UI). */
+  factionSupport: z.array(
+    z.object({ factionId: idSchema, beforeTenths: supportTenths, afterTenths: supportTenths }),
+  ),
   policiesPassed: z.array(idSchema),
   policiesFailed: z.array(idSchema),
   ledger: z.array(ledgerEntrySchema),

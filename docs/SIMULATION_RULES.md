@@ -1,4 +1,4 @@
-# Aturan Simulasi — REPUBLIKA (ruleset 2)
+# Aturan Simulasi — REPUBLIKA (ruleset 3)
 
 Dokumen ini menjelaskan cara engine menghitung satu kuartal, ditulis untuk penulis konten. Anda tidak perlu membaca kode untuk memperkirakan efek sebuah kebijakan. Acuan normatif tetap `AGENT.md` §5; bila ada beda, `AGENT.md` yang menang dan dokumen ini wajib diperbaiki.
 
@@ -131,15 +131,17 @@ Kedua pengali membaca keadaan **di awal kuartal** (sebelum langkah apa pun), buk
 
 Parameter di `baseline.json`. Semua rumus memakai nilai setelah efek kebijakan (awal langkah 8), dihitung bersamaan, lalu dibulatkan ke 1 desimal.
 
-| Yang berubah     | Rumus                                                        | Arti                                             |
-| ---------------- | ------------------------------------------------------------ | ------------------------------------------------ |
-| Inflasi          | `(target − inflasi) × 0,25`                                  | Kembali 25% menuju 3,0%                          |
-| Pengangguran     | `−0,15 × (pertumbuhan − 2,5)`                                | Pertumbuhan di atas 2,5% menurunkan pengangguran |
-| Persetujuan      | `(50 − persetujuan) × 0,1`                                   | Kembali 10% menuju 50                            |
-| Pertumbuhan      | `(4,0 − pertumbuhan) × 0,2`                                  | Kembali 20% menuju 4,0%                          |
-| Kas              | `+ pendapatan − belanja − biaya per kuartal kebijakan aktif` |                                                  |
-| Kesehatan Fiskal | `−3,0` bila kas < 0 setelah langkah di atas                  | Penalti per kuartal                              |
-| Dukungan fraksi  | `(dukungan dasar − dukungan) × 0,1`                          | Kembali 10% menuju `baseSupport`                 |
+| Yang berubah     | Rumus                                                           | Arti                                                                                       |
+| ---------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Inflasi          | `(target − inflasi) × 0,25`                                     | Kembali 25% menuju 3,0%                                                                    |
+| Pengangguran     | `−0,15 × (pertumbuhan − 2,5)`                                   | Pertumbuhan di atas 2,5% menurunkan pengangguran                                           |
+| Persetujuan      | `(50 − persetujuan) × 0,1`                                      | Kembali 10% menuju 50                                                                      |
+| Pertumbuhan      | `(4,0 − pertumbuhan) × 0,2`                                     | Kembali 20% menuju 4,0%                                                                    |
+| Kas              | `+ pendapatan − belanja − biaya per kuartal kebijakan aktif`    |                                                                                            |
+| Kesehatan Fiskal | `−3,0` bila kas < 0 setelah langkah di atas                     | Penalti per kuartal                                                                        |
+| Dukungan fraksi  | `(dukungan dasar − dukungan) × 0,1 + 0,05 × (persetujuan − 50)` | Kembali 10% menuju `baseSupport`, lalu semua fraksi ikut bergeser mengikuti suasana publik |
+
+**Drift dukungan fraksi (ruleset 3).** Pengaruh persetujuan diatur `factionApprovalInfluence` di `baseline.json` (opsional, default 0,05). Persetujuan yang dipakai adalah nilai di awal langkah baseline. Contoh: dukungan 65, dasar 55, persetujuan 58 → (55 − 65) × 0,1 + 0,05 × 8 = −1,0 + 0,4 = **−0,6**. Persetujuan publik 70 menambah +1,0 dukungan per kuartal ke **semua** fraksi; persetujuan 40 mengurangi −0,5.
 
 Contoh pada keadaan awal fixture (persetujuan 58, inflasi 3,4, pertumbuhan 4,8, pengangguran 5,6): inflasi −0,1; pengangguran −0,345 → −0,3; persetujuan −0,8; pertumbuhan −0,16 → −0,2.
 

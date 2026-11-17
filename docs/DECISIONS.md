@@ -56,3 +56,11 @@ Keputusan aturan yang tidak dirinci `AGENT.md` §5. Semua dipilih sebagai opsi p
 | Kalimat laporan            | `copy.engineReasons` untuk kode engine; kode konten memakai `copy.contentReasons` (diisi pemilik) dengan fallback "Dampak {nama sumber}".                                                      |
 | Tombol nonaktif            | Alasan diambil dari uji coba `applyCommand` (tanpa mengubah state), jadi selalu sama dengan aturan engine.                                                                                     |
 | Nama menteri               | Nama menteri dari mock Tahap 1 dihapus karena bukan bagian konten; kartu kementerian menampilkan bidangnya.                                                                                    |
+
+## Tahap 4 — Sistem lengkap
+
+| Keputusan                | Isi                                                                                                                                                                                                                                                                                 |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Drift fraksi (ruleset 3) | Δ = reversi ke dukungan dasar + `factionApprovalInfluence` × (persetujuan − jangkar). Parameter opsional di `baseline.json` dengan default 0,05 karena `content/` dilindungi. Fixture naik ke ruleset 3. Kode ledger `BASELINE_SUPPORT_REVERSION` diganti `BASELINE_SUPPORT_DRIFT`. |
+| Hash konten              | Default parameter baru ikut ter-hash, jadi `contentHash` konten placeholder berubah walau file JSON tidak berubah.                                                                                                                                                                  |
+| Tren fraksi              | `TurnReport.factionSupport` menyimpan dukungan sebelum/sesudah tiap kuartal untuk tren di UI.                                                                                                                                                                                       |
