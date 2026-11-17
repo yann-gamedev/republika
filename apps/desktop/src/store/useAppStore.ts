@@ -45,6 +45,8 @@ export const useAppStore = create<AppStore>()((set, get) => ({
   initialize: async () => {
     if (get().initialized) return;
     try {
+      // Pertama kali jalan: siapkan saves/ dan logs/ (AGENT §5.12).
+      await saveStorage.init();
       const stored = await saveStorage.readSettings();
       set({
         ...(stored === null ? {} : { settings: stored }),
