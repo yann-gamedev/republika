@@ -305,6 +305,10 @@ export const copy = {
     noLead: 'Belum ditunjuk',
     ministryFallback: 'Kementerian',
     policyCount: (count: number) => `${count} kebijakan aktif`,
+    historyTitle: 'Riwayat efektivitas',
+    historyEmpty: 'Belum ada perubahan efektivitas.',
+    historyTurn: (turn: number) => `K${turn}`,
+    influence: (name: string, multiplier: string) => `Dipengaruhi ${name} ×${multiplier}`,
   },
   events: {
     kicker: 'Peristiwa',

@@ -2,11 +2,12 @@ import { INDICATOR_DOMAINS, type PolicyDefinition } from '@republika/shared';
 import { evaluateRequirement, projectPolicy } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
-import { PREVIEW_COMMAND_ID, previewCommand, useGameState } from '@/app/useGame';
+import { PREVIEW_COMMAND_ID, ministryInfluence, previewCommand, useGameState } from '@/app/useGame';
 import { definitions, factionName, ministryName, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { effectText, requirementText, type ContentNames } from '@/features/content/effectText';
 import {
+  formatDecimal,
   formatInteger,
   formatRupiahTriliun,
   formatSignedIndicator,
@@ -21,6 +22,17 @@ const names: ContentNames = { factionName, ministryName, policyName };
 
 function categoryLabel(policy: PolicyDefinition): string {
   return copy.policies.categoryLabels[policy.category];
+}
+
+function InfluenceLine({ category }: { category: PolicyDefinition['category'] }) {
+  const state = useGameState();
+  const influence = ministryInfluence(state, category);
+  if (influence === null) return null;
+  return (
+    <p className="mt-2 text-[0.65rem] uppercase tracking-[0.12em] text-primary/80">
+      {copy.cabinet.influence(influence.name, formatDecimal(influence.multiplier))}
+    </p>
+  );
 }
 
 function Stat({ label, value }: { label: string; value: string }) {
@@ -143,6 +155,7 @@ export default function PoliciesPage() {
                   <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                     {policy.description}
                   </p>
+                  <InfluenceLine category={policy.category} />
                 </div>
 
                 <dl className="grid grid-cols-4 divide-x divide-border/40 border-b border-border/40 text-center">
