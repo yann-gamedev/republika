@@ -1,43 +1,30 @@
-import type { SaveFile, SaveSlotId, SaveSlotInfo, Settings } from '@republika/shared';
+import { FileBackedStorage } from './FileBackedStorage';
+import type { FilePort } from './SaveStorage';
 
-import type { SaveStorage } from './SaveStorage';
-
-/** Penyimpanan in-memory untuk dev browser dan test. Tidak menyentuh disk. */
-export class MemoryStorage implements SaveStorage {
+/** Port file di memori untuk dev browser dan test. Tidak menyentuh disk. */
+export class MemoryFilePort implements FilePort {
   readonly kind = 'memory' as const;
+  readonly files = new Map<string, string>();
 
-  private readonly saves = new Map<SaveSlotId, SaveFile>();
-  private settings: Settings | null = null;
-
-  async listSlots(): Promise<readonly SaveSlotInfo[]> {
-    return [...this.saves.entries()]
-      .map(([slot, save]) => ({
-        slot,
-        label: save.label,
-        savedAt: save.savedAt,
-        turn: save.state.turn,
-        presidentName: save.state.presidentName,
-        rulesetVersion: save.rulesetVersion,
-        hasBackup: false,
-        isCorrupt: false,
-      }))
-      .sort((left, right) => left.slot.localeCompare(right.slot));
+  async ensureDirs(_relativeDirs: readonly string[]): Promise<void> {
+    // Memori tidak punya folder.
   }
 
-  async readSave(slot: SaveSlotId): Promise<SaveFile | null> {
-    const save = this.saves.get(slot);
-    return save === undefined ? null : structuredClone(save);
+  async readText(relativePath: string): Promise<string | null> {
+    return this.files.get(relativePath) ?? null;
   }
 
-  async writeSave(slot: SaveSlotId, save: SaveFile): Promise<void> {
-    this.saves.set(slot, structuredClone(save));
+  async writeTextAtomic(relativePath: string, contents: string): Promise<void> {
+    this.files.set(relativePath, contents);
   }
+}
 
-  async readSettings(): Promise<Settings | null> {
-    return this.settings === null ? null : structuredClone(this.settings);
-  }
+/** Penyimpanan in-memory (dev browser dan test) dengan perilaku sama seperti versi file. */
+export class MemoryStorage extends FileBackedStorage {
+  readonly memory: MemoryFilePort;
 
-  async writeSettings(settings: Settings): Promise<void> {
-    this.settings = structuredClone(settings);
+  constructor(port: MemoryFilePort = new MemoryFilePort()) {
+    super(port);
+    this.memory = port;
   }
 }

@@ -30,11 +30,12 @@ describe('MemoryStorage', () => {
 
     await storage.writeSave('slot-1', save);
     const read = await storage.readSave('slot-1');
-    expect(read).toEqual(save);
+    expect(read).toEqual({ status: 'ok', save });
 
-    if (read === null) throw new Error('Save seharusnya ada.');
-    read.label = 'Diubah di memori';
-    expect((await storage.readSave('slot-1'))?.label).toBe('Kampanye contoh');
+    if (read.status !== 'ok') throw new Error('Save seharusnya ada.');
+    read.save.label = 'Diubah di memori';
+    const again = await storage.readSave('slot-1');
+    expect(again.status === 'ok' ? again.save.label : null).toBe('Kampanye contoh');
 
     const slots = await storage.listSlots();
     expect(slots).toHaveLength(1);
@@ -44,7 +45,7 @@ describe('MemoryStorage', () => {
 
   it('menyimpan pengaturan dan mengembalikan null untuk slot kosong', async () => {
     const storage = new MemoryStorage();
-    expect(await storage.readSave('slot-2')).toBeNull();
+    expect(await storage.readSave('slot-2')).toEqual({ status: 'missing' });
     expect(await storage.readSettings()).toBeNull();
 
     const settings = {
