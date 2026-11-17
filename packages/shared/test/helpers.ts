@@ -32,6 +32,7 @@ export function createGameState(): GameState {
     commandIdsThisTurn: [],
     policyCooldowns: {},
     eventCooldowns: {},
+    eventsFired: [],
     flags: [],
     delayedEffects: [],
     campaignStats: {

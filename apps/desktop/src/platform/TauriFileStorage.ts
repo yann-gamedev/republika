@@ -1,33 +1,31 @@
-import type { SaveFile, SaveSlotId, SaveSlotInfo, Settings } from '@republika/shared';
+import { invoke } from '@tauri-apps/api/core';
 
-import { copy } from '@/copy/id';
-
-import type { SaveStorage } from './SaveStorage';
+import { FileBackedStorage } from './FileBackedStorage';
+import type { FilePort } from './SaveStorage';
 
 /**
- * Stub untuk Tahap 1. Command Rust `save_atomic` dan pembacaan folder
- * Documents/REPUBLIKA diisi pada Tahap 3.
+ * Port file Tauri: memanggil tiga command Rust di `src-tauri/src/main.rs`.
+ * Path relatif terhadap `Documents/REPUBLIKA/`; Rust menolak traversal.
  */
-export class TauriFileStorage implements SaveStorage {
+class TauriFilePort implements FilePort {
   readonly kind = 'tauri' as const;
 
-  async listSlots(): Promise<readonly SaveSlotInfo[]> {
-    throw new Error(copy.errors.storageUnavailable);
+  async ensureDirs(_relativeDirs: readonly string[]): Promise<void> {
+    // Rust membuat saves/ dan logs/ saat app dibuka; list_saves memastikan saves/ ada.
+    await invoke<string[]>('list_saves');
   }
 
-  async readSave(_slot: SaveSlotId): Promise<SaveFile | null> {
-    throw new Error(copy.errors.storageUnavailable);
+  async readText(relativePath: string): Promise<string | null> {
+    return invoke<string | null>('read_text', { path: relativePath });
   }
 
-  async writeSave(_slot: SaveSlotId, _save: SaveFile): Promise<void> {
-    throw new Error(copy.errors.storageUnavailable);
+  async writeTextAtomic(relativePath: string, contents: string): Promise<void> {
+    await invoke('save_atomic', { path: relativePath, contents });
   }
+}
 
-  async readSettings(): Promise<Settings | null> {
-    throw new Error(copy.errors.storageUnavailable);
-  }
-
-  async writeSettings(_settings: Settings): Promise<void> {
-    throw new Error(copy.errors.storageUnavailable);
+export class TauriFileStorage extends FileBackedStorage {
+  constructor() {
+    super(new TauriFilePort());
   }
 }

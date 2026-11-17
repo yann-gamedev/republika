@@ -5,11 +5,7 @@ import { APP_VERSION, UI_SCALES } from '@republika/shared';
 
 import { PageHeader } from '@/app/PageHeader';
 import { copy } from '@/copy/id';
-import {
-  mockContentHash,
-  mockContentWarnings,
-  mockRulesetVersion,
-} from '@/features/mock/mockState';
+import { contentHash, definitions, gameContent } from '@/content/gameContent';
 import { setApplicationFullscreen } from '@/platform';
 import { useAppStore } from '@/store/useAppStore';
 import { Badge } from '@/ui/components/badge';
@@ -66,7 +62,7 @@ export default function SettingsPage() {
             kicker={copy.settings.kicker}
             title={copy.settings.title}
             subtitle={copy.settings.subtitle}
-            actions={<Badge variant="outline">{copy.app.mockData}</Badge>}
+            actions={<Badge variant="outline">{copy.app.offline}</Badge>}
           />
         </div>
 
@@ -144,23 +140,23 @@ export default function SettingsPage() {
                 <CardTitle className="mt-2">{copy.settings.contentWarningTitle}</CardTitle>
               </div>
               <Badge variant="maroon">
-                {copy.settings.contentWarningBadge(mockContentWarnings.length)}
+                {copy.settings.contentWarningBadge(gameContent.warnings.length)}
               </Badge>
             </CardHeader>
             <CardContent>
               <p className="mb-3 text-xs leading-relaxed text-muted-foreground">
-                {copy.settings.contentWarningBody(mockContentWarnings.length)}
+                {copy.settings.contentWarningBody(gameContent.warnings.length)}
               </p>
               <dl className="divide-y divide-border/40 border-y border-border/40">
                 <div className="flex flex-wrap items-center justify-between gap-3 py-2.5">
                   <dt className="text-xs text-muted-foreground">{copy.settings.contentHash}</dt>
                   <dd className="numeric break-all text-[0.68rem] text-foreground/85">
-                    {mockContentHash}
+                    {contentHash}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between gap-3 py-2.5">
                   <dt className="text-xs text-muted-foreground">{copy.settings.ruleset}</dt>
-                  <dd className="numeric text-xs">{mockRulesetVersion}</dd>
+                  <dd className="numeric text-xs">{definitions.scenario.rulesetVersion}</dd>
                 </div>
                 <div className="flex items-center justify-between gap-3 py-2.5">
                   <dt className="text-xs text-muted-foreground">{copy.settings.appVersion}</dt>
@@ -168,7 +164,7 @@ export default function SettingsPage() {
                 </div>
               </dl>
               <p className="mt-3 text-[0.65rem] leading-relaxed text-muted-foreground">
-                {copy.settings.mockNote}
+                {copy.settings.persistNote}
               </p>
             </CardContent>
           </Card>
@@ -197,7 +193,7 @@ export default function SettingsPage() {
 
             <div className="flex items-center gap-3 border border-border/40 bg-card/20 px-4 py-3 text-[0.68rem] text-muted-foreground">
               <IconCheck className="h-4 w-4 shrink-0 text-emerald-300/80" />
-              {copy.settings.mockNote}
+              {copy.settings.persistNote}
             </div>
           </div>
         </div>

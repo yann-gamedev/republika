@@ -1,7 +1,8 @@
 import type { GameDefinitions, GameState, LedgerEntry, TurnReport } from '@republika/shared';
 
 import { applyBaseline } from '../economy/baseline.js';
-import { applyEventResponses, selectNextEvents } from '../events/events.js';
+import { applyEventResponses } from '../events/events.js';
+import { selectNextEvents } from '../events/select.js';
 import type { EffectContext } from '../policies/effects.js';
 import {
   applyImmediateEffects,
@@ -80,9 +81,11 @@ export function resolveTurn(
   updateMinistryEffectiveness(work, ticked, index, ledger);
   // 10. Normalize + clamp.
   normalizeState(work, ledger);
-  // 11. Event untuk kuartal berikutnya (stub Tahap 2).
-  const rng = createTurnRng(state.seed, state.turn);
-  const nextEventIds = selectNextEvents(work, defs, index, rng, ledger);
+  // 11. Event untuk kuartal berikutnya (tidak ada setelah kuartal terakhir).
+  const isFinal = state.turn >= state.maxTurns;
+  const nextEventIds = isFinal
+    ? []
+    : selectNextEvents(work, index, createTurnRng(state.seed, state.turn), ledger, state.turn + 1);
 
   // 12. Laporan, statistik, dan maju ke kuartal berikutnya.
   const treasuryDrop = snapshot.treasuryBillion - work.treasuryBillion;
@@ -99,7 +102,6 @@ export function resolveTurn(
     nextEventIds,
   });
 
-  const isFinal = state.turn >= state.maxTurns;
   // Bonus lobi dan pengajuan hanya berlaku untuk kuartal ini.
   work.pendingCommands = [];
   work.lobbyThisTurn = [];
@@ -109,7 +111,7 @@ export function resolveTurn(
     ...work.pendingEvents,
     ...nextEventIds.map((eventId) => ({
       eventId,
-      arrivedTurn: Math.min(state.turn + 1, state.maxTurns),
+      arrivedTurn: state.turn + 1,
       resolvedChoiceId: null,
     })),
   ];

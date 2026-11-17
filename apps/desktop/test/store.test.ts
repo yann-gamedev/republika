@@ -2,12 +2,10 @@ import { expect, it } from 'vitest';
 
 import { useAppStore } from '../src/store/useAppStore';
 
-it('aksi mock tidak mengubah GameState', () => {
+it('preferensi skala dan layar penuh diperbarui tanpa menyentuh state permainan', () => {
   const store = useAppStore.getState();
-  const before = structuredClone(store.gameState);
-  store.recordMockChoice('policy:example', 'example', 'Aksi contoh');
-  store.selectEventChoice('event:example', 'A', 'Keputusan contoh');
-  expect(useAppStore.getState().gameState).toEqual(before);
-  expect(useAppStore.getState().mockSelections['event:example']).toBe('A');
-  useAppStore.setState({ mockSelections: {}, feedback: null });
+  store.setUiScale(110);
+  store.setFullscreenPreference(true);
+  expect(useAppStore.getState().settings).toMatchObject({ uiScale: 110, fullscreen: true });
+  expect(Object.keys(useAppStore.getState())).not.toContain('gameState');
 });

@@ -38,3 +38,21 @@ Keputusan aturan yang tidak dirinci `AGENT.md` §5. Semua dipilih sebagai opsi p
 | Skema state                         | Ditambah `seed`, `commandIdsThisTurn`, `lastTickedTurn`, `DelayedEffect.sourceType/createdTurn`; ledger memakai `order/sourceType/target/unit/before/delta/after`. `stateVersion` tetap 1 karena belum ada save pemain.                 |
 | `roundTenths`                       | Menormalkan galat biner (`toPrecision(12)`) agar 1,15 → 1,2; hasil konversi konten tidak berubah.                                                                                                                                       |
 | Hash state                          | cyrb128 atas JSON kanonis (bukan kriptografis), cukup untuk uji determinisme; PRNG sfc32 dengan seed `seed:turn`.                                                                                                                       |
+
+## Tahap 3 — Vertical slice
+
+| Keputusan                  | Isi                                                                                                                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ruleset 2                  | Seleksi event aktif. `rulesetVersion` fixture naik ke 2 dan snapshot `slice-4q` diperbarui. `content/scenario.json` masih 1 karena area konten dilindungi; pemilik perlu menaikkannya sendiri. |
+| `TURN_AT_LEAST` pada event | Dievaluasi terhadap kuartal kedatangan (N+1), syarat lain terhadap state akhir kuartal N.                                                                                                      |
+| Cooldown event             | Dipasang saat event terpilih; tidak berkurang di kuartal pemilihan.                                                                                                                            |
+| `eventsFired`              | Field state baru untuk `uniquePerCampaign`.                                                                                                                                                    |
+| Kuartal terakhir           | Tidak ada undian event setelah kuartal terakhir.                                                                                                                                               |
+| History di save            | `history.reports` menyimpan laporan beserta ledger-nya; `history.ledger` sengaja kosong agar ledger tidak tersimpan dua kali.                                                                  |
+| Autosave                   | Setelah pelantikan dan setiap akhir kuartal. Pengajuan yang belum diproses tidak ikut tersimpan bila app ditutup di tengah kuartal.                                                            |
+| Cadangan                   | Hanya `autosave.bak.json`, berisi autosave valid sebelumnya; autosave rusak tidak pernah menimpa cadangan.                                                                                     |
+| Ruleset berbeda            | Save dengan `rulesetVersion` lain ditolak dengan pesan jelas; migrasi menyusul di Tahap 5.                                                                                                     |
+| Konsekuensi event          | Ditampilkan kualitatif (arah ↑/↓, "menyusul" untuk efek tertunda); flag tidak ditampilkan agar rantai peristiwa tidak bocor.                                                                   |
+| Kalimat laporan            | `copy.engineReasons` untuk kode engine; kode konten memakai `copy.contentReasons` (diisi pemilik) dengan fallback "Dampak {nama sumber}".                                                      |
+| Tombol nonaktif            | Alasan diambil dari uji coba `applyCommand` (tanpa mengubah state), jadi selalu sama dengan aturan engine.                                                                                     |
+| Nama menteri               | Nama menteri dari mock Tahap 1 dihapus karena bukan bagian konten; kartu kementerian menampilkan bidangnya.                                                                                    |

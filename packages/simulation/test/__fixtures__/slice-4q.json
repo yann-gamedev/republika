@@ -1,19 +1,19 @@
 {
   "seed": "fixture-4q",
   "stateHashes": [
-    "7d96357bd649877613a1abc0b201b449",
-    "64879bfff037dd3561e67136086eefd9",
-    "939f3202989bbaf5dddb53941db942be",
-    "d3f4ab78dbf8cd3fb02a1cc46c74915f"
+    "d60860060223f7975396305957692d06",
+    "92c2227ec21796bb56e5b83e9b441d9f",
+    "cd8272d2d6aec3ef1e20137bb961e065",
+    "a5c591db139a006d98338bf6b05ab21e"
   ],
   "reportHashes": [
-    "27a5e7aa7a09f1335bef9d98a2cc0d6f",
-    "524f866d582081cac7a6c5d4381e955f",
-    "312bec7f1c2f8cdb01c0b2852c9de94a",
-    "9b59dc57e77e6684ca240e06c8acf2a4"
+    "e6a1426bb800cbf396ec463372da7780",
+    "e7fa516cdea15c3429652d975ee2e1d7",
+    "1f69ed081ff34ebe7c7ab5aa774eb138",
+    "656d3f6de053d744417a28ae1ec80170"
   ],
   "finalIndicators": {
-    "approval": 528,
+    "approval": 513,
     "stability": 620,
     "fiscalHealth": 580,
     "growthPct": 48,

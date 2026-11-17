@@ -157,3 +157,25 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Momen pelantikan: transisi CSS ringan, dimatikan bila pengguna meminta gerak minimal. */
+.ceremony-enter {
+  animation: ceremony-enter 600ms ease-out both;
+}
+
+@keyframes ceremony-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ceremony-enter {
+    animation: none;
+  }
+}

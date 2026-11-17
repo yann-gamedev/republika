@@ -4,6 +4,7 @@ import { applyCommand, type PlayerCommand } from '../src/core/commands.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
 import {
   EVENT_FLOOD,
+  EVENT_PROTEST,
   FACTION_REGION,
   FACTION_TECH,
   POLICY_ENERGY,
@@ -11,14 +12,16 @@ import {
   POLICY_SOCIAL,
   defs,
   newState,
+  respondAll,
 } from './helpers.js';
 
 /**
- * Skrip tetap 4 kuartal untuk fixture engine:
+ * Skrip tetap 4 kuartal untuk fixture engine. Event dipilih engine (PRNG ber-seed)
+ * dan ditanggapi otomatis: banjir → A, demo → B (netral).
  *  K1 Energi (tanpa voting) + Fiskal (gagal voting → cooldown 1).
  *  K2 Fiskal ditolak (ON_COOLDOWN); lobi dua fraksi.
- *  K3 event banjir disuntikkan → opsi A; Fiskal + lobi Daerah → lolos.
- *  K4 Energi habis (cooldown), Sosial diajukan.
+ *  K3 Fiskal + lobi Daerah → lolos.
+ *  K4 Sosial diajukan.
  */
 export const SCRIPT: ReadonlyArray<ReadonlyArray<PlayerCommand>> = [
   [
@@ -31,12 +34,16 @@ export const SCRIPT: ReadonlyArray<ReadonlyArray<PlayerCommand>> = [
     { type: 'LOBBY_FACTION', commandId: 'k2-lobby-region', factionId: FACTION_REGION },
   ],
   [
-    { type: 'RESPOND_EVENT', commandId: 'k3-flood', eventId: EVENT_FLOOD, choiceId: 'A' },
     { type: 'ENACT_POLICY', commandId: 'k3-fiscal', policyId: POLICY_FISCAL },
     { type: 'LOBBY_FACTION', commandId: 'k3-lobby-region', factionId: FACTION_REGION },
   ],
   [{ type: 'ENACT_POLICY', commandId: 'k4-social', policyId: POLICY_SOCIAL }],
 ];
+
+export const SCRIPT_CHOICES: Readonly<Record<string, string>> = {
+  [EVENT_FLOOD]: 'A',
+  [EVENT_PROTEST]: 'B',
+};
 
 export interface ScriptRun {
   readonly initial: GameState;
@@ -54,14 +61,8 @@ export function runScript(seed = 'fixture-4q'): ScriptRun {
   const ledger: LedgerEntry[] = [];
   const rejections: Array<{ turn: number; commandId: string; code: string }> = [];
   SCRIPT.forEach((commands, position) => {
-    if (position === 2) {
-      // Pemilihan event masih stub (Tahap 3); event disuntikkan agar jalur respons teruji.
-      state = {
-        ...state,
-        pendingEvents: [{ eventId: EVENT_FLOOD, arrivedTurn: state.turn, resolvedChoiceId: null }],
-      };
-    }
-    for (const command of commands) {
+    const responses = respondAll(state, (id) => SCRIPT_CHOICES[id] ?? 'A', `k${position + 1}`);
+    for (const command of [...responses, ...commands]) {
       const result = applyCommand(state, command, defs);
       if (result.error !== undefined) {
         rejections.push({

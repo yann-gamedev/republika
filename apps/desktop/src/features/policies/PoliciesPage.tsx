@@ -1,66 +1,66 @@
-import type { PolicyDefinition } from '@republika/shared';
+import { INDICATOR_DOMAINS, type PolicyDefinition } from '@republika/shared';
+import { evaluateRequirement, projectPolicy } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
+import { PREVIEW_COMMAND_ID, previewCommand, useGameState } from '@/app/useGame';
+import { definitions, factionName, ministryName, policyName } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { effectText, requirementText } from '@/features/content/effectText';
-import { mockContentNames, mockDefinitions } from '@/features/mock/mockState';
-import { formatInteger, formatRupiahTriliun } from '@/format/formatters';
-import { useAppStore } from '@/store/useAppStore';
+import { effectText, requirementText, type ContentNames } from '@/features/content/effectText';
+import {
+  formatInteger,
+  formatRupiahTriliun,
+  formatSignedIndicator,
+  formatSignedRupiahTriliun,
+} from '@/format/formatters';
+import { gameController } from '@/store/controller';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/card';
 import { cn } from '@/ui/lib/utils';
+
+const names: ContentNames = { factionName, ministryName, policyName };
 
 function categoryLabel(policy: PolicyDefinition): string {
   return copy.policies.categoryLabels[policy.category];
 }
 
-function PolicyEffects({ policy }: { policy: PolicyDefinition }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <ul className="space-y-1.5">
-      {policy.effects.map((effect, index) => (
-        <li
-          key={`${policy.id}-effect-${index}`}
-          className="flex gap-2 text-[0.72rem] leading-relaxed text-muted-foreground"
-        >
-          <span className="mt-[0.45rem] h-px w-2.5 shrink-0 bg-primary/50" aria-hidden="true" />
-          <span>{effectText(effect, mockContentNames)}</span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function PolicyRequirements({ policy }: { policy: PolicyDefinition }) {
-  if (policy.requirements.length === 0) {
-    return <p className="text-[0.72rem] text-muted-foreground">{copy.policies.noRequirements}</p>;
-  }
-  return (
-    <ul className="space-y-1.5">
-      {policy.requirements.map((requirement, index) => (
-        <li
-          key={`${policy.id}-requirement-${index}`}
-          className="flex gap-2 text-[0.72rem] leading-relaxed text-muted-foreground"
-        >
-          <span className="mt-[0.45rem] h-px w-2.5 shrink-0 bg-border" aria-hidden="true" />
-          <span>{requirementText(requirement, mockContentNames)}</span>
-        </li>
-      ))}
-    </ul>
+    <div className="px-2 py-3">
+      <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+        {label}
+      </dt>
+      <dd className="numeric mt-1 text-sm">{value}</dd>
+    </div>
   );
 }
 
 export default function PoliciesPage() {
-  const state = useAppStore((store) => store.gameState);
-  const mockSelections = useAppStore((store) => store.mockSelections);
-  const recordMockChoice = useAppStore((store) => store.recordMockChoice);
-
-  const pendingPolicyIds = new Set(
+  const state = useGameState();
+  const pendingByPolicy = new Map(
     state.pendingCommands.flatMap((command) =>
-      command.type === 'ENACT_POLICY' ? [command.policyId] : [],
+      command.type === 'ENACT_POLICY' ? [[command.policyId, command.commandId] as const] : [],
     ),
   );
-  const activePolicyIds = new Set(state.activePolicies.map((policy) => policy.policyId));
+  const activeById = new Map(state.activePolicies.map((policy) => [policy.policyId, policy]));
+  const catalog = [...definitions.policies].sort((a, b) => (a.id < b.id ? -1 : 1));
+
+  const enact = (policy: PolicyDefinition) => {
+    const result = gameController.dispatch({
+      type: 'ENACT_POLICY',
+      commandId: gameController.newCommandId(),
+      policyId: policy.id,
+    });
+    if (result.ok) gameController.notify(copy.policies.enacted(policy.name));
+  };
+
+  const cancel = (pendingCommandId: string) => {
+    const result = gameController.dispatch({
+      type: 'CANCEL_PENDING',
+      commandId: gameController.newCommandId(),
+      pendingCommandId,
+    });
+    if (result.ok) gameController.notify(copy.dashboard.cancelled);
+  };
 
   return (
     <>
@@ -77,102 +77,38 @@ export default function PoliciesPage() {
 
       <section>
         <div className="mb-4 flex items-end justify-between gap-4">
-          <h2 className="font-serif text-xl leading-none">{copy.policies.activeTitle}</h2>
+          <h2 className="font-serif text-xl leading-none">{copy.policies.availableTitle}</h2>
           <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
             {copy.dashboard.activeCount(state.activePolicies.length)}
           </span>
         </div>
 
-        {state.activePolicies.length === 0 ? (
-          <div className="border border-dashed border-border/60 px-5 py-8 text-center text-sm text-muted-foreground">
-            {copy.policies.empty}
-          </div>
-        ) : (
-          <div className="grid gap-3 xl:grid-cols-2">
-            {state.activePolicies.map((active) => {
-              const policy = mockDefinitions.policies.find(
-                (definition) => definition.id === active.policyId,
-              );
-              if (policy === undefined) return null;
-              return (
-                <Card key={active.policyId}>
-                  <CardHeader className="flex-row items-start justify-between gap-3 pb-3">
-                    <div>
-                      <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-                        {categoryLabel(policy)}
-                      </p>
-                      <CardTitle className="mt-1.5">{policy.name}</CardTitle>
-                    </div>
-                    <Badge variant="success">{copy.common.active}</Badge>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-xs leading-relaxed text-muted-foreground">
-                      {policy.description}
-                    </p>
-                    <div className="mt-4 grid grid-cols-3 gap-3 border-t border-border/40 pt-3">
-                      <div>
-                        <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                          {copy.policies.duration}
-                        </p>
-                        <p className="numeric mt-1 text-sm">
-                          {copy.policies.activeUntil(active.remainingTurns)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                          {copy.policies.perTurn}
-                        </p>
-                        <p className="numeric mt-1 text-sm">
-                          {formatRupiahTriliun(active.perTurnCostBillion)}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                          {copy.common.turn}
-                        </p>
-                        <p className="numeric mt-1 text-sm">{formatInteger(active.enactedTurn)}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        )}
-      </section>
-
-      <section className="mt-9">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <h2 className="font-serif text-xl leading-none">{copy.policies.availableTitle}</h2>
-          <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
-            {formatInteger(mockDefinitions.policies.length)} · {copy.game.mockBadge}
-          </span>
-        </div>
-
         <div className="grid gap-3 xl:grid-cols-2">
-          {mockDefinitions.policies.map((policy) => {
-            const isActive = activePolicyIds.has(policy.id);
-            const isPending = pendingPolicyIds.has(policy.id);
-            const isRequested = mockSelections[`policy:${policy.id}`] !== undefined;
+          {catalog.map((policy) => {
+            const active = activeById.get(policy.id);
+            const pendingCommandId = pendingByPolicy.get(policy.id);
             const cooldown = state.policyCooldowns[policy.id] ?? 0;
-            const blocked = isActive || isPending || isRequested || cooldown > 0;
-
-            const buttonLabel = isActive
-              ? copy.common.active
-              : isPending || isRequested
-                ? copy.policies.pendingButton
-                : cooldown > 0
-                  ? copy.policies.cooldownActive(cooldown)
-                  : copy.policies.enact;
+            const blockedCode =
+              pendingCommandId === undefined
+                ? previewCommand(state, {
+                    type: 'ENACT_POLICY',
+                    commandId: PREVIEW_COMMAND_ID,
+                    policyId: policy.id,
+                  })
+                : null;
+            const projection = projectPolicy(state, policy.id, definitions);
 
             return (
               <article
                 key={policy.id}
+                data-testid={`policy-${policy.id}`}
                 className={cn(
                   'flex flex-col border border-border/60 bg-card/35 transition-colors',
-                  isActive
+                  active !== undefined
                     ? 'border-emerald-800/40 bg-emerald-950/10'
-                    : 'hover:border-primary/30 hover:bg-card/55',
+                    : pendingCommandId !== undefined
+                      ? 'border-primary/45 bg-primary/[0.05]'
+                      : 'hover:border-primary/30 hover:bg-card/55',
                 )}
               >
                 <div className="border-b border-border/40 p-5">
@@ -184,10 +120,18 @@ export default function PoliciesPage() {
                       <h3 className="mt-1.5 font-serif text-lg leading-tight">{policy.name}</h3>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
-                      {isActive && <Badge variant="success">{copy.common.active}</Badge>}
-                      {isPending && <Badge variant="secondary">{copy.policies.pending}</Badge>}
-                      {isRequested && (
-                        <Badge variant="secondary">{copy.policies.pendingButton}</Badge>
+                      {active !== undefined && (
+                        <Badge variant="success">
+                          {copy.policies.activeUntil(active.remainingTurns)}
+                        </Badge>
+                      )}
+                      {pendingCommandId !== undefined && (
+                        <Badge variant="secondary">{copy.policies.pending}</Badge>
+                      )}
+                      {cooldown > 0 && (
+                        <Badge variant="destructive">
+                          {copy.policies.cooldownActive(cooldown)}
+                        </Badge>
                       )}
                       {policy.needsVote ? (
                         <Badge variant="maroon">{copy.policies.voteRequired}</Badge>
@@ -202,85 +146,148 @@ export default function PoliciesPage() {
                 </div>
 
                 <dl className="grid grid-cols-4 divide-x divide-border/40 border-b border-border/40 text-center">
-                  <div className="px-2 py-3">
-                    <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.policies.apCost}
-                    </dt>
-                    <dd className="numeric mt-1 text-sm">{formatInteger(policy.apCost)}</dd>
-                  </div>
-                  <div className="px-2 py-3">
-                    <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.policies.fiscalCost}
-                    </dt>
-                    <dd className="numeric mt-1 text-sm">
-                      {formatRupiahTriliun(policy.fiscalCostBillion)}
-                    </dd>
-                  </div>
-                  <div className="px-2 py-3">
-                    <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.policies.duration}
-                    </dt>
-                    <dd className="numeric mt-1 text-sm">
-                      {copy.policies.durationValue(policy.durationTurns)}
-                    </dd>
-                  </div>
-                  <div className="px-2 py-3">
-                    <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.policies.cooldown}
-                    </dt>
-                    <dd className="numeric mt-1 text-sm">
-                      {copy.policies.cooldownValue(policy.cooldownTurns)}
-                    </dd>
-                  </div>
+                  <Stat label={copy.policies.apCost} value={formatInteger(policy.apCost)} />
+                  <Stat
+                    label={copy.policies.fiscalCost}
+                    value={formatRupiahTriliun(projection.upfrontCostBillion)}
+                  />
+                  <Stat
+                    label={copy.policies.perTurn}
+                    value={formatRupiahTriliun(projection.perTurnCostBillion)}
+                  />
+                  <Stat
+                    label={copy.policies.costTotal}
+                    value={formatRupiahTriliun(projection.totalCostBillion)}
+                  />
                 </dl>
 
-                <div className="grid flex-1 gap-4 p-5 sm:grid-cols-2">
+                <div className="grid flex-1 gap-5 p-5 sm:grid-cols-2">
                   <div>
-                    <p className="institutional-label">{copy.policies.effects}</p>
-                    <div className="mt-2.5">
-                      <PolicyEffects policy={policy} />
-                    </div>
+                    <p className="institutional-label">{copy.policies.projection}</p>
+                    {projection.indicators.length === 0 ? (
+                      <p className="mt-2.5 text-xs text-muted-foreground">
+                        {copy.policies.projectionEmpty}
+                      </p>
+                    ) : (
+                      <ul className="mt-2.5 space-y-1.5 text-xs">
+                        {projection.indicators.map((item) => (
+                          <li
+                            key={item.indicator}
+                            className="flex items-center justify-between gap-3"
+                          >
+                            <span className="text-muted-foreground">
+                              {INDICATOR_DOMAINS[item.indicator].shortLabel}
+                            </span>
+                            <span
+                              className={cn(
+                                'numeric',
+                                item.direction === 'up' && 'text-emerald-300/85',
+                                item.direction === 'down' && 'text-red-300/85',
+                              )}
+                            >
+                              {item.direction === 'up'
+                                ? '↑'
+                                : item.direction === 'down'
+                                  ? '↓'
+                                  : '→'}{' '}
+                              {formatSignedIndicator(item.minTenths)} …{' '}
+                              {formatSignedIndicator(item.maxTenths)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {projection.treasuryEffectBillion !== 0 && (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {copy.policies.treasuryEffect}:{' '}
+                        <span className="numeric text-foreground">
+                          {formatSignedRupiahTriliun(projection.treasuryEffectBillion)}
+                        </span>
+                      </p>
+                    )}
+                    <p className="mt-2 text-[0.62rem] leading-relaxed text-muted-foreground/70">
+                      {copy.policies.projectionNote}
+                    </p>
+                    {projection.vote !== null && (
+                      <p
+                        className={cn(
+                          'mt-3 text-xs',
+                          projection.vote.passed ? 'text-emerald-300/85' : 'text-red-300/85',
+                        )}
+                      >
+                        {copy.policies.votePrediction(projection.vote.yesSeats)} ·{' '}
+                        {projection.vote.passed
+                          ? copy.policies.voteLikelyPass
+                          : copy.policies.voteLikelyFail}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <p className="institutional-label">{copy.policies.requirements}</p>
-                    <div className="mt-2.5">
-                      <PolicyRequirements policy={policy} />
-                    </div>
+                    {policy.requirements.length === 0 ? (
+                      <p className="mt-2.5 text-xs text-muted-foreground">
+                        {copy.policies.noRequirements}
+                      </p>
+                    ) : (
+                      <ul className="mt-2.5 space-y-1.5 text-xs">
+                        {policy.requirements.map((requirement, index) => {
+                          const met = evaluateRequirement(state, requirement);
+                          return (
+                            <li key={index} className="flex gap-2">
+                              <span
+                                aria-label={
+                                  met
+                                    ? copy.policies.requirementMet
+                                    : copy.policies.requirementNotMet
+                                }
+                                className={met ? 'text-emerald-300' : 'text-red-300'}
+                              >
+                                {met ? '✓' : '✗'}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {requirementText(requirement, names)}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                    <p className="institutional-label mt-4">{copy.policies.effects}</p>
+                    <ul className="mt-2.5 space-y-1 text-xs text-muted-foreground">
+                      {policy.effects.map((effect, index) => (
+                        <li key={index}>{effectText(effect, names)}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 border-t border-border/40 px-5 py-3">
-                  <span className="text-[0.62rem] text-muted-foreground">
-                    {policy.perTurnCostBillion > 0
-                      ? `${copy.policies.perTurn}: ${formatRupiahTriliun(policy.perTurnCostBillion)}`
-                      : copy.policies.noPerTurn}
+                  <span className="text-[0.68rem] leading-snug text-muted-foreground">
+                    {blockedCode !== null && active === undefined
+                      ? `${copy.policies.unavailableReason}: ${copy.commandErrors[blockedCode]}`
+                      : copy.policies.durationValue(policy.durationTurns)}
                   </span>
-                  <Button
-                    size="sm"
-                    variant={blocked ? 'outline' : 'default'}
-                    disabled={blocked}
-                    onClick={() =>
-                      recordMockChoice(`policy:${policy.id}`, policy.id, copy.policies.enactMock)
-                    }
-                  >
-                    {buttonLabel}
-                  </Button>
+                  {pendingCommandId !== undefined ? (
+                    <Button size="sm" variant="outline" onClick={() => cancel(pendingCommandId)}>
+                      {copy.policies.cancelPending}
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant={blockedCode !== null ? 'outline' : 'default'}
+                      disabled={blockedCode !== null}
+                      title={blockedCode !== null ? copy.commandErrors[blockedCode] : undefined}
+                      onClick={() => enact(policy)}
+                    >
+                      {active !== undefined ? copy.common.active : copy.policies.enact}
+                    </Button>
+                  )}
                 </div>
-
-                {isRequested && (
-                  <p className="border-t border-border/40 px-5 py-2.5 text-[0.68rem] text-muted-foreground">
-                    {copy.policies.pendingNote}
-                  </p>
-                )}
               </article>
             );
           })}
         </div>
       </section>
-
-      <p className="mt-6 text-[0.65rem] leading-relaxed text-muted-foreground/70">
-        {copy.policies.enactMock}
-      </p>
     </>
   );
 }

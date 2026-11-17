@@ -1,12 +1,15 @@
-import { useState, type ComponentType, type SVGProps } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useState, type ComponentType, type SVGProps } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
 
 import { copy } from '@/copy/id';
 import { isTauriRuntime, quitApplication } from '@/platform';
+import { gameController } from '@/store/controller';
+import type { ContinueResult } from '@/store/gameController';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
+import { ConfirmDialog } from '@/ui/components/dialog';
 import {
   IconChevronRight,
   IconFolder,
@@ -110,7 +113,48 @@ function ActionCard({
 }
 
 export default function MenuPage() {
+  const navigate = useNavigate();
   const [quitNotice, setQuitNotice] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [corrupt, setCorrupt] = useState<{ hasBackup: boolean } | null>(null);
+
+  const handleContinueResult = useCallback(
+    (result: ContinueResult) => {
+      setLoading(false);
+      if (result.status === 'loaded') {
+        navigate('/game/dashboard');
+      } else if (result.status === 'missing') {
+        setQuitNotice(copy.menu.continueMissing);
+      } else if (result.status === 'incompatible') {
+        setQuitNotice(result.message);
+      } else {
+        setCorrupt({ hasBackup: result.hasBackup });
+      }
+    },
+    [navigate],
+  );
+
+  const handleContinue = () => {
+    setLoading(true);
+    setQuitNotice(copy.menu.continueLoading);
+    void gameController.continueCampaign().then(handleContinueResult);
+  };
+
+  const restoreBackup = useCallback(() => {
+    setCorrupt(null);
+    setLoading(true);
+    void gameController.continueFromBackup().then(handleContinueResult);
+  }, [handleContinueResult]);
+
+  const startOver = useCallback(() => {
+    setCorrupt(null);
+    navigate('/inauguration');
+  }, [navigate]);
+
+  const closeCorrupt = useCallback(() => {
+    setCorrupt(null);
+    setQuitNotice(null);
+  }, []);
 
   const handleQuit = () => {
     if (!isTauriRuntime()) {
@@ -179,7 +223,8 @@ export default function MenuPage() {
                 icon={IconChevronRight}
                 label={copy.menu.continueGame}
                 description={copy.menu.continueDescription}
-                to="/game/dashboard"
+                onClick={handleContinue}
+                disabled={loading}
               />
               <ActionCard
                 icon={IconFolder}
@@ -247,7 +292,7 @@ export default function MenuPage() {
 
           <div className="border-t border-border/50 pt-5">
             <div className="flex items-center justify-between">
-              <Badge variant="outline">{copy.app.mockData}</Badge>
+              <Badge variant="outline">{copy.app.offline}</Badge>
               <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground/60">
                 {copy.app.stageNote}
               </span>
@@ -258,6 +303,20 @@ export default function MenuPage() {
           </div>
         </aside>
       </div>
+
+      <ConfirmDialog
+        open={corrupt !== null}
+        title={copy.menu.corruptTitle}
+        confirmLabel={corrupt?.hasBackup === true ? copy.menu.useBackup : copy.menu.newGame}
+        cancelLabel={copy.common.close}
+        onConfirm={corrupt?.hasBackup === true ? restoreBackup : startOver}
+        onCancel={closeCorrupt}
+        {...(corrupt?.hasBackup === true
+          ? { secondaryLabel: copy.menu.newGame, onSecondary: startOver }
+          : {})}
+      >
+        {corrupt?.hasBackup === true ? copy.menu.corruptBody : copy.menu.corruptNoBackup}
+      </ConfirmDialog>
     </main>
   );
 }
