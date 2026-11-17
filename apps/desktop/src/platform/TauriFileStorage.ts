@@ -1,22 +1,26 @@
-import { copy } from '@/copy/id';
+import { invoke } from '@tauri-apps/api/core';
 
 import { FileBackedStorage } from './FileBackedStorage';
 import type { FilePort } from './SaveStorage';
 
-/** Port file Tauri. Command Rust `save_atomic`/`read_text` disambungkan pada bagian 3.3. */
+/**
+ * Port file Tauri: memanggil tiga command Rust di `src-tauri/src/main.rs`.
+ * Path relatif terhadap `Documents/REPUBLIKA/`; Rust menolak traversal.
+ */
 class TauriFilePort implements FilePort {
   readonly kind = 'tauri' as const;
 
   async ensureDirs(_relativeDirs: readonly string[]): Promise<void> {
-    throw new Error(copy.errors.storageUnavailable);
+    // Rust membuat saves/ dan logs/ saat app dibuka; list_saves memastikan saves/ ada.
+    await invoke<string[]>('list_saves');
   }
 
-  async readText(_relativePath: string): Promise<string | null> {
-    throw new Error(copy.errors.storageUnavailable);
+  async readText(relativePath: string): Promise<string | null> {
+    return invoke<string | null>('read_text', { path: relativePath });
   }
 
-  async writeTextAtomic(_relativePath: string, _contents: string): Promise<void> {
-    throw new Error(copy.errors.storageUnavailable);
+  async writeTextAtomic(relativePath: string, contents: string): Promise<void> {
+    await invoke('save_atomic', { path: relativePath, contents });
   }
 }
 
