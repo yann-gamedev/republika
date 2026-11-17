@@ -59,6 +59,7 @@ export function createInitialState(
     commandIdsThisTurn: [],
     policyCooldowns: {},
     eventCooldowns: {},
+    eventsFired: [],
     flags: [],
     delayedEffects: [],
     campaignStats: {

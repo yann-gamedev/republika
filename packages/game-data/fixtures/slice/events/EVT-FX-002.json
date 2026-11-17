@@ -1,0 +1,52 @@
+{
+  "id": "EVT-FX-002",
+  "version": 1,
+  "title": "Demo Mahasiswa (fixture)",
+  "body": "Ribuan mahasiswa fiktif berkumpul di depan gedung parlemen menuntut transparansi anggaran.",
+  "eligibility": [{ "type": "TURN_AT_LEAST", "value": 2 }],
+  "triggerWeight": 30,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Temui perwakilan mahasiswa",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "FX_DIALOGUE_OPENED"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "FX_DEMANDS_EMBOLDENED"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Serahkan pada aparat keamanan",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "FX_HEAVY_HANDED"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "populis",
+          "delta": -2,
+          "reasonCode": "FX_POPULIST_PROTEST"
+        }
+      ]
+    }
+  ]
+}

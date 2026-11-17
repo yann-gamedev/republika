@@ -123,6 +123,8 @@ export const gameStateSchema = z
     commandIdsThisTurn: z.array(commandIdSchema),
     policyCooldowns: z.record(z.string(), nonNegativeInt),
     eventCooldowns: z.record(z.string(), nonNegativeInt),
+    /** Event yang pernah muncul di kampanye ini (untuk `uniquePerCampaign`). */
+    eventsFired: z.array(idSchema),
     flags: flagsSchema,
     delayedEffects: z.array(delayedEffectSchema),
     campaignStats: campaignStatsSchema,
