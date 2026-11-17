@@ -15,6 +15,7 @@ const CabinetPage = lazy(() => import('@/features/cabinet/CabinetPage'));
 const EventsPage = lazy(() => import('@/features/events/EventsPage'));
 const HistoryPage = lazy(() => import('@/features/history/HistoryPage'));
 const ReportPage = lazy(() => import('@/features/report/ReportPage'));
+const FinalReportPage = lazy(() => import('@/features/final/FinalReportPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
 const NotFoundPage = lazy(() => import('@/features/not-found/NotFoundPage'));
 
@@ -48,6 +49,7 @@ export function App() {
               <Route path="events" element={<EventsPage />} />
               <Route path="history" element={<HistoryPage />} />
               <Route path="report" element={<ReportPage />} />
+              <Route path="final" element={<FinalReportPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

@@ -1,9 +1,10 @@
-import type {
-  EffectRule,
-  GameDefinitions,
-  IndicatorKey,
-  Requirement,
-  ValidationIssue,
+import {
+  parseArchetypeStat,
+  type EffectRule,
+  type GameDefinitions,
+  type IndicatorKey,
+  type Requirement,
+  type ValidationIssue,
 } from '@republika/shared';
 
 /** Target jumlah konten MVP (Tahap 4). Kekurangan hanya peringatan. */
@@ -182,6 +183,20 @@ export function qualityWarnings(defs: GameDefinitions): ValidationIssue[] {
           `Kebijakan ${policy.id} tidak mungkin diajukan: ${reason}.`,
         ),
       );
+    }
+  }
+
+  for (const archetype of defs.archetypes) {
+    for (const condition of archetype.conditions) {
+      if (parseArchetypeStat(condition.stat) === null) {
+        warnings.push(
+          warning(
+            'ARCHETYPE_UNKNOWN_STAT',
+            `archetypes.${archetype.id}`,
+            `Statistik "${condition.stat}" tidak dikenal; aturan ${archetype.id} tidak akan pernah cocok.`,
+          ),
+        );
+      }
     }
   }
 

@@ -124,7 +124,7 @@ describe('applyCommand — sukses', () => {
 describe('applyCommand — kode error', () => {
   const cases: Array<[string, () => { state: GameState; command: PlayerCommand }]> = [
     [
-      'GAME_COMPLETED',
+      'CAMPAIGN_COMPLETED',
       () => ({
         state: { ...newState(), status: 'completed' },
         command: { type: 'ENACT_POLICY', commandId: 'c', policyId: POLICY_FISCAL },
@@ -284,7 +284,7 @@ describe('validateEndQuarter', () => {
       'DUPLICATE_COMMAND',
     );
     expect(validateEndQuarter({ ...newState(), status: 'completed' }, 'end')?.code).toBe(
-      'GAME_COMPLETED',
+      'CAMPAIGN_COMPLETED',
     );
   });
 

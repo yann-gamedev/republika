@@ -427,6 +427,36 @@ export const copy = {
     statEvents: 'Peristiwa dijawab',
     statTreasury: 'Kas akhir',
   },
+  final: {
+    kicker: 'Laporan Akhir Masa Jabatan',
+    title: (name: string, cabinet: string | undefined, start: number, end: number) =>
+      `Presiden ${name}${cabinet === undefined ? '' : `, ${cabinet}`} — ${start}–${end}`,
+    subtitle:
+      'Catatan perjalanan pemerintahan fiktif ini. Tidak ada skor tunggal; setiap pilihan membentuk jenis pemerintahan yang berbeda.',
+    archetype: 'Corak pemerintahan',
+    noArchetype: 'Pemerintahan Seimbang',
+    chartsTitle: 'Delapan indikator sepanjang masa jabatan',
+    chartAria: (label: string, start: string, end: string) =>
+      `Grafik ${label} dari awal ${start} hingga akhir ${end}`,
+    start: 'Awal',
+    decisionsKicker: 'Jejak keputusan',
+    decisionsTitle: 'Lima keputusan paling berdampak',
+    decisionsNote:
+      'Diurutkan menurut total perubahan indikator yang ditelusuri ledger, dinormalisasi terhadap rentang tiap indikator.',
+    noDecisions: 'Tidak ada kebijakan atau peristiwa yang mengubah indikator.',
+    policy: 'Kebijakan',
+    event: 'Peristiwa',
+    chronologyKicker: 'Kronologi',
+    chronologyTitle: 'Kuartal demi kuartal',
+    enacted: (name: string) => `${name} berlaku`,
+    rejected: (name: string) => `${name} ditolak parlemen`,
+    answered: (title: string, choice: string) => `${title}: ${choice}`,
+    quiet: 'Kuartal tanpa keputusan besar',
+    notYetTitle: 'Masa jabatan belum berakhir',
+    notYetBody: 'Laporan akhir tersedia setelah kuartal terakhir ditutup.',
+    open: 'Buka Laporan Akhir',
+    bannerTitle: 'Masa jabatan telah berakhir',
+  },
   settings: {
     kicker: 'Pengaturan',
     title: 'Pengaturan',
@@ -493,7 +523,7 @@ export const copy = {
   reasonFallback: (source: string) => `Dampak ${source}`,
   reasonUnknown: (code: string) => `Penyebab ${code}`,
   commandErrors: {
-    GAME_COMPLETED: 'Masa jabatan sudah berakhir. Tidak ada keputusan baru yang bisa diambil.',
+    CAMPAIGN_COMPLETED: 'Masa jabatan sudah berakhir. Tidak ada keputusan baru yang bisa diambil.',
     DUPLICATE_COMMAND: 'Perintah ini sudah diproses.',
     UNKNOWN_POLICY: 'Kebijakan tidak ditemukan.',
     ALREADY_ACTIVE: 'Kebijakan ini sedang berjalan.',

@@ -1,3 +1,4 @@
+export * from './types/archetypeStats.js';
 export * from './types/constants.js';
 export * from './types/fixedPoint.js';
 export * from './types/indicators.js';

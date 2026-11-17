@@ -18,5 +18,7 @@ export * from './economy/baseline.js';
 export * from './events/events.js';
 export * from './events/select.js';
 export * from './politics/ministries.js';
+export * from './report/archetype.js';
 export * from './report/buildReport.js';
+export * from './report/finalSummary.js';
 export * from './policies/projection.js';

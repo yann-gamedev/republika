@@ -149,7 +149,7 @@ describe('GameController', () => {
       commandId: 'late',
       policyId: firstPolicy.id,
     });
-    expect(late).toMatchObject({ ok: false, code: 'GAME_COMPLETED' });
+    expect(late).toMatchObject({ ok: false, code: 'CAMPAIGN_COMPLETED' });
   });
 
   it('Lanjutkan memuat autosave yang sama di sesi baru', async () => {

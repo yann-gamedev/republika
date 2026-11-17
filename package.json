@@ -15,7 +15,7 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "pnpm -r --if-present typecheck",
     "test": "vitest run",
-    "test:e2e": "pnpm build:web && playwright test",
+    "test:e2e": "pnpm --filter @republika/desktop build:web:e2e && playwright test",
     "content:check": "pnpm --filter @republika/game-data content:check",
     "format": "prettier --write .",
     "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90"

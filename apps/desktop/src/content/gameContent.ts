@@ -6,7 +6,26 @@ import type { GameDefinitions, LoadedGameContent } from '@republika/shared';
  * Nama, judul, dan teks berasal langsung dari `packages/game-data/content/`.
  */
 export const gameContent: LoadedGameContent = loadGameDefinitions();
-export const definitions: GameDefinitions = gameContent.definitions;
+
+/**
+ * Khusus build test (`vite build --mode e2e`): panjang kampanye bisa diganti
+ * agar E2E tidak bergantung pada `scenario.json` milik penulis konten.
+ * Build rilis tidak pernah mengisi variabel ini.
+ */
+function maxTurnsOverride(): number | null {
+  const raw = (import.meta.env as Record<string, string | undefined>).VITE_MAX_TURNS_OVERRIDE;
+  const value = raw === undefined ? Number.NaN : Number.parseInt(raw, 10);
+  return Number.isInteger(value) && value >= 1 && value <= 100 ? value : null;
+}
+
+const override = maxTurnsOverride();
+export const definitions: GameDefinitions =
+  override === null
+    ? gameContent.definitions
+    : {
+        ...gameContent.definitions,
+        scenario: { ...gameContent.definitions.scenario, maxTurns: override },
+      };
 export const contentHash: string = gameContent.contentHash;
 
 export function policyName(policyId: string): string {

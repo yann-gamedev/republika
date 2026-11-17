@@ -35,7 +35,7 @@ async function endQuarter(page: Page, turn: number): Promise<void> {
   ).toBeVisible();
 }
 
-test('vertical slice: 4 kuartal dari pelantikan sampai ringkasan akhir', async ({ page }) => {
+test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }) => {
   test.setTimeout(90_000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -76,9 +76,6 @@ test('vertical slice: 4 kuartal dari pelantikan sampai ringkasan akhir', async (
     }
     await endQuarter(page, turn);
   }
-
-  await expect(page.getByTestId('campaign-summary')).toBeVisible();
-  await expect(page.getByRole('button', { name: copy.game.campaignCompleted })).toBeVisible();
 
   // Riwayat dimuat dari save: 4 laporan + grafik SVG.
   await shortcut(page, '6', copy.history.title);

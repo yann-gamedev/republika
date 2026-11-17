@@ -77,6 +77,17 @@ export const delayedEffectSchema = z.object({
 
 export type DelayedEffect = z.infer<typeof delayedEffectSchema>;
 
+const indicatorRecordSchema = z.object({
+  approval: z.number().int(),
+  stability: z.number().int(),
+  fiscalHealth: z.number().int(),
+  growthPct: z.number().int(),
+  inflationPct: z.number().int(),
+  unemploymentPct: z.number().int(),
+  welfare: z.number().int(),
+  trust: z.number().int(),
+});
+
 export const campaignStatsSchema = z.object({
   policiesEnacted: nonNegativeInt,
   policiesByCategory: z.object({
@@ -91,6 +102,13 @@ export const campaignStatsSchema = z.object({
   eventsResolved: nonNegativeInt,
   totalDeficitBillion: z.number().int(),
   totalPolicySpendingBillion: nonNegativeInt,
+  /** Jumlah kuartal yang sudah diresolusi (pembagi rata-rata). */
+  quartersPlayed: nonNegativeInt,
+  /** Jumlah nilai akhir kuartal per indikator (persepuluhan), untuk rata-rata. */
+  indicatorSums: indicatorRecordSchema,
+  /** Nilai terendah/tertinggi per indikator, termasuk nilai awal kampanye. */
+  indicatorMin: indicatorRecordSchema,
+  indicatorMax: indicatorRecordSchema,
 });
 
 export type CampaignStats = z.infer<typeof campaignStatsSchema>;

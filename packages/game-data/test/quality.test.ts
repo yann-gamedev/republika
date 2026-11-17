@@ -108,6 +108,25 @@ describe('qualityWarnings', () => {
     expect(codes(d)).toContain('POLICY_NEVER_AVAILABLE@policies.POL-UJI-001.requirements');
   });
 
+  it('statistik arketipe tak dikenal diperingatkan', () => {
+    const d: GameDefinitions = {
+      ...defs,
+      archetypes: [
+        ...defs.archetypes,
+        {
+          id: 'ARC-UJI-001',
+          version: 1,
+          priority: 5,
+          name: 'Uji',
+          description: '',
+          conditions: [{ stat: 'avg.popularitas', op: '>=', value: 1 }],
+        },
+      ],
+    };
+    expect(codes(d)).toContain('ARCHETYPE_UNKNOWN_STAT@archetypes.ARC-UJI-001');
+    expect(codes(defs).some((code) => code.startsWith('ARCHETYPE_UNKNOWN_STAT'))).toBe(false);
+  });
+
   it('flag di-set tapi tidak pernah dibaca, dan sebaliknya', () => {
     // Fixture: FX_SUBSIDY_REFORMED di-set energi, tidak pernah dibaca.
     expect(codes(defs)).toContain('FLAG_NEVER_READ@flags.FX_SUBSIDY_REFORMED');
