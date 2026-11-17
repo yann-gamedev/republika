@@ -13,6 +13,10 @@
     "./fixtures": {
       "types": "./fixtures/slice/index.ts",
       "default": "./fixtures/slice/index.ts"
+    },
+    "./disk": {
+      "types": "./src/readContentFromDisk.ts",
+      "default": "./src/readContentFromDisk.ts"
     }
   },
   "scripts": {
