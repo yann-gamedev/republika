@@ -22,6 +22,8 @@ interface AppStore {
   initialize: () => Promise<void>;
   setUiScale: (scale: UiScale) => void;
   setFullscreenPreference: (fullscreen: boolean) => void;
+  /** Perbarui sebagian pengaturan lalu simpan ke settings.json. */
+  updateSettings: (patch: Partial<Settings>) => void;
 }
 
 function persistSettings(settings: Settings): void {
@@ -57,6 +59,12 @@ export const useAppStore = create<AppStore>()((set, get) => ({
 
   setFullscreenPreference: (fullscreen) => {
     const settings: Settings = { ...get().settings, fullscreen };
+    set({ settings });
+    persistSettings(settings);
+  },
+
+  updateSettings: (patch) => {
+    const settings: Settings = { ...get().settings, ...patch };
     set({ settings });
     persistSettings(settings);
   },

@@ -1,16 +1,17 @@
-import { saveFileSchema, settingsSchema } from '@republika/shared';
+import { SAVE_FORMAT_VERSION, saveFileSchema, settingsSchema } from '@republika/shared';
 import { describe, expect, it } from 'vitest';
 
 import { createGameState } from './helpers.js';
 
 function createSaveFile() {
   return {
-    saveFormatVersion: 1,
+    saveFormatVersion: SAVE_FORMAT_VERSION,
     appVersion: '0.1.0',
     rulesetVersion: 1,
     contentHash: '3ed0ca9655c713e270679edefd96e843aee0b1e021f0530ffec91b6ad3fe200c',
     savedAt: '2026-11-17T12:00:00.000Z',
     label: 'Kuartal 1',
+    playTimeSeconds: 0,
     state: createGameState(),
     history: { reports: [], ledger: [] },
   };

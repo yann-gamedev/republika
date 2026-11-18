@@ -1,3 +1,4 @@
+import { migrateSave, saveToDisk } from '@republika/simulation';
 import {
   saveFileSchema,
   settingsSchema,
@@ -42,21 +43,25 @@ export function parseSaveText(text: string): SaveReadResult {
       detail: error instanceof Error ? error.message : String(error),
     };
   }
-  const parsed = saveFileSchema.safeParse(raw);
-  if (!parsed.success) {
-    const issue = parsed.error.issues[0];
+  // Format lama dimigrasi di memori (rantai migrator murni dari engine).
+  const migrated = migrateSave(raw);
+  if (!migrated.ok) {
+    const { error } = migrated;
     return {
       status: 'corrupt',
-      reason: 'schema',
-      detail: issue === undefined ? 'invalid' : `${issue.path.join('.')}: ${issue.message}`,
+      reason: error.code === 'NEWER_FORMAT' ? 'newer' : 'schema',
+      detail:
+        error.code === 'NEWER_FORMAT' || error.code === 'NO_MIGRATOR'
+          ? `saveFormatVersion ${error.version}`
+          : error.detail,
     };
   }
-  return { status: 'ok', save: parsed.data };
+  return { status: 'ok', save: migrated.save, fromFormat: migrated.fromFormat };
 }
 
-/** Serialisasi save yang stabil (indentasi 2 agar mudah diedit pemain). */
+/** Serialisasi save format terbaru: ledger ringkas, indentasi 2 agar mudah diedit pemain. */
 export function serializeSave(save: SaveFile): string {
-  return `${JSON.stringify(save, null, 2)}\n`;
+  return `${JSON.stringify(saveToDisk(save), null, 2)}\n`;
 }
 
 /**
@@ -140,6 +145,18 @@ export class FileBackedStorage implements SaveStorage {
       }
     }
     await this.port.writeTextAtomic(savePath(slot), text);
+  }
+
+  async listSaveFiles(): Promise<string[]> {
+    return this.port.listSaveFiles();
+  }
+
+  async readFile(relativePath: string): Promise<string | null> {
+    return this.port.readText(relativePath);
+  }
+
+  async writeFile(relativePath: string, contents: string): Promise<void> {
+    await this.port.writeTextAtomic(relativePath, contents);
   }
 
   async readSettings(): Promise<Settings | null> {

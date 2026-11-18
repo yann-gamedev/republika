@@ -3,6 +3,7 @@ import {
   SAVE_FORMAT_VERSION,
   type GameDefinitions,
   type GameState,
+  type RulesetMigrationMap,
   type SaveFile,
   type SaveHistory,
   type SaveSlotId,
@@ -12,6 +13,8 @@ import {
 import {
   applyCommand,
   createInitialState,
+  migrateRuleset,
+  migrateSave,
   resolveTurn,
   type CommandErrorCode,
   type PlayerCommand,
@@ -30,13 +33,62 @@ export interface GameControllerDeps {
   readonly createSeed: () => string;
   readonly createCommandId: () => string;
   readonly store: GameStore;
+  /** Peta migrasi ruleset dari `packages/game-data/migrations/` (default: kosong). */
+  readonly rulesetMaps?: readonly RulesetMigrationMap[];
+  /** Jam monotonik (ms) untuk lama bermain; default dari `now()`. */
+  readonly nowMs?: () => number;
 }
+
+export interface OldSaveFile {
+  readonly path: string;
+  readonly appVersion: string | null;
+  readonly fromFormat: number | null;
+  readonly fromRuleset: number | null;
+}
+
+export interface MigrationOutcome {
+  readonly path: string;
+  readonly ok: boolean;
+  readonly reason?: string;
+  readonly targetSlot?: SaveSlotId;
+  /** Ruleset baru bila kampanye dilanjutkan dengan aturan berbeda. */
+  readonly continuedWithRuleset?: number;
+  readonly backupPath: string;
+}
+
+/** Batas jeda yang dihitung sebagai waktu bermain (menghindari AFK berjam-jam). */
+const MAX_PLAY_INTERVAL_MS = 30 * 60 * 1000;
 
 export type ControllerResult =
   | { readonly ok: true }
   | { readonly ok: false; readonly code?: CommandErrorCode; readonly message: string };
 
 export type ManualSlot = Exclude<SaveSlotId, 'autosave'>;
+
+const MANUAL_SLOTS: readonly ManualSlot[] = ['slot-1', 'slot-2', 'slot-3', 'slot-4', 'slot-5'];
+const SLOT_IDS: readonly SaveSlotId[] = ['autosave', ...MANUAL_SLOTS];
+
+function sanitize(value: string): string {
+  return value.replace(/[^0-9A-Za-z.-]/gu, '-');
+}
+
+/** Metadata ringan dari teks save mentah, tanpa validasi penuh. */
+function readMeta(text: string | null): Omit<OldSaveFile, 'path'> {
+  try {
+    const raw: unknown = text === null ? null : JSON.parse(text);
+    if (typeof raw !== 'object' || raw === null) {
+      return { appVersion: null, fromFormat: null, fromRuleset: null };
+    }
+    const record = raw as Record<string, unknown>;
+    return {
+      appVersion: typeof record.appVersion === 'string' ? record.appVersion : null,
+      fromFormat: typeof record.saveFormatVersion === 'number' ? record.saveFormatVersion : null,
+      fromRuleset: typeof record.rulesetVersion === 'number' ? record.rulesetVersion : null,
+    };
+  } catch {
+    return { appVersion: null, fromFormat: null, fromRuleset: null };
+  }
+}
 
 export type ContinueResult =
   | { readonly status: 'loaded' }
@@ -57,6 +109,8 @@ export function commandErrorMessage(code: CommandErrorCode): string {
 export class GameController {
   private readonly deps: GameControllerDeps;
   private toastCounter = 0;
+  private playTimeBase = 0;
+  private playMark: number | null = null;
 
   constructor(deps: GameControllerDeps) {
     this.deps = deps;
@@ -81,6 +135,8 @@ export class GameController {
         cabinetName: input.cabinetName,
         seed: this.deps.createSeed(),
       });
+      this.playTimeBase = 0;
+      this.playMark = this.nowMs();
       this.deps.store.setState({ state, lastReport: null, uiStatus: 'busy' });
       const saved = await this.autosave(state, { reports: [], ledger: [] });
       this.toast(
@@ -145,15 +201,139 @@ export class GameController {
     return { ok: true };
   }
 
-  /** Memuat save yang sudah tervalidasi Zod ke store. */
+  /**
+   * Memuat save yang sudah tervalidasi Zod ke store. Save dari ruleset lama
+   * dilanjutkan dengan aturan baru (AGENT §5.13); ruleset lebih baru ditolak.
+   */
   loadFromSave(file: SaveFile): ControllerResult {
-    const expected = this.deps.definitions.scenario.rulesetVersion;
-    if (file.state.rulesetVersion !== expected) {
-      return this.fail(copy.controller.rulesetMismatch(file.state.rulesetVersion, expected));
+    const migrated = migrateRuleset(file, this.deps.definitions, this.deps.rulesetMaps ?? []);
+    if (!migrated.ok) {
+      return this.fail(
+        copy.controller.rulesetMismatch(
+          migrated.version,
+          this.deps.definitions.scenario.rulesetVersion,
+        ),
+      );
     }
-    const lastReport: TurnReport | null = file.history.reports.at(-1) ?? null;
-    this.deps.store.setState({ state: file.state, lastReport, uiStatus: 'idle' });
+    const save = migrated.save;
+    const lastReport: TurnReport | null = save.history.reports.at(-1) ?? null;
+    this.playTimeBase = save.playTimeSeconds;
+    this.playMark = this.nowMs();
+    this.deps.store.setState({ state: save.state, lastReport, uiStatus: 'idle' });
+    if (migrated.migrated) this.toast('info', copy.migration.continuedWith(migrated.toRuleset));
     return { ok: true };
+  }
+
+  /** Save di `saves/` yang formatnya atau ruleset-nya lebih lama dari versi ini. */
+  async findOldSaves(): Promise<readonly OldSaveFile[]> {
+    let names: string[];
+    try {
+      names = await this.deps.storage.listSaveFiles();
+    } catch {
+      return [];
+    }
+    const found: OldSaveFile[] = [];
+    for (const name of names) {
+      if (name.endsWith('.bak.json')) continue;
+      const path = `saves/${name}`;
+      const meta = readMeta(await this.deps.storage.readFile(path));
+      const oldFormat = meta.fromFormat !== null && meta.fromFormat < SAVE_FORMAT_VERSION;
+      const oldRuleset =
+        meta.fromRuleset !== null &&
+        meta.fromRuleset < this.deps.definitions.scenario.rulesetVersion;
+      if (oldFormat || oldRuleset) found.push({ path, ...meta });
+    }
+    return found;
+  }
+
+  /**
+   * Migrasi file save (dari `saves/` atau `saves/imported/`). File asli SELALU
+   * dicadangkan ke `saves/backup-v{versiLama}/` sebelum apa pun, termasuk bila
+   * migrasi gagal. Save slot ditulis ulang di slot yang sama; save impor
+   * ditaruh di slot manual kosong pertama.
+   */
+  async migrateSaveFiles(paths: readonly string[]): Promise<readonly MigrationOutcome[]> {
+    const outcomes: MigrationOutcome[] = [];
+    for (const path of paths) {
+      const name = path.split('/').at(-1) ?? path;
+      const text = await this.deps.storage.readFile(path);
+      const meta = readMeta(text);
+      const backupPath = `saves/backup-v${sanitize(meta.appVersion ?? 'lama')}/${name}`;
+      if (text === null) {
+        outcomes.push({ path, ok: false, reason: copy.migration.missing, backupPath });
+        continue;
+      }
+      try {
+        await this.deps.storage.writeFile(backupPath, text);
+      } catch {
+        outcomes.push({ path, ok: false, reason: copy.migration.backupFailed, backupPath });
+        continue;
+      }
+      outcomes.push(await this.migrateOne(path, name, text, backupPath));
+    }
+    return outcomes;
+  }
+
+  private async migrateOne(
+    path: string,
+    name: string,
+    text: string,
+    backupPath: string,
+  ): Promise<MigrationOutcome> {
+    let raw: unknown;
+    try {
+      raw = JSON.parse(text);
+    } catch {
+      return { path, ok: false, reason: copy.migration.notJson, backupPath };
+    }
+    const formatted = migrateSave(raw);
+    if (!formatted.ok) {
+      const { error } = formatted;
+      const reason =
+        error.code === 'NEWER_FORMAT'
+          ? copy.migration.newerFormat(error.version)
+          : error.code === 'NO_MIGRATOR'
+            ? copy.migration.noMigrator(error.version)
+            : copy.migration.invalid(error.detail);
+      return { path, ok: false, reason, backupPath };
+    }
+    const ruleset = migrateRuleset(
+      formatted.save,
+      this.deps.definitions,
+      this.deps.rulesetMaps ?? [],
+    );
+    if (!ruleset.ok) {
+      return { path, ok: false, reason: copy.migration.newerRuleset(ruleset.version), backupPath };
+    }
+    const slotFromName = SLOT_IDS.find((slot) => name === `${slot}.json`);
+    const targetSlot =
+      path.startsWith('saves/imported/') || slotFromName === undefined
+        ? await this.firstFreeManualSlot()
+        : slotFromName;
+    if (targetSlot === null) {
+      return { path, ok: false, reason: copy.migration.noFreeSlot, backupPath };
+    }
+    try {
+      await this.deps.storage.writeSave(targetSlot, ruleset.save);
+    } catch {
+      return { path, ok: false, reason: copy.saves.saveFailed, backupPath };
+    }
+    return {
+      path,
+      ok: true,
+      targetSlot,
+      backupPath,
+      ...(ruleset.migrated ? { continuedWithRuleset: ruleset.toRuleset } : {}),
+    };
+  }
+
+  private async firstFreeManualSlot(): Promise<ManualSlot | null> {
+    const used = new Set((await this.listSlots()).map((info) => info.slot));
+    return MANUAL_SLOTS.find((slot) => !used.has(slot)) ?? null;
+  }
+
+  private nowMs(): number {
+    return this.deps.nowMs?.() ?? Date.parse(this.deps.now());
   }
 
   /** Menu Utama → Lanjutkan: muat autosave. */
@@ -282,6 +462,12 @@ export class GameController {
   }
 
   private buildSave(state: GameState, history: SaveHistory, label?: string): SaveFile {
+    const now = this.nowMs();
+    if (this.playMark !== null && Number.isFinite(now)) {
+      const elapsed = Math.min(Math.max(0, now - this.playMark), MAX_PLAY_INTERVAL_MS);
+      this.playTimeBase += Math.floor(elapsed / 1000);
+    }
+    this.playMark = now;
     return {
       saveFormatVersion: SAVE_FORMAT_VERSION,
       appVersion: APP_VERSION,
@@ -289,6 +475,7 @@ export class GameController {
       contentHash: this.deps.contentHash,
       savedAt: this.deps.now(),
       label: label ?? copy.controller.saveLabel(state.presidentName, state.cabinetName, state.turn),
+      playTimeSeconds: this.playTimeBase,
       state,
       history,
     };

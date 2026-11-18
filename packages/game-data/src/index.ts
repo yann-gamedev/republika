@@ -1,4 +1,5 @@
 export { rawContentBundle } from './contentBundle.js';
+export { rulesetMigrationMaps } from './rulesetMigrations.js';
 export {
   convertArchetype,
   convertBaseline,

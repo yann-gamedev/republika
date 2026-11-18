@@ -9,6 +9,7 @@ import { gameController } from '@/store/controller';
 import type { ContinueResult } from '@/store/gameController';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
+import { PreviousVersionFlow } from '@/features/migration/PreviousVersionFlow';
 import { ConfirmDialog } from '@/ui/components/dialog';
 import {
   IconChevronRight,
@@ -302,6 +303,8 @@ export default function MenuPage() {
           </div>
         </aside>
       </div>
+
+      <PreviousVersionFlow />
 
       <ConfirmDialog
         open={corrupt !== null}

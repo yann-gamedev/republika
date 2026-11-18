@@ -21,6 +21,7 @@ function createSave(): SaveFile {
     contentHash,
     savedAt: '2026-01-01T00:00:00.000Z',
     label: 'Kampanye contoh',
+    playTimeSeconds: 0,
     state: sampleState,
     history: {
       reports: [],
@@ -36,7 +37,7 @@ describe('MemoryStorage', () => {
 
     await storage.writeSave('slot-1', save);
     const read = await storage.readSave('slot-1');
-    expect(read).toEqual({ status: 'ok', save });
+    expect(read).toEqual({ status: 'ok', save, fromFormat: SAVE_FORMAT_VERSION });
 
     if (read.status !== 'ok') throw new Error('Save seharusnya ada.');
     read.save.label = 'Diubah di memori';

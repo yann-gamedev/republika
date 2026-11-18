@@ -19,6 +19,8 @@ export const saveFileSchema = z
     contentHash: z.string().min(8).max(128),
     savedAt: isoDateTimeSchema,
     label: z.string().trim().min(1).max(80),
+    /** Lama bermain kumulatif (detik). Ditambahkan di format v2. */
+    playTimeSeconds: z.number().int().min(0),
     state: gameStateSchema,
     history: saveHistorySchema,
   })

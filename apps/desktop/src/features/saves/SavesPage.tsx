@@ -12,6 +12,8 @@ import type { ManualSlot } from '@/store/gameController';
 import { useGameStore } from '@/store/gameStore';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
+import { MigrationResult, importAndMigrate } from '@/features/migration/PreviousVersionFlow';
+import type { MigrationOutcome } from '@/store/gameController';
 import { ConfirmDialog } from '@/ui/components/dialog';
 import { Input } from '@/ui/components/input';
 import { IconFolder } from '@/ui/icons';
@@ -41,6 +43,7 @@ export default function SavesPage() {
   const [pending, setPending] = useState<Pending | null>(null);
   const [renaming, setRenaming] = useState<{ slot: ManualSlot; label: string } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [imported, setImported] = useState<readonly MigrationOutcome[] | null>(null);
 
   const refresh = useCallback(() => {
     void gameController.listSlots().then(setSlots);
@@ -98,6 +101,20 @@ export default function SavesPage() {
       .catch(() => setNotice(copy.saves.openFolderUnavailable));
   };
 
+  const importPrevious = () => {
+    if (!isTauriRuntime()) {
+      setNotice(copy.migration.importUnavailable);
+      return;
+    }
+    void importAndMigrate()
+      .then((outcomes) => {
+        if (outcomes !== null) setImported(outcomes);
+        refresh();
+      })
+      .catch(() => setNotice(copy.migration.importUnavailable));
+  };
+  const closeImported = useCallback(() => setImported(null), []);
+
   const slotLabel = (slot: SaveSlotId) => copy.saves.slotName(slot);
   const dialogTitle =
     pending?.kind === 'overwrite'
@@ -124,15 +141,20 @@ export default function SavesPage() {
           >
             ← {state === null ? copy.game.menu : copy.saves.back}
           </Link>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={openFolder}
-            title={isTauriRuntime() ? undefined : copy.saves.openFolderUnavailable}
-          >
-            <IconFolder className="h-3.5 w-3.5" />
-            {copy.saves.openFolder}
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button size="sm" variant="ghost" onClick={importPrevious}>
+              {copy.migration.importFromPrevious}
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={openFolder}
+              title={isTauriRuntime() ? undefined : copy.saves.openFolderUnavailable}
+            >
+              <IconFolder className="h-3.5 w-3.5" />
+              {copy.saves.openFolder}
+            </Button>
+          </div>
         </div>
 
         <div className="pt-8">
@@ -280,6 +302,16 @@ export default function SavesPage() {
           </ol>
         )}
       </div>
+
+      <ConfirmDialog
+        open={imported !== null}
+        title={copy.migration.resultTitle}
+        confirmLabel={copy.common.close}
+        onConfirm={closeImported}
+        onCancel={closeImported}
+      >
+        {imported !== null && <MigrationResult outcomes={imported} />}
+      </ConfirmDialog>
 
       <ConfirmDialog
         open={pending !== null}

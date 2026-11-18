@@ -1,3 +1,5 @@
+import { rulesetMigrationMaps } from '@republika/game-data';
+
 import { contentHash, definitions } from '@/content/gameContent';
 import { createCampaignSeed, createCommandId, nowIso, saveStorage } from '@/platform';
 
@@ -13,4 +15,5 @@ export const gameController = new GameController({
   createSeed: createCampaignSeed,
   createCommandId,
   store: gameStore,
+  rulesetMaps: rulesetMigrationMaps,
 });

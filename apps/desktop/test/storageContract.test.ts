@@ -31,6 +31,7 @@ function makeSave(turn: number, label = `Kuartal ${turn}`): SaveFile {
     contentHash,
     savedAt: '2031-01-01T00:00:00.000Z',
     label,
+    playTimeSeconds: 0,
     state: { ...state, turn: Math.min(turn, state.maxTurns) },
     history: { reports: [], ledger: [] },
   };

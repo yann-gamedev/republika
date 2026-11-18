@@ -1,0 +1,894 @@
+{
+  "saveFormatVersion": 1,
+  "appVersion": "0.1.0",
+  "rulesetVersion": 3,
+  "contentHash": "fixture-slice-v1",
+  "savedAt": "2031-06-30T08:00:00.000Z",
+  "label": "Presiden Sari Wening — Kabinet Fajar — Kuartal 3",
+  "state": {
+    "stateVersion": 1,
+    "presidentName": "Sari Wening",
+    "cabinetName": "Kabinet Fajar",
+    "rulesetVersion": 3,
+    "seed": "fixture-save-v1",
+    "turn": 3,
+    "maxTurns": 4,
+    "status": "active",
+    "actionPointsPerTurn": 2,
+    "actionPointsRemaining": 2,
+    "treasuryBillion": 22000,
+    "indicators": {
+      "approval": 535,
+      "stability": 620,
+      "fiscalHealth": 550,
+      "growthPct": 50,
+      "inflationPct": 35,
+      "unemploymentPct": 48,
+      "welfare": 500,
+      "trust": 500
+    },
+    "factions": [
+      {
+        "factionId": "FAC-FX-01",
+        "supportTenths": 554
+      },
+      {
+        "factionId": "FAC-FX-02",
+        "supportTenths": 443
+      },
+      {
+        "factionId": "FAC-FX-03",
+        "supportTenths": 386
+      }
+    ],
+    "ministries": [
+      {
+        "ministryId": "MIN-FX-ENERGY",
+        "effectiveness": 59
+      },
+      {
+        "ministryId": "MIN-FX-FISCAL",
+        "effectiveness": 65
+      },
+      {
+        "ministryId": "MIN-FX-GOVERNANCE",
+        "effectiveness": 60
+      },
+      {
+        "ministryId": "MIN-FX-SOCIAL",
+        "effectiveness": 60
+      }
+    ],
+    "activePolicies": [
+      {
+        "policyId": "POL-ENERGY-FX-001",
+        "enactedTurn": 1,
+        "remainingTurns": 1,
+        "perTurnCostBillion": 0,
+        "lastTickedTurn": 2
+      }
+    ],
+    "pendingCommands": [],
+    "pendingEvents": [
+      {
+        "eventId": "EVT-FX-002",
+        "arrivedTurn": 3,
+        "resolvedChoiceId": null
+      }
+    ],
+    "lobbyThisTurn": [],
+    "commandIdsThisTurn": [],
+    "policyCooldowns": {},
+    "eventCooldowns": {
+      "EVT-FX-001": 3
+    },
+    "eventsFired": [
+      "EVT-FX-001",
+      "EVT-FX-002"
+    ],
+    "flags": [
+      "FX_SUBSIDY_REFORMED"
+    ],
+    "delayedEffects": [
+      {
+        "sourceType": "POLICY",
+        "sourceId": "POL-ENERGY-FX-001",
+        "createdTurn": 1,
+        "remainingTurns": 1,
+        "effect": {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "deltaTenths": 30,
+          "timing": "DELAYED",
+          "delayTurns": 2,
+          "reasonCode": "FX_TARGETED_AID"
+        }
+      }
+    ],
+    "campaignStats": {
+      "policiesEnacted": 1,
+      "policiesByCategory": {
+        "FISCAL": 0,
+        "SOCIAL": 0,
+        "ENERGY": 1,
+        "GOVERNANCE": 0
+      },
+      "votesHeld": 0,
+      "votesFailed": 0,
+      "lobbies": 1,
+      "eventsResolved": 1,
+      "totalDeficitBillion": 3000,
+      "totalPolicySpendingBillion": 4000,
+      "quartersPlayed": 2,
+      "indicatorSums": {
+        "approval": 1074,
+        "stability": 1240,
+        "fiscalHealth": 1100,
+        "growthPct": 99,
+        "inflationPct": 72,
+        "unemploymentPct": 100,
+        "welfare": 1000,
+        "trust": 1020
+      },
+      "indicatorMin": {
+        "approval": 535,
+        "stability": 620,
+        "fiscalHealth": 550,
+        "growthPct": 48,
+        "inflationPct": 34,
+        "unemploymentPct": 48,
+        "welfare": 500,
+        "trust": 500
+      },
+      "indicatorMax": {
+        "approval": 580,
+        "stability": 620,
+        "fiscalHealth": 550,
+        "growthPct": 50,
+        "inflationPct": 37,
+        "unemploymentPct": 56,
+        "welfare": 500,
+        "trust": 520
+      }
+    }
+  },
+  "history": {
+    "reports": [
+      {
+        "turn": 1,
+        "year": 2031,
+        "quarter": 1,
+        "presidentName": "Sari Wening",
+        "indicatorsBefore": {
+          "approval": 580,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 48,
+          "inflationPct": 34,
+          "unemploymentPct": 56,
+          "welfare": 500,
+          "trust": 520
+        },
+        "indicatorsAfter": {
+          "approval": 539,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 49,
+          "inflationPct": 37,
+          "unemploymentPct": 52,
+          "welfare": 500,
+          "trust": 520
+        },
+        "treasuryBeforeBillion": 20000,
+        "treasuryAfterBillion": 25000,
+        "treasuryDeltaBillion": 5000,
+        "indicatorDeltas": {
+          "approval": -41,
+          "stability": 0,
+          "fiscalHealth": 0,
+          "growthPct": 1,
+          "inflationPct": 3,
+          "unemploymentPct": -4,
+          "welfare": 0,
+          "trust": 0
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-ENERGY-FX-001",
+              "reasonCode": "FX_FUEL_DISCONTENT",
+              "deltaTenths": -37
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -4
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [],
+          "growthPct": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-ENERGY-FX-001",
+              "reasonCode": "FX_ENERGY_EFFICIENCY",
+              "deltaTenths": 3
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_GROWTH_REVERSION",
+              "deltaTenths": -2
+            }
+          ],
+          "inflationPct": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-ENERGY-FX-001",
+              "reasonCode": "FX_ENERGY_PASS_THROUGH",
+              "deltaTenths": 6
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_INFLATION_REVERSION",
+              "deltaTenths": -3
+            }
+          ],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -4
+            }
+          ],
+          "welfare": [],
+          "trust": []
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-FX-01",
+            "beforeTenths": 550,
+            "afterTenths": 552
+          },
+          {
+            "factionId": "FAC-FX-02",
+            "beforeTenths": 480,
+            "afterTenths": 437
+          },
+          {
+            "factionId": "FAC-FX-03",
+            "beforeTenths": 450,
+            "afterTenths": 407
+          }
+        ],
+        "policiesPassed": [
+          "POL-ENERGY-FX-001"
+        ],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "id": "T01-0000",
+            "turn": 1,
+            "order": 0,
+            "kind": "POLICY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "POLICY_ENACTED",
+            "target": "POL-ENERGY-FX-001"
+          },
+          {
+            "id": "T01-0001",
+            "turn": 1,
+            "order": 1,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "POLICY_UPFRONT_COST",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 20000,
+            "delta": -2000,
+            "after": 18000
+          },
+          {
+            "id": "T01-0002",
+            "turn": 1,
+            "order": 2,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_SUBSIDY_SAVINGS",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 18000,
+            "delta": 8000,
+            "after": 26000
+          },
+          {
+            "id": "T01-0003",
+            "turn": 1,
+            "order": 3,
+            "kind": "INDICATOR",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_ENERGY_PASS_THROUGH",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 34,
+            "delta": 6,
+            "after": 40
+          },
+          {
+            "id": "T01-0004",
+            "turn": 1,
+            "order": 4,
+            "kind": "INDICATOR",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_FUEL_DISCONTENT",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 580,
+            "delta": -37,
+            "after": 543
+          },
+          {
+            "id": "T01-0005",
+            "turn": 1,
+            "order": 5,
+            "kind": "FACTION",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_POPULIST_BACKLASH",
+            "target": "FAC-FX-02",
+            "unit": "tenths",
+            "before": 480,
+            "delta": -50,
+            "after": 430
+          },
+          {
+            "id": "T01-0006",
+            "turn": 1,
+            "order": 6,
+            "kind": "FACTION",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_POPULIST_BACKLASH",
+            "target": "FAC-FX-03",
+            "unit": "tenths",
+            "before": 450,
+            "delta": -50,
+            "after": 400
+          },
+          {
+            "id": "T01-0007",
+            "turn": 1,
+            "order": 7,
+            "kind": "MINISTRY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_ENERGY_REFORM",
+            "target": "MIN-FX-ENERGY",
+            "unit": "points",
+            "before": 55,
+            "delta": 2,
+            "after": 57
+          },
+          {
+            "id": "T01-0008",
+            "turn": 1,
+            "order": 8,
+            "kind": "FLAG",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_SUBSIDY_FLAG",
+            "target": "FX_SUBSIDY_REFORMED",
+            "unit": "flag",
+            "before": 0,
+            "delta": 1,
+            "after": 1
+          },
+          {
+            "id": "T01-0009",
+            "turn": 1,
+            "order": 9,
+            "kind": "INDICATOR",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_ENERGY_EFFICIENCY",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 48,
+            "delta": 3,
+            "after": 51
+          },
+          {
+            "id": "T01-0010",
+            "turn": 1,
+            "order": 10,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_INFLATION_REVERSION",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 40,
+            "delta": -3,
+            "after": 37
+          },
+          {
+            "id": "T01-0011",
+            "turn": 1,
+            "order": 11,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 56,
+            "delta": -4,
+            "after": 52
+          },
+          {
+            "id": "T01-0012",
+            "turn": 1,
+            "order": 12,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 543,
+            "delta": -4,
+            "after": 539
+          },
+          {
+            "id": "T01-0013",
+            "turn": 1,
+            "order": 13,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_GROWTH_REVERSION",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 51,
+            "delta": -2,
+            "after": 49
+          },
+          {
+            "id": "T01-0014",
+            "turn": 1,
+            "order": 14,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 26000,
+            "delta": 40000,
+            "after": 66000
+          },
+          {
+            "id": "T01-0015",
+            "turn": 1,
+            "order": 15,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 66000,
+            "delta": -41000,
+            "after": 25000
+          },
+          {
+            "id": "T01-0016",
+            "turn": 1,
+            "order": 16,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-01",
+            "unit": "tenths",
+            "before": 550,
+            "delta": 2,
+            "after": 552
+          },
+          {
+            "id": "T01-0017",
+            "turn": 1,
+            "order": 17,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-02",
+            "unit": "tenths",
+            "before": 430,
+            "delta": 7,
+            "after": 437
+          },
+          {
+            "id": "T01-0018",
+            "turn": 1,
+            "order": 18,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-03",
+            "unit": "tenths",
+            "before": 400,
+            "delta": 7,
+            "after": 407
+          },
+          {
+            "id": "T01-0019",
+            "turn": 1,
+            "order": 19,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-FX-ENERGY",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-FX-ENERGY",
+            "unit": "points",
+            "before": 57,
+            "delta": 1,
+            "after": 58
+          },
+          {
+            "id": "T01-0020",
+            "turn": 1,
+            "order": 20,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-FX-001",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-FX-001"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [],
+        "nextEventIds": [
+          "EVT-FX-001"
+        ],
+        "summary": []
+      },
+      {
+        "turn": 2,
+        "year": 2031,
+        "quarter": 2,
+        "presidentName": "Sari Wening",
+        "indicatorsBefore": {
+          "approval": 539,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 49,
+          "inflationPct": 37,
+          "unemploymentPct": 52,
+          "welfare": 500,
+          "trust": 520
+        },
+        "indicatorsAfter": {
+          "approval": 535,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 50,
+          "inflationPct": 35,
+          "unemploymentPct": 48,
+          "welfare": 500,
+          "trust": 500
+        },
+        "treasuryBeforeBillion": 25000,
+        "treasuryAfterBillion": 22000,
+        "treasuryDeltaBillion": -3000,
+        "indicatorDeltas": {
+          "approval": -4,
+          "stability": 0,
+          "fiscalHealth": 0,
+          "growthPct": 1,
+          "inflationPct": -2,
+          "unemploymentPct": -4,
+          "welfare": 0,
+          "trust": -20
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -4
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [],
+          "growthPct": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-ENERGY-FX-001",
+              "reasonCode": "FX_ENERGY_EFFICIENCY",
+              "deltaTenths": 3
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_GROWTH_REVERSION",
+              "deltaTenths": -2
+            }
+          ],
+          "inflationPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_INFLATION_REVERSION",
+              "deltaTenths": -2
+            }
+          ],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -4
+            }
+          ],
+          "welfare": [],
+          "trust": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-FX-001",
+              "reasonCode": "FX_SEEN_AS_ABSENT",
+              "deltaTenths": -20
+            }
+          ]
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-FX-01",
+            "beforeTenths": 552,
+            "afterTenths": 554
+          },
+          {
+            "factionId": "FAC-FX-02",
+            "beforeTenths": 437,
+            "afterTenths": 443
+          },
+          {
+            "factionId": "FAC-FX-03",
+            "beforeTenths": 407,
+            "afterTenths": 386
+          }
+        ],
+        "policiesPassed": [],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "id": "T02-0000",
+            "turn": 2,
+            "order": 0,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-FX-001",
+            "reasonCode": "EVENT_RESOLVED",
+            "target": "B"
+          },
+          {
+            "id": "T02-0001",
+            "turn": 2,
+            "order": 1,
+            "kind": "INDICATOR",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-FX-001",
+            "reasonCode": "FX_SEEN_AS_ABSENT",
+            "target": "trust",
+            "unit": "tenths",
+            "before": 520,
+            "delta": -20,
+            "after": 500
+          },
+          {
+            "id": "T02-0002",
+            "turn": 2,
+            "order": 2,
+            "kind": "FACTION",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-FX-001",
+            "reasonCode": "FX_REGIONAL_ANGER",
+            "target": "FAC-FX-03",
+            "unit": "tenths",
+            "before": 407,
+            "delta": -30,
+            "after": 377
+          },
+          {
+            "id": "T02-0003",
+            "turn": 2,
+            "order": 3,
+            "kind": "TREASURY",
+            "sourceType": "LOBBY",
+            "sourceId": "FAC-FX-03",
+            "reasonCode": "LOBBY_COST",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 25000,
+            "delta": -2000,
+            "after": 23000
+          },
+          {
+            "id": "T02-0004",
+            "turn": 2,
+            "order": 4,
+            "kind": "VOTE",
+            "sourceType": "LOBBY",
+            "sourceId": "FAC-FX-03",
+            "reasonCode": "LOBBY_BONUS",
+            "target": "FAC-FX-03",
+            "unit": "tenths",
+            "delta": 150
+          },
+          {
+            "id": "T02-0005",
+            "turn": 2,
+            "order": 5,
+            "kind": "INDICATOR",
+            "sourceType": "POLICY",
+            "sourceId": "POL-ENERGY-FX-001",
+            "reasonCode": "FX_ENERGY_EFFICIENCY",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 49,
+            "delta": 3,
+            "after": 52
+          },
+          {
+            "id": "T02-0006",
+            "turn": 2,
+            "order": 6,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_INFLATION_REVERSION",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 37,
+            "delta": -2,
+            "after": 35
+          },
+          {
+            "id": "T02-0007",
+            "turn": 2,
+            "order": 7,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 52,
+            "delta": -4,
+            "after": 48
+          },
+          {
+            "id": "T02-0008",
+            "turn": 2,
+            "order": 8,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 539,
+            "delta": -4,
+            "after": 535
+          },
+          {
+            "id": "T02-0009",
+            "turn": 2,
+            "order": 9,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_GROWTH_REVERSION",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 52,
+            "delta": -2,
+            "after": 50
+          },
+          {
+            "id": "T02-0010",
+            "turn": 2,
+            "order": 10,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 23000,
+            "delta": 40000,
+            "after": 63000
+          },
+          {
+            "id": "T02-0011",
+            "turn": 2,
+            "order": 11,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 63000,
+            "delta": -41000,
+            "after": 22000
+          },
+          {
+            "id": "T02-0012",
+            "turn": 2,
+            "order": 12,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-01",
+            "unit": "tenths",
+            "before": 552,
+            "delta": 2,
+            "after": 554
+          },
+          {
+            "id": "T02-0013",
+            "turn": 2,
+            "order": 13,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-02",
+            "unit": "tenths",
+            "before": 437,
+            "delta": 6,
+            "after": 443
+          },
+          {
+            "id": "T02-0014",
+            "turn": 2,
+            "order": 14,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-FX-03",
+            "unit": "tenths",
+            "before": 377,
+            "delta": 9,
+            "after": 386
+          },
+          {
+            "id": "T02-0015",
+            "turn": 2,
+            "order": 15,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-FX-ENERGY",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-FX-ENERGY",
+            "unit": "points",
+            "before": 58,
+            "delta": 1,
+            "after": 59
+          },
+          {
+            "id": "T02-0016",
+            "turn": 2,
+            "order": 16,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-FX-002",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-FX-002"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [
+          {
+            "eventId": "EVT-FX-001",
+            "choiceId": "B"
+          }
+        ],
+        "nextEventIds": [
+          "EVT-FX-002"
+        ],
+        "summary": []
+      }
+    ],
+    "ledger": []
+  }
+}

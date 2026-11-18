@@ -1,2 +1,3 @@
 # Snapshot engine dibandingkan byte-per-byte; jaga akhir baris LF di semua OS.
 packages/simulation/test/__fixtures__/** text eol=lf
+packages/simulation/test/fixtures/** text eol=lf
