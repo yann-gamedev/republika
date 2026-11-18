@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Ilustrasi event</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#0E1117}</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1400px; box-sizing: border-box; padding: 48px; display: flex; flex-direction: column; gap: 32px">
+  <div>
+    <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 36px">Ilustrasi event</h1>
+    <p style="margin: 8px 0 0; font-size: 15px; color: #A9A59A; max-width: 56rem">Satu gambar per event di packages/game-data/content/events. Berkas SVG final ada di apps/desktop/src/assets/images/events/, dipetakan lewat ID event.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{events}}" as="ev" hint-placeholder-count="12">
+      <figure style="margin: 0; background: #151A22; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column">
+        <img src="{{ev.src}}" alt="{{ev.alt}}" style="display: block; width: 100%; aspect-ratio: 6 / 5; object-fit: cover">
+        <figcaption style="padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">{{ev.id}}</span>
+          <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; line-height: 1.25">{{ev.title}}</span>
+        </figcaption>
+      </figure>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const E = [
+      ['EVT-HIST-001', 'Konferensi Negara-Negara Selatan', '/_blob/04029ac392e96717b55cf10f6295c2e7', 'Delegasi mengelilingi meja konferensi di bawah deretan bendera'],
+      ['EVT-HIST-002', 'Kebuntuan Majelis Konstitusi', '/_blob/6ebfeae1139f591bc60b193c6cffdf80', 'Dua kelompok anggota majelis saling membelakangi'],
+      ['EVT-HIST-003', 'Mandat Darurat Istana', '/_blob/fdfd93ef2ecb827916aa8b725a21bb16', 'Ruang krisis istana dengan dinding layar'],
+      ['EVT-HIST-004', 'Krisis Perbankan dan Mata Uang', '/_blob/1c2c9538606991268945d0553dbe57bd', 'Antrean nasabah di depan bank'],
+      ['EVT-HIST-005', 'Desakan Membentuk Kabinet Transisi', '/_blob/0f66479656e06c79fc70ce7f31874ea9', 'Massa berspanduk di depan pagar istana'],
+      ['EVT-HIST-006', 'Tawaran Dukungan Jelang Putaran Kedua', '/_blob/a7092323467ae53bc9738f8e11ca404c', 'Jabat tangan di atas kotak suara'],
+      ['EVT-HIST-007', 'Rekonstruksi Pesisir Utara', '/_blob/f3a85509f9494af84a25ec25ec30592b', 'Pekerja membangun kembali dermaga nelayan'],
+      ['EVT-HIST-008', 'Kesepakatan Damai Provinsi Serambi', '/_blob/71a896608ee52ec450206cfeefc2bf9c', 'Dua delegasi menandatangani naskah damai'],
+      ['EVT-HIST-009', 'Darurat Kesehatan Nasional', '/_blob/b13fe57ab38b0aaa3bbc6fd1da243514', 'Tenda darurat kesehatan dan ranjang pasien'],
+      ['EVT-HIST-010', 'Harga Energi dan Kompensasi Tunai', '/_blob/7993172f4c9dcf4253927fcc87614059', 'Antrean motor di SPBU dengan papan harga naik'],
+      ['EVT-PLACEHOLDER-001', 'Banjir Besar', '/_blob/78fee94b0d86577765a6e9e6e26a0e33', 'Warga mengungsi di atap rumah saat banjir'],
+      ['EVT-PLACEHOLDER-002', 'Unjuk Rasa Mahasiswa', '/_blob/3994178c4b42f4e87d4f7b5c0dd5877a', 'Mahasiswa berunjuk rasa di depan kampus']
+    ];
+    return { events: E.map(([id, title, blob, alt]) => ({ id, title, alt, src: blob })) };
+  }
+}
+</script>
+</body>
+</html>

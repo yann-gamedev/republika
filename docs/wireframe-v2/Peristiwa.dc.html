@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Nota dinas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#C9A227}a:hover{color:#E0BE4A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:8px;border:0;font:500 14px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 150ms,transform 120ms,opacity 150ms}
+.btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.ink{background:#1E1B16;color:#E8E1D0}.ink:hover{background:#2E2A22;color:#E8E1D0}
+.opt{display:flex;flex-direction:column;gap:8px;width:100%;padding:16px;border-radius:10px;border:0;text-align:left;cursor:pointer;font:400 14px Inter,sans-serif;color:#1E1B16;transition:background-color 150ms,box-shadow 150ms}
+.opt:hover{background:#DDD5C1}
+.opt:focus-visible,.btn:focus-visible{outline:2px solid #7A5A0A;outline-offset:2px}
+.stamp{transition:opacity 220ms cubic-bezier(0.22,1,0.36,1),transform 260ms cubic-bezier(0.22,1,0.36,1)}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1000px; display: flex; flex-direction: column">
+
+  <header style="display: flex; align-items: center; gap: 16px; height: 56px; padding: 0 24px; border-bottom: 1px solid rgba(237,233,222,0.08); background: #0B0E13">
+    <a href="MejaKerja.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #A9A59A; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Meja kerja</a>
+    <span style="color: #8A877E">/</span>
+    <span style="font-size: 14px">Nota dinas</span>
+    <span style="margin-left: auto; font-size: 13px; color: #8A877E">2032 · Kuartal 1 · keputusan nota tidak memakai AP</span>
+  </header>
+
+  <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 32px; padding: 40px 32px; justify-content: center; align-items: flex-start">
+
+    <!-- Kertas nota -->
+    <article style="flex: 1 1 640px; max-width: 760px; min-width: 0; position: relative; background: #E8E1D0; color: #1E1B16; border-radius: 8px; box-shadow: 0 24px 48px rgba(0,0,0,0.35); overflow: hidden">
+      <div style="position: relative; height: 240px; overflow: hidden">
+        <img src="/_blob/0f66479656e06c79fc70ce7f31874ea9" alt="Massa berspanduk di depan pagar istana pada malam hari" style="display: block; width: 100%; height: 240px; object-fit: cover">
+        <span style="position: absolute; left: 16px; bottom: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #E8E1D0; background: rgba(24,26,31,0.75); padding: 4px 8px; border-radius: 6px">events/evt-hist-005.svg</span>
+      </div>
+
+      <div style="padding: 32px 40px 40px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 12px; font-weight: 600; color: #9A2A18">Nota dinas · segera</span>
+            <span style="font-size: 13px; color: #6B6255">Kepada Presiden Sari Wening · dari Sekretariat Negara</span>
+          </div>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B6255">No. 05/SETNEG/2032</span>
+        </div>
+        <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 500; font-size: 34px; line-height: 1.15">Desakan membentuk kabinet transisi</h1>
+        <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; line-height: 30px; color: #3A352C">Koalisi goyah setelah gelombang demonstrasi. Kelompok mahasiswa dan partai oposisi menuntut jadwal reformasi pemilu, sementara para pelaku usaha meminta tim ekonomi tetap bekerja selama transisi.</p>
+
+        <div style="height: 1px; background: rgba(30,27,22,0.15); margin: 8px 0"></div>
+        <span style="font-size: 13px; font-weight: 500; color: #4A443A">Pilih satu tindakan</span>
+
+        <div role="radiogroup" aria-label="Pilihan tindakan" style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{choices}}" as="c" hint-placeholder-count="2">
+            <button type="button" role="radio" aria-checked="{{c.checked}}" class="opt" onClick="{{c.pick}}" disabled="{{signed}}" style="background: {{c.bg}}; box-shadow: {{c.ring}}">
+              <span style="display: flex; align-items: center; gap: 12px">
+                <span style="width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px #1E1B16; display: inline-flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{c.dot}}"></span></span>
+                <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; font-weight: 500">{{c.label}}</span>
+              </span>
+              <span style="padding-left: 30px; font-size: 14px; line-height: 22px; color: #4A443A">{{c.desc}}</span>
+              <span style="padding-left: 30px; display: flex; flex-wrap: wrap; gap: 6px">
+                <sc-for list="{{c.effects}}" as="e" hint-placeholder-count="3"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding: 2px 8px; border-radius: 4px; background: rgba(30,27,22,0.06); color: {{e.color}}">{{e.t}}</span></sc-for>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px">
+          <sc-if value="{{notSigned}}" hint-placeholder-val="{{ true }}">
+            <button type="button" class="btn ink" onClick="{{sign}}" disabled="{{noPick}}">Tandatangani keputusan</button>
+            <span style="font-size: 13px; color: #6B6255">{{hint}}</span>
+          </sc-if>
+          <sc-if value="{{signed}}" hint-placeholder-val="{{ false }}">
+            <a href="MejaKerja.dc.html" class="btn ink">Kembali ke meja kerja</a>
+            <button type="button" onClick="{{undo}}" style="background: none; border: 0; font: 500 14px Inter, sans-serif; color: #7A5A0A; cursor: pointer; text-decoration: underline">Ubah keputusan</button>
+            <span style="font-size: 13px; color: #6B6255">Bisa diubah sampai kuartal diakhiri</span>
+          </sc-if>
+        </div>
+      </div>
+
+      <!-- Stempel -->
+      <div class="stamp" aria-hidden="{{stampHidden}}" style="position: absolute; right: 48px; top: 268px; opacity: {{stampOpacity}}; transform: rotate(-12deg) scale({{stampScale}}); pointer-events: none">
+        <div style="border: 3px solid #A8301C; border-radius: 8px; padding: 8px 16px; color: #A8301C; display: flex; flex-direction: column; align-items: center; gap: 2px; background: rgba(232,225,208,0.6)">
+          <span style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 22px; letter-spacing: 0.06em">DIPUTUSKAN</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px">Presiden RI · 2032 K1</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Panel samping -->
+    <aside style="flex: 0 1 320px; min-width: 260px; display: flex; flex-direction: column; gap: 16px">
+      <section style="background: #151A22; border-radius: 16px; padding: 20px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 500">Perkiraan dampak</h2>
+        <sc-if value="{{noPick}}" hint-placeholder-val="{{ true }}">
+          <p style="margin: 0; font-size: 13px; line-height: 20px; color: #8A877E">Pilih tindakan di nota untuk melihat perkiraan perubahan indikator.</p>
+        </sc-if>
+        <sc-for list="{{impact}}" as="m" hint-placeholder-count="4">
+          <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #A9A59A">{{m.k}}</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{m.color}}">{{m.v}}</span></div>
+        </sc-for>
+        <span style="font-size: 12px; line-height: 18px; color: #8A877E">Rentang perkiraan, belum termasuk peristiwa lain kuartal ini</span>
+      </section>
+      <section style="background: #151A22; border-radius: 16px; padding: 20px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 12px">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 500">Siapa yang menunggu</h2>
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><span>Panji Merdeka</span><span style="color: #A9A59A">menuntut reformasi</span></div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><span>Cakrawala Maju</span><span style="color: #A9A59A">minta tim ekonomi tetap</span></div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><span>Mahasiswa</span><span style="color: #A9A59A">aksi lanjutan pekan depan</span></div>
+      </section>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { pick: null, signed: false }; }
+  renderVals() {
+    const G = '#2F7A50', R = '#A8301C', N = '#4A443A';
+    const opts = [
+      { label: 'Bentuk kesepakatan lintas partai untuk reformasi', desc: 'Oposisi ikut menyusun jadwal pemilu. Tuntutan mereda, tetapi kabinet harus berbagi kursi.', effects: [{ t: 'Stabilitas ↑', color: G }, { t: 'Kepercayaan ↑', color: G }, { t: 'Efektivitas kabinet ↓', color: R }],
+        impact: [{ k: 'Stabilitas', v: '+3 … +5', color: '#4CC38A' }, { k: 'Kepercayaan', v: '+2 … +4', color: '#4CC38A' }, { k: 'Persetujuan', v: '+1 … +2', color: '#4CC38A' }, { k: 'Efektivitas kabinet', v: '−5', color: '#E5484D' }] },
+      { label: 'Pertahankan tim ekonomi dan umumkan batas transisi', desc: 'Pasar tenang dan program jalan terus. Mahasiswa menilai pemerintah mengulur waktu.', effects: [{ t: 'Pertumbuhan ↑', color: G }, { t: 'Persetujuan ↓', color: R }, { t: 'Rantai peristiwa: aksi lanjutan', color: N }],
+        impact: [{ k: 'Pertumbuhan', v: '+0,1 … +0,3', color: '#4CC38A' }, { k: 'Persetujuan', v: '−4 … −2', color: '#E5484D' }, { k: 'Stabilitas', v: '−2 … 0', color: '#E5484D' }, { k: 'Peristiwa lanjutan', v: 'mungkin', color: '#A9A59A' }] }
+    ];
+    const { pick, signed } = this.state;
+    const choices = opts.map((o, i) => {
+      const on = pick === i;
+      return { ...o, checked: on ? 'true' : 'false', bg: on ? '#DDD5C1' : 'transparent', ring: on ? 'inset 0 0 0 1.5px #1E1B16' : 'inset 0 0 0 1px rgba(30,27,22,0.18)', dot: on ? '#1E1B16' : 'transparent', pick: () => this.setState({ pick: i }) };
+    });
+    return {
+      choices,
+      signed,
+      notSigned: !signed,
+      noPick: pick === null,
+      hint: pick === null ? 'Pilih salah satu tindakan dulu' : 'Stempel akan dibubuhkan di nota',
+      impact: pick === null ? [] : opts[pick].impact,
+      sign: () => this.setState({ signed: true }),
+      undo: () => this.setState({ signed: false }),
+      stampOpacity: signed ? 1 : 0,
+      stampScale: signed ? 1 : 1.4,
+      stampHidden: signed ? 'false' : 'true'
+    };
+  }
+}
+</script>
+</body>
+</html>

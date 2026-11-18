@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Komponen potret</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: {{size}}; height: {{size}}; line-height: 0">
+<svg viewBox="0 0 200 200" width="100%" height="100%" aria-hidden="true">
+  <rect width="200" height="200" fill="{{latar}}"></rect>
+  <sc-if value="{{is.hijab}}" hint-placeholder-val="{{ false }}">
+    <path d="M48 200 C48 150 68 128 100 128 C132 128 152 150 152 200 Z" fill="{{jas}}"></path>
+    <path d="M58 92 C58 56 78 40 100 40 C122 40 142 56 142 92 L148 150 C130 164 70 164 52 150 Z" fill="{{dasi}}"></path>
+    <ellipse cx="100" cy="88" rx="28" ry="33" fill="{{kulit}}"></ellipse>
+  </sc-if>
+  <sc-if value="{{notHijab}}" hint-placeholder-val="{{ true }}">
+    <rect x="88" y="112" width="24" height="24" fill="{{kulit}}"></rect>
+    <path d="M30 200 C30 150 60 132 100 132 C140 132 170 150 170 200 Z" fill="{{jas}}"></path>
+    <polygon points="86,134 114,134 100,166" fill="#ECEAE4"></polygon>
+    <polygon points="96,140 104,140 106,176 100,184 94,176" fill="{{dasi}}"></polygon>
+    <ellipse cx="100" cy="84" rx="32" ry="38" fill="{{kulit}}"></ellipse>
+    <sc-if value="{{is.peci}}" hint-placeholder-val="{{ false }}"><rect x="66" y="40" width="68" height="30" rx="6" fill="#111215"></rect></sc-if>
+    <sc-if value="{{is.rambut}}" hint-placeholder-val="{{ true }}"><path d="M66 82 C64 52 80 42 100 42 C122 42 136 54 134 82 C128 66 114 60 100 60 C86 60 72 66 66 82 Z" fill="#2B2522"></path></sc-if>
+    <sc-if value="{{is.panjang}}" hint-placeholder-val="{{ false }}"><path d="M64 100 C58 56 78 42 100 42 C122 42 142 56 136 100 L140 124 C134 128 128 126 126 120 L130 76 C122 64 110 60 100 60 C90 60 78 64 70 76 L74 120 C72 126 66 128 60 124 Z" fill="#2B2522"></path></sc-if>
+    <sc-if value="{{is.uban}}" hint-placeholder-val="{{ false }}"><path d="M66 82 C64 52 80 42 100 42 C122 42 136 54 134 82 C128 66 114 60 100 60 C86 60 72 66 66 82 Z" fill="#B8B4AA"></path></sc-if>
+    <sc-if value="{{is.baret}}" hint-placeholder-val="{{ false }}"><path d="M62 66 C62 40 90 34 120 40 C142 44 144 60 138 68 Z" fill="#4A5A3A"></path><circle cx="78" cy="58" r="6" fill="#C9A227"></circle></sc-if>
+    <sc-if value="{{is.botak}}" hint-placeholder-val="{{ false }}"><rect x="66" y="74" width="8" height="22" rx="4" fill="#787878"></rect><rect x="126" y="74" width="8" height="22" rx="4" fill="#787878"></rect></sc-if>
+    <sc-if value="{{glasses}}" hint-placeholder-val="{{ false }}"><circle cx="87" cy="86" r="11" fill="none" stroke="#181A1F" stroke-width="3"></circle><circle cx="113" cy="86" r="11" fill="none" stroke="#181A1F" stroke-width="3"></circle><rect x="97" y="84" width="6" height="3" fill="#181A1F"></rect></sc-if>
+  </sc-if>
+</svg>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"kepala":{"editor":"enum","options":["peci","rambut","panjang","uban","baret","botak","hijab"],"default":"peci"},"kulit":{"editor":"color","default":"#C09078"},"jas":{"editor":"color","default":"#181A1F"},"dasi":{"editor":"color","default":"#C03018"},"latar":{"editor":"color","default":"#D8D8C0"},"kacamata":{"editor":"text","default":"tidak"},"ukuran":{"editor":"int","default":200},"$preview":{"width":200,"height":200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const k = this.props.kepala ?? 'peci';
+    const is = {};
+    ['peci', 'rambut', 'panjang', 'uban', 'baret', 'botak', 'hijab'].forEach((n) => { is[n] = n === k; });
+    return {
+      is,
+      notHijab: k !== 'hijab',
+      glasses: (this.props.kacamata ?? 'tidak') === 'ya',
+      kulit: this.props.kulit ?? '#C09078',
+      jas: this.props.jas ?? '#181A1F',
+      dasi: this.props.dasi ?? '#C03018',
+      latar: this.props.latar ?? '#D8D8C0',
+      size: (this.props.ukuran ?? 200) + 'px'
+    };
+  }
+}
+</script>
+</body>
+</html>

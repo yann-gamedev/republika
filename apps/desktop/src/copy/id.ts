@@ -741,6 +741,26 @@ export const copy = {
       `Detail tercatat di ${path}. Lampirkan file ini saat melapor di GitHub Issues.`,
     backToMenu: 'Kembali ke Menu Utama',
   },
+  art: {
+    /** Teks alternatif ilustrasi adegan (TAHAP-6 §6A.2). */
+    scenes: {
+      'menu-hero': 'Istana pada malam hari dijaga dua pengawal',
+      'inauguration-oath': 'Presiden mengangkat tangan di atas kitab saat pelantikan',
+      'cabinet-briefing': 'Rapat kabinet di meja panjang',
+      'parliament-vote': 'Ruang sidang parlemen, sebagian anggota mengangkat kartu suara',
+      'dashboard-desk': 'Meja kerja presiden di malam hari',
+      protest: 'Massa membawa spanduk di depan barisan aparat',
+      flood: 'Permukiman tergenang banjir dan perahu karet',
+      market: 'Pedagang dan pembeli di pasar',
+      port: 'Kapal peti kemas dan derek di pelabuhan',
+      'map-visit': 'Presiden berjabat tangan dengan petani saat kunjungan daerah',
+      'policy-fiscal': 'Dokumen anggaran, tumpukan koin, dan mesin hitung',
+      'policy-social': 'Antrean pembagian bantuan sosial',
+      'policy-energy': 'Kilang, menara listrik, dan turbin angin',
+      'policy-governance': 'Rak arsip, loket layanan, dan stempel',
+    },
+    event: (title: string) => `Ilustrasi peristiwa: ${title}`,
+  },
   closeGuard: {
     title: 'Keluar dari REPUBLIKA?',
     body: 'Keputusan kuartal ini belum tersimpan. Autosave terakhir aman, tetapi antrean kebijakan, lobi, dan jawaban peristiwa kuartal ini akan hilang.',

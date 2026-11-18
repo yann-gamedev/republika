@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Meja kerja</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#C9A227}a:hover{color:#E0BE4A}
+.nv{display:flex;align-items:center;gap:10px;height:36px;padding:0 12px;border-radius:8px;color:#A9A59A;text-decoration:none;font-size:14px;transition:background-color 150ms cubic-bezier(0.22,1,0.36,1),color 150ms}
+.nv:hover{background:#1C222C;color:#EDE9DE}
+.nv.on{background:#1C222C;color:#EDE9DE;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
+.btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:8px;border:0;font:500 14px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 150ms,transform 120ms}
+.btn:active{transform:scale(0.98)}
+.gold{background:#C9A227;color:#14110A}.gold:hover{background:#D9B33A;color:#14110A}
+.ghost{background:#1C222C;color:#EDE9DE;box-shadow:inset 0 0 0 1px rgba(237,233,222,0.08)}.ghost:hover{background:#252C38;color:#EDE9DE}
+.row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;width:100%;height:40px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:#EDE9DE;font:400 14px Inter,sans-serif;text-align:left;cursor:pointer;transition:background-color 150ms}
+.row:hover{background:#1C222C}
+.row:focus-visible,.btn:focus-visible,.nv:focus-visible,.nota:focus-visible{outline:2px solid #C9A227;outline-offset:2px}
+.nota{display:block;text-decoration:none;color:#1E1B16;transition:transform 180ms cubic-bezier(0.22,1,0.36,1)}
+.nota:hover{transform:translateY(-3px);color:#1E1B16}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1180px; display: flex; flex-direction: column">
+
+  <!-- Bilah atas -->
+  <header style="display: flex; flex-wrap: wrap; align-items: center; gap: 24px; min-height: 64px; padding: 0 24px; border-bottom: 1px solid rgba(237,233,222,0.08); background: #0B0E13">
+    <div style="display: flex; align-items: center; gap: 10px; width: 224px">
+      <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="#C9A227" stroke-width="1.5"></circle><path d="M16 7l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z" fill="#C9A227"></path></svg>
+      <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; font-weight: 500">Republika</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 12px; color: #8A877E">Presiden</span>
+      <span style="font-size: 14px; font-weight: 500">Sari Wening</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; flex: 1 1 280px; max-width: 360px">
+      <span style="font-size: 12px; color: #8A877E; display: flex; justify-content: space-between"><span>2032 · Kuartal 1</span><span class="num" style="font-family: 'IBM Plex Mono', monospace">5 / 20</span></span>
+      <div aria-hidden="true" style="display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 2px">
+        <sc-for list="{{quarters}}" as="q" hint-placeholder-count="20"><div style="height: 6px; border-radius: 2px; background: {{q.bg}}"></div></sc-for>
+      </div>
+    </div>
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 24px">
+      <div style="display: flex; align-items: center; gap: 8px" title="Action point tersisa">
+        <sc-for list="{{apTokens}}" as="t" hint-placeholder-count="2"><span style="width: 14px; height: 14px; border-radius: 50%; background: {{t.bg}}; box-shadow: inset 0 0 0 1.5px #C9A227"></span></sc-for>
+        <span style="font-size: 13px; color: #A9A59A">{{apLeft}} AP</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; color: #8A877E">Kas negara</span>
+        <span class="num" style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">Rp142 T</span>
+      </div>
+      <a href="Laporan.dc.html" class="btn gold">Akhiri kuartal</a>
+    </div>
+  </header>
+
+  <div style="display: flex; flex-wrap: wrap; flex: 1">
+    <!-- Sidebar -->
+    <nav aria-label="Navigasi" style="flex: 1 1 248px; max-width: 248px; box-sizing: border-box; padding: 24px 16px; display: flex; flex-direction: column; gap: 2px; border-right: 1px solid rgba(237,233,222,0.08); background: #0B0E13">
+      <span style="font-size: 12px; color: #8A877E; padding: 0 12px 8px">Pemerintahan</span>
+      <a href="MejaKerja.dc.html" class="nv on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 10h18M5 10v9M19 10v9M2 19h20M12 4l9 6H3z"></path></svg>Meja kerja</a>
+      <a href="Kebijakan.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"></path></svg>Kebijakan</a>
+      <a href="Sidang.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 18a9 9 0 0 1 18 0M7 18a5 5 0 0 1 10 0"></path></svg>Parlemen<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">1 RUU</span></a>
+      <a href="Kabinet.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><path d="M3 20a6 6 0 0 1 12 0M16 4a3 3 0 0 1 0 6M18 14a6 6 0 0 1 3 6"></path></svg>Kabinet</a>
+      <a href="Peta.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"></path></svg>Peta daerah<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #F0A08A">3 gejolak</span></a>
+      <a href="Peristiwa.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4h16v16H4zM4 9h16M9 4v5"></path></svg>Nota dinas<span style="margin-left: auto; min-width: 20px; height: 20px; border-radius: 10px; background: #C9A227; color: #14110A; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center">1</span></a>
+      <a href="Laporan.dc.html" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5"></path></svg>Warta</a>
+      <span style="font-size: 12px; color: #8A877E; padding: 24px 12px 8px">Arsip</span>
+      <a href="#riwayat" class="nv"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"></path></svg>Riwayat</a>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 2px; padding-top: 24px">
+        <a href="#simpan" class="nv">Simpan &amp; muat</a>
+        <a href="#atur" class="nv">Pengaturan</a>
+        <a href="Main.dc.html" class="nv">Menu utama</a>
+      </div>
+    </nav>
+
+    <!-- Konten -->
+    <main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 32px; display: flex; flex-direction: column; gap: 24px; max-width: 1280px">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+        <div>
+          <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 34px; line-height: 1.15">Meja kerja</h1>
+          <p style="margin: 6px 0 0; font-size: 14px; color: #A9A59A">Satu nota menunggu jawaban, satu rancangan undang-undang menunggu sidang</p>
+        </div>
+      </div>
+
+      <!-- Baris 1: map masuk + indikator -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px">
+        <section aria-labelledby="map" style="background: #151A22; border-radius: 16px; padding: 24px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <h2 id="map" style="margin: 0; font-size: 16px; font-weight: 500">Map masuk</h2>
+            <span style="font-size: 13px; color: #8A877E">Kuartal tidak bisa diakhiri sebelum nota dijawab</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+            <a href="Peristiwa.dc.html" class="nota" style="position: relative">
+              <div aria-hidden="true" style="position: absolute; inset: 6px -6px -6px 6px; background: #CFC6B2; border-radius: 6px"></div>
+              <div style="position: relative; background: #E8E1D0; border-radius: 6px; padding: 20px; min-height: 176px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px">
+                <span style="font-size: 12px; color: #9A2A18; font-weight: 600">Nota dinas · segera</span>
+                <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 21px; line-height: 1.25">Desakan membentuk kabinet transisi</span>
+                <span style="font-size: 13px; line-height: 20px; color: #4A443A">Koalisi goyah setelah gelombang demonstrasi. Dua pilihan, tanpa biaya AP.</span>
+                <span style="margin-top: auto; font-size: 13px; font-weight: 500; color: #1E1B16; display: flex; align-items: center; gap: 6px">Buka nota <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+              </div>
+            </a>
+            <a href="Sidang.dc.html" class="nota" style="position: relative">
+              <div style="position: relative; background: #1C222C; border-radius: 6px; padding: 20px; min-height: 176px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); color: #EDE9DE">
+                <span style="font-size: 12px; color: #A9A59A; font-weight: 500">RUU · menunggu sidang</span>
+                <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 21px; line-height: 1.25">Reformasi subsidi energi</span>
+                <span style="font-size: 13px; line-height: 20px; color: #A9A59A">Perkiraan 82 dari 100 kursi setuju. Butuh 51 untuk lolos.</span>
+                <div aria-hidden="true" style="margin-top: auto; height: 6px; border-radius: 3px; background: #252C38; position: relative">
+                  <div style="width: 82%; height: 6px; border-radius: 3px; background: #C9A227"></div>
+                  <div style="position: absolute; left: 51%; top: -4px; width: 2px; height: 14px; background: #EDE9DE"></div>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; font-size: 13px; color: #A9A59A">
+            <span>Masih ada {{apLeft}} AP kuartal ini</span>
+            <a href="Kebijakan.dc.html" class="btn ghost" style="margin-left: auto; height: 32px">Ajukan kebijakan</a>
+          </div>
+        </section>
+
+        <section aria-labelledby="ind" style="background: #151A22; border-radius: 16px; padding: 16px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 4px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 4px 12px 8px">
+            <h2 id="ind" style="margin: 0; font-size: 16px; font-weight: 500">Indikator nasional</h2>
+            <span style="font-size: 12px; color: #8A877E">vs kuartal lalu</span>
+          </div>
+          <sc-for list="{{indicators}}" as="it" hint-placeholder-count="8">
+            <button type="button" class="row" onClick="{{it.pick}}" aria-pressed="{{it.selected}}" style="background: {{it.rowBg}}">
+              <span style="display: flex; align-items: center; gap: 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: {{it.dot}}"></span>{{it.label}}</span>
+              <span style="font-variant-numeric: tabular-nums; font-weight: 500">{{it.valueText}}</span>
+              <span style="width: 56px; text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{it.deltaColor}}">{{it.deltaText}}</span>
+            </button>
+          </sc-for>
+        </section>
+      </div>
+
+      <!-- Baris 2: grafik utama + warta -->
+      <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 24px">
+        <section aria-labelledby="arah" style="background: #151A22; border-radius: 16px; padding: 24px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px">
+            <div>
+              <h2 id="arah" style="margin: 0; font-size: 16px; font-weight: 500">Arah negara · {{sel.label}}</h2>
+              <p style="margin: 4px 0 0; font-size: 13px; color: #8A877E">Pilih indikator di sebelah kanan atas untuk mengganti grafik</p>
+            </div>
+            <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 32px; font-variant-numeric: tabular-nums">{{sel.valueText}}</span>
+          </div>
+          <svg viewBox="0 0 640 240" width="100%" role="img" aria-label="Grafik {{sel.label}} lima kuartal terakhir" style="display: block">
+            <line x1="0" y1="40" x2="640" y2="40" stroke="rgba(237,233,222,0.06)"></line>
+            <line x1="0" y1="110" x2="640" y2="110" stroke="rgba(237,233,222,0.06)"></line>
+            <line x1="0" y1="180" x2="640" y2="180" stroke="rgba(237,233,222,0.06)"></line>
+            <polyline points="{{chart.points}}" fill="none" stroke="#C9A227" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></polyline>
+            <sc-for list="{{chart.dots}}" as="d" hint-placeholder-count="5">
+              <circle cx="{{d.x}}" cy="{{d.y}}" r="{{d.r}}" fill="{{d.fill}}" stroke="#C9A227" stroke-width="2"></circle>
+            </sc-for>
+            <sc-for list="{{chart.labels}}" as="l" hint-placeholder-count="5">
+              <text x="{{l.x}}" y="232" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="#8A877E">{{l.t}}</text>
+            </sc-for>
+          </svg>
+        </section>
+
+        <section aria-labelledby="warta" style="background: #E8E1D0; color: #1E1B16; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column">
+          <img src="/_blob/6de3ea8f84c2a1640f4a04bff18bdde0" alt="Ilustrasi datar: seorang tahanan berompi oranye digiring dua aparat" style="display: block; width: 100%; height: 200px; object-fit: cover; object-position: center 40%">
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 8px">
+            <span id="warta" style="font-size: 12px; color: #6B6255; font-weight: 500">Warta Republika · contoh berita</span>
+            <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 20px; line-height: 1.3">Mantan direktur pengadaan energi ditahan, oposisi minta audit subsidi</span>
+            <span style="font-size: 13px; line-height: 20px; color: #4A443A">Kepercayaan publik bisa ikut bergerak. Tanggapi lewat kebijakan tata kelola atau biarkan proses hukum berjalan.</span>
+            <a href="Laporan.dc.html" style="margin-top: 4px; font-size: 13px; font-weight: 500; color: #7A5A0A">Baca warta kuartal</a>
+          </div>
+        </section>
+      </div>
+
+      <!-- Baris 3: koalisi -->
+      <section aria-labelledby="koa" style="background: #151A22; border-radius: 16px; padding: 24px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <h2 id="koa" style="margin: 0; font-size: 16px; font-weight: 500">Peta dukungan parlemen</h2>
+          <a href="Sidang.dc.html" style="font-size: 13px">Buka parlemen</a>
+        </div>
+        <div aria-hidden="true" style="display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 2px">
+          <sc-for list="{{factions}}" as="f" hint-placeholder-count="6"><div style="flex: {{f.seats}} 1 0; background: {{f.color}}"></div></sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 24px">
+          <sc-for list="{{factions}}" as="f" hint-placeholder-count="6">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #A9A59A"><span style="width: 8px; height: 8px; border-radius: 2px; background: {{f.color}}"></span><span style="color: #EDE9DE">{{f.name}}</span><span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px">{{f.seats}} kursi · {{f.stance}}</span></div>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sel: 'approval' }; }
+  renderVals() {
+    const data = [
+      { id: 'approval', label: 'Persetujuan', s: [52.4, 55.1, 56.7, 58.0, 53.9], unit: '' },
+      { id: 'stability', label: 'Stabilitas', s: [60.1, 61.2, 60.5, 62.0, 62.0], unit: '' },
+      { id: 'trust', label: 'Kepercayaan', s: [50.8, 52.8, 53.5, 52.0, 52.0], unit: '' },
+      { id: 'fiscal', label: 'Kesehatan fiskal', s: [57.0, 54.0, 53.5, 55.0, 55.0], unit: '' },
+      { id: 'growth', label: 'Pertumbuhan', s: [4.5, 4.9, 4.7, 4.8, 4.6], unit: '%' },
+      { id: 'inflation', label: 'Inflasi', s: [3.1, 3.6, 3.5, 3.4, 3.6], unit: '%', lowGood: true },
+      { id: 'unemp', label: 'Pengangguran', s: [5.9, 5.5, 5.6, 5.6, 5.3], unit: '%', lowGood: true },
+      { id: 'welfare', label: 'Kesejahteraan', s: [49.0, 50.6, 51.2, 50.0, 50.0], unit: '' }
+    ];
+    const fmt = (v) => v.toFixed(1).replace('.', ',');
+    const indicators = data.map((d) => {
+      const v = d.s[4], dv = v - d.s[3];
+      const good = d.lowGood ? dv < 0 : dv > 0;
+      const selected = d.id === this.state.sel;
+      return {
+        label: d.label,
+        valueText: fmt(v) + d.unit,
+        deltaText: Math.abs(dv) < 0.05 ? '0,0' : (dv > 0 ? '+' : '−') + fmt(Math.abs(dv)),
+        deltaColor: Math.abs(dv) < 0.05 ? '#8A877E' : (good ? '#4CC38A' : '#E5484D'),
+        dot: selected ? '#C9A227' : 'transparent',
+        rowBg: selected ? '#1C222C' : 'transparent',
+        selected: selected ? 'true' : 'false',
+        pick: () => this.setState({ sel: d.id })
+      };
+    });
+    const sd = data.find((d) => d.id === this.state.sel);
+    const min = Math.min(...sd.s), max = Math.max(...sd.s), span = (max - min) || 1;
+    const pts = sd.s.map((v, i) => ({ x: 24 + i * 148, y: 196 - ((v - min) / span) * 160 }));
+    const qLabels = ['2031 K2', '2031 K3', '2031 K4', '2031 K4', '2032 K1'];
+    const chart = {
+      points: pts.map((p) => p.x + ',' + p.y.toFixed(1)).join(' '),
+      dots: pts.map((p, i) => ({ x: p.x, y: p.y.toFixed(1), r: i === 4 ? 5 : 3, fill: i === 4 ? '#C9A227' : '#151A22' })),
+      labels: pts.map((p, i) => ({ x: p.x, t: ['2031 K1', '2031 K2', '2031 K3', '2031 K4', '2032 K1'][i] }))
+    };
+    const factions = [
+      { name: 'Cakrawala Maju', seats: 20, color: '#C9A227', stance: 'setuju' },
+      { name: 'Suara Jelata', seats: 18, color: '#8C7A4E', stance: 'ragu' },
+      { name: 'Tunas Lestari', seats: 17, color: '#6F8A7A', stance: 'setuju' },
+      { name: 'Musyawarah Madani', seats: 16, color: '#7A7F8C', stance: 'setuju' },
+      { name: 'Panji Merdeka', seats: 15, color: '#5A6070', stance: 'setuju' },
+      { name: 'Simpul Daerah', seats: 14, color: '#3E4452', stance: 'menolak' }
+    ];
+    const apLeft = 2;
+    return {
+      indicators,
+      sel: { label: sd.label, valueText: fmt(sd.s[4]) + sd.unit },
+      chart,
+      factions,
+      apLeft,
+      apTokens: [0, 1].map((i) => ({ bg: i < apLeft ? '#C9A227' : 'transparent' })),
+      quarters: Array.from({ length: 20 }, (_, i) => ({ bg: i < 4 ? '#8A877E' : (i === 4 ? '#C9A227' : '#252C38') }))
+    };
+  }
+}
+</script>
+</body>
+</html>

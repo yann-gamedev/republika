@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Menu utama</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#C9A227}a:hover{color:#E0BE4A}
+.mi{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;border-radius:10px;color:#EDE9DE;text-decoration:none;font-size:15px;transition:background-color 150ms cubic-bezier(0.22,1,0.36,1)}
+.mi:hover{background:#1C222C;color:#EDE9DE}
+.mi:focus-visible{outline:2px solid #C9A227;outline-offset:2px}
+.primary{background:#C9A227;color:#14110A}
+.primary:hover{background:#D9B33A;color:#14110A}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 900px; display: flex; flex-wrap: wrap">
+
+  <!-- Hero ilustrasi -->
+  <div style="flex: 999 1 640px; min-width: 0; position: relative; min-height: 560px; max-height: 900px; background: #181830; overflow: hidden">
+    <dc-import name="Ilustrasi" scene="istana" tinggi="900px" hint-size="100%,900px"></dc-import>
+    <div style="position: absolute; left: 24px; bottom: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A9A59A; background: rgba(14,17,23,0.7); padding: 4px 8px; border-radius: 6px">menu-hero.webp · sketsa komposisi</div>
+  </div>
+
+  <!-- Panel menu -->
+  <div style="flex: 1 1 440px; min-width: 0; box-sizing: border-box; padding: 64px 56px; display: flex; flex-direction: column; justify-content: space-between; gap: 48px; background: #0E1117; border-left: 1px solid rgba(237,233,222,0.08)">
+    <div style="display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="#C9A227" stroke-width="1.5"></circle><path d="M16 7l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z" fill="#C9A227"></path></svg>
+        <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; font-weight: 500">Republika</span>
+      </div>
+      <h1 style="margin: 24px 0 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 48px; line-height: 1.08; letter-spacing: -0.02em">Lima tahun, dua puluh kuartal, satu meja kerja</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 26px; color: #A9A59A; max-width: 34rem">Pimpin republik fiktif lewat kebijakan, parlemen, kabinet, dan krisis yang datang tanpa diundang.</p>
+    </div>
+
+    <nav aria-label="Menu utama" style="display: flex; flex-direction: column; gap: 4px">
+      <a href="MejaKerja.dc.html" class="mi primary" style="height: 64px; justify-content: space-between">
+        <span style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-weight: 500">Lanjutkan pemerintahan</span>
+          <span style="font-size: 13px; opacity: 0.8">Sari Wening · 2032 Kuartal 1 · disimpan 14.20</span>
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="Setup.dc.html" class="mi" style="margin-top: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A59A" stroke-width="1.5" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Pemerintahan baru</a>
+      <a href="#muat" class="mi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A59A" stroke-width="1.5" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3z"></path></svg>Muat simpanan<span style="margin-left: auto; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">3 slot</span></a>
+      <a href="#atur" class="mi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A59A" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"></path></svg>Pengaturan</a>
+      <a href="#keluar" class="mi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A9A59A" stroke-width="1.5" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"></path></svg>Keluar</a>
+    </nav>
+
+    <div style="display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">
+      <span>Versi 1.0.0</span>
+      <span>Offline · data tersimpan di perangkat ini</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Sumpah atau janji presiden</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600&amp;family=Mrs+Saint+Delafield&amp;family=IBM+Plex+Mono:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#7A5A0A}a:hover{color:#5A4206}
+.seg{flex:1;height:44px;border-radius:8px;border:0;font:500 15px Inter,sans-serif;cursor:pointer;transition:background-color 150ms,color 150ms}
+.seg:disabled{cursor:not-allowed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 20px;border-radius:8px;border:0;font:500 15px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 150ms,transform 120ms}
+.btn:active{transform:scale(0.98)}
+.ink{background:#1E1B16;color:#E8E1D0}.ink:hover{background:#2E2A22;color:#E8E1D0}
+.seg:focus-visible,.btn:focus-visible{outline:2px solid #7A5A0A;outline-offset:2px}
+.sig{transition:clip-path 900ms cubic-bezier(0.22,1,0.36,1)}
+.seal{transition:opacity 220ms cubic-bezier(0.22,1,0.36,1),transform 260ms cubic-bezier(0.22,1,0.36,1)}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; background: #0E1117; min-height: 900px; display: flex; flex-wrap: wrap">
+  <div style="flex: 1 1 520px; min-width: 0; min-height: 420px; max-height: 900px; position: relative; overflow: hidden">
+    <dc-import name="Ilustrasi" scene="sumpah" tinggi="900px" hint-size="100%,900px"></dc-import>
+    <a href="Setup.dc.html" style="position: absolute; left: 24px; top: 20px; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border-radius: 8px; background: rgba(14,17,23,0.75); color: #EDE9DE; font-size: 14px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Berkas pencalonan</a>
+  </div>
+
+  <div style="flex: 1 1 560px; min-width: 0; display: flex; align-items: center; justify-content: center; padding: 48px 40px; box-sizing: border-box">
+    <article style="position: relative; width: 100%; max-width: 620px; background: #E8E1D0; color: #1E1B16; border-radius: 6px; padding: 40px 48px; box-sizing: border-box; box-shadow: 0 24px 48px rgba(0,0,0,0.35); display: flex; flex-direction: column; gap: 20px">
+      <header style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 16px; border-bottom: 2px solid #C9A227">
+        <svg width="44" height="44" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="#7A5A0A" stroke-width="1.2"></circle><path d="M16 7l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z" fill="#7A5A0A"></path></svg>
+        <span style="font-size: 13px; color: #6B6255">Majelis Permusyawaratan Rakyat · Sidang pelantikan</span>
+        <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 26px; text-align: center">{{title}}</h1>
+      </header>
+
+      <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 18px; line-height: 30px; color: #3A352C">Dengan ini saya, <strong style="font-weight: 600; color: #1E1B16">Sari Wening</strong>, yang dilantik sebagai Presiden untuk masa jabatan lima tahun (20 kuartal), menyatakan:</p>
+
+      <blockquote style="margin: 0; padding: 4px 0 4px 20px; border-left: 3px solid #C9A227; font-family: 'Source Serif 4', Georgia, serif; font-size: 19px; line-height: 32px; color: #1E1B16">{{oath}}</blockquote>
+      <span style="font-size: 12px; color: #6B6255">Naskah sesuai Pasal 9 ayat (1) UUD 1945</span>
+
+      <div role="radiogroup" aria-label="Bentuk pengucapan" style="display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #DDD5C1">
+        <sc-for list="{{modes}}" as="m" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{m.on}}" class="seg" onClick="{{m.pick}}" disabled="{{signed}}" style="background: {{m.bg}}; color: {{m.fg}}">{{m.label}}</button></sc-for>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-top: 8px">
+        <span style="font-size: 14px; color: #4A443A">Jakarta, 20 Oktober 2031</span>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 220px">
+          <span class="sig" style="font-family: 'Mrs Saint Delafield', cursive; font-size: 52px; line-height: 1; color: #181830; clip-path: inset(0 {{sigClip}} 0 0); height: 56px">Sari Wening</span>
+          <span style="width: 100%; height: 1px; background: #1E1B16"></span>
+          <span style="font-size: 13px; color: #4A443A">Presiden</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: center; margin-top: 8px">
+        <sc-if value="{{notSigned}}" hint-placeholder-val="{{ true }}">
+          <button type="button" class="btn ink" onClick="{{sign}}" style="flex: 1">{{cta}}</button>
+        </sc-if>
+        <sc-if value="{{signed}}" hint-placeholder-val="{{ false }}">
+          <a href="MejaKerja.dc.html" class="btn ink" style="flex: 1">Masuk ke meja kerja</a>
+          <button type="button" onClick="{{reset}}" style="background: none; border: 0; font: 500 14px Inter, sans-serif; color: #7A5A0A; cursor: pointer; text-decoration: underline">Ulangi</button>
+        </sc-if>
+      </div>
+
+      <div class="seal" aria-hidden="{{sealHidden}}" style="position: absolute; left: 40px; bottom: 96px; opacity: {{sealOpacity}}; transform: rotate(-10deg) scale({{sealScale}}); pointer-events: none">
+        <div style="width: 112px; height: 112px; border-radius: 50%; border: 3px solid #A8301C; color: #A8301C; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: rgba(232,225,208,0.5)">
+          <span style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 18px; letter-spacing: 0.06em">DILANTIK</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 10px">20 · 10 · 2031</span>
+        </div>
+      </div>
+    </article>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { mode: 'sumpah', signed: false }; }
+  renderVals() {
+    const t = {
+      sumpah: '“Demi Allah, saya bersumpah akan memenuhi kewajiban Presiden Republik Indonesia dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Undang-Undang Dasar dan menjalankan segala undang-undang dan peraturannya dengan selurus-lurusnya serta berbakti kepada Nusa dan Bangsa.”',
+      janji: '“Saya berjanji dengan sungguh-sungguh akan memenuhi kewajiban Presiden Republik Indonesia dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Undang-Undang Dasar dan menjalankan segala undang-undang dan peraturannya dengan selurus-lurusnya serta berbakti kepada Nusa dan Bangsa.”'
+    };
+    const { mode, signed } = this.state;
+    const modes = [['sumpah', 'Sumpah menurut agama'], ['janji', 'Janji']].map(([id, label]) => ({ label, on: mode === id ? 'true' : 'false', bg: mode === id ? '#1E1B16' : 'transparent', fg: mode === id ? '#E8E1D0' : '#4A443A', pick: () => this.setState({ mode: id }) }));
+    return {
+      modes, signed, notSigned: !signed,
+      title: mode === 'sumpah' ? 'Naskah sumpah presiden' : 'Naskah janji presiden',
+      oath: t[mode],
+      cta: mode === 'sumpah' ? 'Ucapkan sumpah dan tandatangani' : 'Ucapkan janji dan tandatangani',
+      sign: () => this.setState({ signed: true }),
+      reset: () => this.setState({ signed: false }),
+      sigClip: signed ? '0%' : '100%',
+      sealOpacity: signed ? 1 : 0,
+      sealScale: signed ? 1 : 1.4,
+      sealHidden: signed ? 'false' : 'true'
+    };
+  }
+}
+</script>
+</body>
+</html>

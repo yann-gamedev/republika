@@ -20,7 +20,7 @@ const lines: string[] = ['# Laporan performa REPUBLIKA', ''];
 
 // 1. Chunk hasil build.
 const assets = readdirSync(DIST)
-  .filter((name) => /\.(js|css|woff2)$/u.test(name))
+  .filter((name) => /\.(js|css|woff2|svg|jpg|webp)$/u.test(name))
   .map((name) => {
     const buffer = readFileSync(join(DIST, name));
     return { name, raw: buffer.length, gzip: gzipSync(buffer).length };
@@ -29,8 +29,12 @@ const assets = readdirSync(DIST)
 const total = (kind: string) =>
   assets.filter((asset) => asset.name.endsWith(kind)).reduce((sum, asset) => sum + asset.raw, 0);
 lines.push('## Bundle web', '');
+const art = assets.filter((asset) => /\.(svg|jpg|webp)$/u.test(asset.name));
+const artRaw = art.reduce((sum, asset) => sum + asset.raw, 0);
+const artGzip = art.reduce((sum, asset) => sum + asset.gzip, 0);
 lines.push(
   `- JS total: ${kb(total('.js'))} · CSS: ${kb(total('.css'))} · font: ${kb(total('.woff2'))}`,
+  `- Ilustrasi (berkas terpisah, bukan chunk JS): ${art.length} berkas, ${kb(artRaw)} mentah / ${kb(artGzip)} gzip`,
 );
 lines.push('', '| File | Mentah | Gzip |', '| --- | ---: | ---: |');
 for (const asset of assets) lines.push(`| ${asset.name} | ${kb(asset.raw)} | ${kb(asset.gzip)} |`);

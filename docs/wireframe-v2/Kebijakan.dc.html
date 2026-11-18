@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Kebijakan</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#C9A227}a:hover{color:#E0BE4A}
+.nv{display:flex;align-items:center;gap:10px;height:36px;padding:0 12px;border-radius:8px;color:#A9A59A;text-decoration:none;font-size:14px;transition:background-color 150ms,color 150ms}
+.nv:hover{background:#1C222C;color:#EDE9DE}
+.nv.on{background:#1C222C;color:#EDE9DE;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06)}
+.tab{height:36px;padding:0 14px;border-radius:8px;border:0;font:500 13px Inter,sans-serif;cursor:pointer;transition:background-color 150ms,color 150ms}
+.pc{display:flex;flex-direction:column;width:100%;padding:0;border:0;border-radius:14px;overflow:hidden;text-align:left;cursor:pointer;font:400 14px Inter,sans-serif;color:#EDE9DE;background:#151A22;transition:box-shadow 150ms,transform 180ms cubic-bezier(0.22,1,0.36,1)}
+.pc:hover{transform:translateY(-2px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:8px;border:0;font:500 14px Inter,sans-serif;cursor:pointer;transition:background-color 150ms,transform 120ms,opacity 150ms}
+.btn:active{transform:scale(0.98)}
+.btn:disabled{opacity:0.4;cursor:not-allowed}
+.gold{background:#C9A227;color:#14110A}.gold:hover{background:#D9B33A}
+.ghost{background:#1C222C;color:#EDE9DE;box-shadow:inset 0 0 0 1px rgba(237,233,222,0.1)}.ghost:hover{background:#252C38}
+.nv:focus-visible,.tab:focus-visible,.pc:focus-visible,.btn:focus-visible{outline:2px solid #C9A227;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1000px; display: flex; flex-wrap: wrap">
+  <nav aria-label="Navigasi" style="flex: 1 1 248px; max-width: 248px; box-sizing: border-box; padding: 20px 16px; display: flex; flex-direction: column; gap: 2px; border-right: 1px solid rgba(237,233,222,0.08); background: #0B0E13">
+    <div style="display: flex; align-items: center; gap: 10px; padding: 0 12px 20px">
+      <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="none" stroke="#C9A227" stroke-width="1.5"></circle><path d="M16 7l2.6 5.6 6.1.7-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6-4.5-4.2 6.1-.7z" fill="#C9A227"></path></svg>
+      <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; font-weight: 500">Republika</span>
+    </div>
+    <a href="MejaKerja.dc.html" class="nv">Meja kerja</a>
+    <a href="Kebijakan.dc.html" class="nv on">Kebijakan</a>
+    <a href="Sidang.dc.html" class="nv">Parlemen</a>
+    <a href="Kabinet.dc.html" class="nv">Kabinet</a>
+    <a href="Peta.dc.html" class="nv">Peta daerah</a>
+    <a href="Peristiwa.dc.html" class="nv">Nota dinas</a>
+    <a href="Laporan.dc.html" class="nv">Warta</a>
+  </nav>
+
+  <main style="flex: 999 1 640px; min-width: 0; box-sizing: border-box; padding: 32px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 34px; line-height: 1.15">Kebijakan</h1>
+        <p style="margin: 6px 0 0; font-size: 14px; color: #A9A59A">Tiap kebijakan memakai AP, kas, dan modal politik. Tidak semua bisa dikerjakan sekaligus.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <sc-for list="{{apTokens}}" as="t" hint-placeholder-count="2"><span style="width: 16px; height: 16px; border-radius: 50%; background: {{t.bg}}; box-shadow: inset 0 0 0 1.5px #C9A227; transition: background-color 200ms"></span></sc-for>
+        <span style="font-size: 14px; color: #A9A59A">{{ap}} AP tersisa</span>
+      </div>
+    </div>
+
+    <div role="tablist" aria-label="Kategori" style="display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 10px; background: #151A22; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); align-self: flex-start">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="5"><button type="button" role="tab" aria-selected="{{t.on}}" class="tab" onClick="{{t.pick}}" style="background: {{t.bg}}; color: {{t.fg}}">{{t.label}}</button></sc-for>
+    </div>
+
+    <div style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; align-items: start">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+        <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+          <button type="button" class="pc" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="box-shadow: {{c.ring}}">
+            <span style="display: block; position: relative">
+              <dc-import name="Ilustrasi" scene="{{c.scene}}" tinggi="140px" hint-size="100%,140px"></dc-import>
+              <sc-if value="{{c.sent}}" hint-placeholder-val="{{ false }}"><span style="position: absolute; top: 12px; right: 12px; padding: 4px 10px; border-radius: 6px; background: #0E1117; color: #C9A227; font-size: 12px; font-weight: 500">Diajukan</span></sc-if>
+            </span>
+            <span style="padding: 16px; display: flex; flex-direction: column; gap: 6px">
+              <span style="font-size: 12px; color: #A9A59A">{{c.catLabel}}</span>
+              <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 19px; line-height: 1.25">{{c.nama}}</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">1 AP · Rp{{c.cost}} T · {{c.dur}} kuartal{{c.voteText}}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+
+      <section aria-labelledby="det" style="background: #151A22; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08); display: flex; flex-direction: column">
+        <div style="padding: 24px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid rgba(237,233,222,0.08)">
+          <div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 13px; color: #A9A59A">{{d.catLabel}}</span><sc-if value="{{d.vote}}" hint-placeholder-val="{{ true }}"><span style="font-size: 12px; padding: 3px 8px; border-radius: 6px; background: #2A1E1E; color: #F0A08A">Butuh voting</span></sc-if></div>
+          <h2 id="det" style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.2">{{d.nama}}</h2>
+          <p style="margin: 0; font-size: 14px; line-height: 22px; color: #A9A59A">{{d.desc}}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid rgba(237,233,222,0.08)">
+          <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #8A877E">Biaya AP</span><span style="font-variant-numeric: tabular-nums">1</span></div>
+          <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #8A877E">Biaya awal</span><span style="font-variant-numeric: tabular-nums">Rp{{d.cost}} T</span></div>
+          <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #8A877E">Durasi</span><span>{{d.dur}} kuartal</span></div>
+          <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #8A877E">Menteri</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px">×{{d.mod}}</span></div>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 14px; font-weight: 500">Proyeksi selama berlaku</span>
+          <sc-for list="{{d.proj}}" as="p" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; font-size: 14px">
+              <span style="color: #A9A59A">{{p.k}}</span>
+              <span style="text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{p.color}}">{{p.v}}</span>
+            </div>
+          </sc-for>
+          <span style="font-size: 12px; line-height: 18px; color: #8A877E">Rentang 75–125% dari perkiraan, belum termasuk peristiwa</span>
+          <sc-if value="{{d.vote}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; color: #A9A59A">Perkiraan parlemen: <span style="color: #EDE9DE">{{d.seats}} dari 100 kursi setuju</span></span></sc-if>
+        </div>
+        <div style="padding: 16px 24px 24px; display: flex; gap: 12px; align-items: center">
+          <sc-if value="{{d.canSend}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn gold" onClick="{{d.send}}" style="flex: 1">Ajukan · 1 AP</button></sc-if>
+          <sc-if value="{{d.sent}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn ghost" onClick="{{d.cancel}}" style="flex: 1">Tarik pengajuan</button></sc-if>
+          <sc-if value="{{d.blocked}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn gold" disabled="{{ true }}" style="flex: 1">AP habis kuartal ini</button></sc-if>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cat: 'all', sel: 'energi', sent: [] }; }
+  renderVals() {
+    const s = this.state;
+    const G = '#4CC38A', R = '#E5484D';
+    const P = [
+      { id: 'energi', cat: 'ENERGY', catLabel: 'Energi', scene: 'energi', nama: 'Reformasi subsidi energi', cost: 8, dur: 4, vote: true, seats: 82, mod: '0,92', desc: 'Mengalihkan subsidi bahan bakar ke bantuan tepat sasaran. Hemat kas jangka panjang, tidak populer di awal.', proj: [{ k: 'Persetujuan', v: '−4,6 … −2,8', color: R }, { k: 'Inflasi', v: '+0,3 … +0,5', color: R }, { k: 'Kesejahteraan (tertunda 2 kuartal)', v: '+2,1 … +3,5', color: G }] },
+      { id: 'pajak', cat: 'FISCAL', catLabel: 'Fiskal', scene: 'fiskal', nama: 'Reformasi pajak', cost: 0, dur: 4, vote: true, seats: 58, mod: '1,00', desc: 'Memperluas basis pajak dan menutup celah pengecualian. Kas membaik, dunia usaha mengeluh.', proj: [{ k: 'Kesehatan fiskal', v: '+3,0 … +5,0', color: G }, { k: 'Persetujuan', v: '−2,0 … −1,0', color: R }, { k: 'Pertumbuhan', v: '−0,2 … 0,0', color: R }] },
+      { id: 'birokrasi', cat: 'GOVERNANCE', catLabel: 'Tata kelola', scene: 'tatakelola', nama: 'Reformasi birokrasi', cost: 7, dur: 4, vote: false, seats: 0, mod: '0,96', desc: 'Memangkas lapisan perizinan dan mendigitalkan layanan. Tidak perlu persetujuan parlemen.', proj: [{ k: 'Kepercayaan', v: '+2,0 … +4,0', color: G }, { k: 'Stabilitas', v: '+1,0 … +2,0', color: G }, { k: 'Kas negara', v: '−Rp7 T', color: R }] },
+      { id: 'bansos', cat: 'SOCIAL', catLabel: 'Sosial', scene: 'sosial', nama: 'Bantuan sosial', cost: 12, dur: 3, vote: true, seats: 74, mod: '0,96', desc: 'Bantuan tunai bersyarat untuk keluarga berpenghasilan rendah selama tiga kuartal.', proj: [{ k: 'Kesejahteraan', v: '+3,0 … +5,0', color: G }, { k: 'Persetujuan', v: '+2,0 … +4,0', color: G }, { k: 'Kesehatan fiskal', v: '−3,0 … −2,0', color: R }] }
+    ];
+    const ap = 2 - s.sent.length;
+    const tabs = [['all', 'Semua'], ['FISCAL', 'Fiskal'], ['SOCIAL', 'Sosial'], ['ENERGY', 'Energi'], ['GOVERNANCE', 'Tata kelola']].map(([id, label]) => ({ label, on: s.cat === id ? 'true' : 'false', bg: s.cat === id ? '#C9A227' : 'transparent', fg: s.cat === id ? '#14110A' : '#A9A59A', pick: () => this.setState({ cat: id }) }));
+    const cards = P.filter((p) => s.cat === 'all' || p.cat === s.cat).map((p) => ({ ...p, on: s.sel === p.id ? 'true' : 'false', ring: s.sel === p.id ? 'inset 0 0 0 2px #C9A227' : 'inset 0 0 0 1px rgba(237,233,222,0.08)', sent: s.sent.includes(p.id), voteText: p.vote ? ' · voting' : '', pick: () => this.setState({ sel: p.id }) }));
+    const sel = P.find((p) => p.id === s.sel);
+    const sent = s.sent.includes(sel.id);
+    const d = {
+      ...sel, sent,
+      canSend: !sent && ap > 0,
+      blocked: !sent && ap <= 0,
+      send: () => this.setState({ sent: [...s.sent, sel.id] }),
+      cancel: () => this.setState({ sent: s.sent.filter((x) => x !== sel.id) })
+    };
+    return { tabs, cards, d, ap, apTokens: [0, 1].map((i) => ({ bg: i < ap ? '#C9A227' : 'transparent' })) };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Lembar aset ilustrasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>body{margin:0;background:#0E1117}</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1860px; box-sizing: border-box; padding: 48px; display: flex; flex-direction: column; gap: 40px">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+    <div>
+      <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 36px">Lembar aset ilustrasi</h1>
+      <p style="margin: 8px 0 0; font-size: 15px; color: #A9A59A; max-width: 52rem">Sketsa vektor datar dengan palet arrested.jpg: warna solid, tanpa garis luar, tanpa gradien, figur tanpa wajah. Dipakai sebagai acuan komposisi untuk aset final di docs/ASET-GAMBAR.md.</p>
+    </div>
+    <div style="display: flex; gap: 6px">
+      <sc-for list="{{palette}}" as="c" hint-placeholder-count="10"><span title="{{c}}" style="width: 28px; height: 28px; border-radius: 6px; background: {{c}}; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.1)"></span></sc-for>
+    </div>
+  </div>
+
+  <section aria-labelledby="adegan" style="display: flex; flex-direction: column; gap: 16px">
+    <h2 id="adegan" style="margin: 0; font-size: 17px; font-weight: 500">Adegan · rasio 6:5</h2>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+      <figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+        <img src="/_blob/6de3ea8f84c2a1640f4a04bff18bdde0" alt="Ilustrasi penangkapan, aset final yang sudah ada" style="display: block; width: 100%; aspect-ratio: 6 / 5; object-fit: cover; border-radius: 8px">
+        <figcaption style="display: flex; justify-content: space-between; font-size: 13px"><span>Penangkapan</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4CC38A">arrested.jpg · final</span></figcaption>
+      </figure>
+      <sc-for list="{{scenes}}" as="s" hint-placeholder-count="14">
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 10px">
+          <div style="border-radius: 8px; overflow: hidden"><dc-import name="Ilustrasi" scene="{{s.id}}" tinggi="260px" hint-size="100%,260px"></dc-import></div>
+          <figcaption style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px"><span>{{s.label}}</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">{{s.file}}</span></figcaption>
+        </figure>
+      </sc-for>
+    </div>
+  </section>
+
+  <section aria-labelledby="potret" style="display: flex; flex-direction: column; gap: 16px">
+    <h2 id="potret" style="margin: 0; font-size: 17px; font-weight: 500">Potret tokoh · rasio 1:1, variasi kepala, kulit, jas, aksen</h2>
+    <div style="display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 16px">
+      <sc-for list="{{people}}" as="p" hint-placeholder-count="8">
+        <figure style="margin: 0; display: flex; flex-direction: column; gap: 8px">
+          <div style="border-radius: 8px; overflow: hidden; width: 140px; height: 140px"><dc-import name="Potret" kepala="{{p.kepala}}" kulit="{{p.kulit}}" jas="{{p.jas}}" dasi="{{p.dasi}}" latar="{{p.latar}}" kacamata="{{p.kacamata}}" ukuran="{{ 140 }}" hint-size="140px,140px"></dc-import></div>
+          <figcaption style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A877E">{{p.kepala}}</figcaption>
+        </figure>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1860}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const scenes = [
+      ['istana', 'Istana malam', 'menu-hero.webp'], ['sumpah', 'Pelantikan', 'inauguration-oath.webp'], ['kabinet', 'Rapat kabinet', 'cabinet-briefing.webp'],
+      ['sidang', 'Sidang parlemen', 'parliament-vote.webp'], ['meja', 'Meja presiden', 'dashboard-desk.webp'], ['demo', 'Demonstrasi', 'event-pol-protest.webp'],
+      ['banjir', 'Banjir', 'event-crisis-flood.webp'], ['pasar', 'Pasar dan inflasi', 'event-eco-inflation.webp'], ['pelabuhan', 'Pelabuhan', 'event-eco-boom.webp'],
+      ['kunjungan', 'Kunjungan daerah', 'map-visit.webp · baru'], ['fiskal', 'Kebijakan fiskal', 'policy-fiscal.webp'], ['sosial', 'Kebijakan sosial', 'policy-social.webp'],
+      ['energi', 'Kebijakan energi', 'policy-energy.webp'], ['tatakelola', 'Tata kelola', 'policy-governance.webp']
+    ].map(([id, label, file]) => ({ id, label, file }));
+    const people = [
+      { kepala: 'peci', kulit: '#C09078', jas: '#181A1F', dasi: '#C03018', latar: '#2A2C44', kacamata: 'tidak' },
+      { kepala: 'hijab', kulit: '#B07E66', jas: '#3A3C56', dasi: '#C9A227', latar: '#D8D8C0', kacamata: 'tidak' },
+      { kepala: 'rambut', kulit: '#C09078', jas: '#181A1F', dasi: '#D86018', latar: '#909090', kacamata: 'ya' },
+      { kepala: 'panjang', kulit: '#C9A088', jas: '#181830', dasi: '#C9A227', latar: '#2A2C44', kacamata: 'ya' },
+      { kepala: 'uban', kulit: '#8C5E48', jas: '#3A3C56', dasi: '#C03018', latar: '#D8D8C0', kacamata: 'tidak' },
+      { kepala: 'baret', kulit: '#B07E66', jas: '#4A5A3A', dasi: '#C9A227', latar: '#909090', kacamata: 'tidak' },
+      { kepala: 'botak', kulit: '#C09078', jas: '#181A1F', dasi: '#C9A227', latar: '#2A2C44', kacamata: 'tidak' },
+      { kepala: 'hijab', kulit: '#C09078', jas: '#181A1F', dasi: '#784848', latar: '#D8D8C0', kacamata: 'tidak' }
+    ];
+    return { scenes, people, palette: ['#181A1F', '#181830', '#909090', '#787878', '#D86018', '#C03018', '#C9A227', '#D8D8C0', '#C09078', '#784848'] };
+  }
+}
+</script>
+</body>
+</html>

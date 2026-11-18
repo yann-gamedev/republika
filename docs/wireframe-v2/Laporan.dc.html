@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Warta pagi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#7A5A0A}a:hover{color:#5A4206}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:8px;border:0;font:500 14px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 150ms,transform 120ms}
+.btn:active{transform:scale(0.98)}
+.ink{background:#1E1B16;color:#E8E1D0}.ink:hover{background:#2E2A22;color:#E8E1D0}
+.tr{display:grid;grid-template-columns:minmax(0,1.4fr) 80px 80px 80px 24px;align-items:center;gap:12px;width:100%;min-height:44px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:#1E1B16;font:400 14px Inter,sans-serif;text-align:left;cursor:pointer;transition:background-color 150ms}
+.tr:hover{background:#DDD5C1}
+.tr:focus-visible,.btn:focus-visible{outline:2px solid #7A5A0A;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; background: #0E1117; min-height: 1240px; box-sizing: border-box; padding: 40px 32px; display: flex; justify-content: center">
+  <article style="width: 100%; max-width: 1080px; background: #E8E1D0; color: #1E1B16; border-radius: 6px; box-shadow: 0 24px 48px rgba(0,0,0,0.35); padding: 40px 48px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
+
+    <!-- Masthead -->
+    <header style="display: flex; flex-direction: column; align-items: center; gap: 8px; border-bottom: 3px double rgba(30,27,22,0.6); padding-bottom: 16px">
+      <div style="display: flex; justify-content: space-between; width: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B6255"><span>Edisi kuartal · 2032 K1</span><span>Laporan untuk Presiden Sari Wening</span><span>Nomor 5 dari 20</span></div>
+      <span style="font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 56px; line-height: 1">Warta Republika</span>
+    </header>
+
+    <!-- Berita utama + samping -->
+    <div style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 32px">
+      <section style="display: flex; flex-direction: column; gap: 12px">
+        <div style="border-radius: 4px; overflow: hidden"><dc-import name="Ilustrasi" scene="sidang" tinggi="280px" hint-size="100%,280px"></dc-import></div>
+        <h1 style="margin: 4px 0 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 38px; line-height: 1.12">Parlemen sahkan reformasi subsidi energi, persetujuan publik turun empat poin</h1>
+        <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 17px; line-height: 28px; color: #3A352C">Undang-undang lolos 82 lawan 18. Simpul Daerah menolak penuh. Pemerintah menyebut penghematan kas mulai terasa kuartal depan, sementara harga bahan bakar di daerah naik lebih cepat dari perkiraan.</p>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 10px; border-left: 1px solid rgba(30,27,22,0.15); padding-left: 32px">
+        <img src="/_blob/6de3ea8f84c2a1640f4a04bff18bdde0" alt="Ilustrasi datar: seorang tahanan berompi oranye digiring dua aparat" style="display: block; width: 100%; height: 220px; object-fit: cover; border-radius: 4px">
+        <span style="font-size: 12px; font-weight: 600; color: #9A2A18">Hukum</span>
+        <h2 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 22px; line-height: 1.25">Mantan direktur pengadaan energi ditahan</h2>
+        <p style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-size: 15px; line-height: 24px; color: #3A352C">Oposisi meminta audit menyeluruh atas belanja subsidi tiga tahun terakhir.</p>
+        <span style="font-size: 12px; color: #6B6255">Contoh berita · konten ditulis sendiri</span>
+      </section>
+    </div>
+
+    <!-- Angka kuartal -->
+    <section aria-labelledby="angka" style="display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 32px; border-top: 1px solid rgba(30,27,22,0.25); padding-top: 24px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 12px 8px">
+          <h2 id="angka" style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 22px">Angka kuartal ini</h2>
+          <span style="font-size: 12px; color: #6B6255">Klik baris untuk melihat penyebab</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0,1.4fr) 80px 80px 80px 24px; gap: 12px; padding: 0 12px; font-size: 12px; color: #6B6255"><span>Indikator</span><span style="text-align: right">Sebelum</span><span style="text-align: right">Sesudah</span><span style="text-align: right">Ubah</span><span></span></div>
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+          <div style="border-bottom: 1px solid rgba(30,27,22,0.1)">
+            <button type="button" class="tr" onClick="{{r.toggle}}" aria-expanded="{{r.expanded}}">
+              <span>{{r.label}}</span>
+              <span style="text-align: right; font-variant-numeric: tabular-nums; color: #6B6255">{{r.before}}</span>
+              <span style="text-align: right; font-variant-numeric: tabular-nums; font-weight: 500">{{r.after}}</span>
+              <span style="text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: {{r.color}}">{{r.delta}}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6255" stroke-width="1.5" aria-hidden="true" style="transform: rotate({{r.rot}}); transition: transform 180ms"><path d="M6 9l6 6 6-6"></path></svg>
+            </button>
+            <sc-if value="{{r.open}}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 4px 12px 12px; display: flex; flex-direction: column; gap: 4px">
+                <sc-for list="{{r.causes}}" as="c" hint-placeholder-count="2"><span style="font-size: 13px; line-height: 20px; color: #3A352C"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px">{{c.v}}</span> {{c.t}}</span></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; border-left: 1px solid rgba(30,27,22,0.15); padding-left: 32px">
+        <h2 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: 22px">Kas negara</h2>
+        <div style="display: flex; align-items: baseline; gap: 12px"><span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 40px; font-variant-numeric: tabular-nums">Rp142 T</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #A8301C">−Rp8 T</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+          <div style="display: flex; justify-content: space-between"><span style="color: #4A443A">Pendapatan negara</span><span style="font-variant-numeric: tabular-nums">+Rp40 T</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #4A443A">Belanja rutin</span><span style="font-variant-numeric: tabular-nums">−Rp38 T</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #4A443A">Biaya awal kebijakan</span><span style="font-variant-numeric: tabular-nums">−Rp8 T</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #4A443A">Biaya lobi partai</span><span style="font-variant-numeric: tabular-nums">−Rp2 T</span></div>
+        </div>
+        <div style="height: 1px; background: rgba(30,27,22,0.15)"></div>
+        <h3 style="margin: 0; font-size: 14px; font-weight: 600">Menunggu kuartal depan</h3>
+        <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 17px">Harga energi dan kompensasi tunai</span>
+        <a href="MejaKerja.dc.html" class="btn ink" style="margin-top: 8px">Kembali ke meja kerja</a>
+      </div>
+    </section>
+  </article>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { open: 'approval' }; }
+  renderVals() {
+    const G = '#2F7A50', R = '#A8301C', N = '#6B6255';
+    const data = [
+      { id: 'approval', label: 'Persetujuan', b: '58,0', a: '53,9', d: '−4,1', c: R, causes: [{ v: '−3,7', t: 'Dampak reformasi subsidi energi' }, { v: '−0,4', t: 'Persetujuan publik kembali mendekati rata-rata' }] },
+      { id: 'stability', label: 'Stabilitas', b: '62,0', a: '62,0', d: '0,0', c: N, causes: [{ v: '0,0', t: 'Tidak ada perubahan tercatat' }] },
+      { id: 'fiscal', label: 'Kesehatan fiskal', b: '55,0', a: '55,0', d: '0,0', c: N, causes: [{ v: '0,0', t: 'Penghematan subsidi mulai dihitung kuartal depan' }] },
+      { id: 'growth', label: 'Pertumbuhan', b: '4,8%', a: '4,6%', d: '−0,2', c: R, causes: [{ v: '−0,2', t: 'Pertumbuhan bergerak kembali ke tren jangka panjang' }] },
+      { id: 'inflation', label: 'Inflasi', b: '3,4%', a: '3,6%', d: '+0,2', c: R, causes: [{ v: '+0,4', t: 'Dampak reformasi subsidi energi' }, { v: '−0,2', t: 'Inflasi bergerak kembali ke target' }] },
+      { id: 'unemp', label: 'Pengangguran', b: '5,6%', a: '5,3%', d: '−0,3', c: G, causes: [{ v: '−0,3', t: 'Pertumbuhan ekonomi memengaruhi pengangguran' }] },
+      { id: 'welfare', label: 'Kesejahteraan', b: '50,0', a: '50,0', d: '0,0', c: N, causes: [{ v: '0,0', t: 'Efek bantuan tertunda dua kuartal' }] },
+      { id: 'trust', label: 'Kepercayaan', b: '52,0', a: '52,0', d: '0,0', c: N, causes: [{ v: '0,0', t: 'Tidak ada perubahan tercatat' }] }
+    ];
+    const rows = data.map((r) => {
+      const open = this.state.open === r.id;
+      return { label: r.label, before: r.b, after: r.a, delta: r.d, color: r.c, causes: r.causes, open, expanded: open ? 'true' : 'false', rot: open ? '180deg' : '0deg', toggle: () => this.setState({ open: open ? null : r.id }) };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>
