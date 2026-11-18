@@ -1,6 +1,6 @@
 [package]
 name = "republika"
-version = "0.1.0"
+version = "0.1.0-rc.1"
 description = "REPUBLIKA — ruang rapat negara fiktif"
 authors = ["REPUBLIKA"]
 edition = "2021"
