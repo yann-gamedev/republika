@@ -24,7 +24,7 @@ Isi kolom **Jawaban** sebelum agent mulai. Kalau kosong, agent memakai **Default
 | K3 | Font tambahan: IBM Plex Mono 400 (angka/meta, ±20 KB subset Latin) dan Mrs Saint Delafield (tanda tangan, ±15 KB). Keduanya OFL. Boleh dibundel? | Boleh. Sebutkan ukuran di commit message. | **Boleh.** Keduanya tetap dibundel; ukuran build 14,4 KiB (IBM Plex Mono) + 18,4 KiB (Mrs Saint Delafield), tercatat di `CREDITS.md` dan `docs/PERFORMANCE.md`. |
 | K4 | Nama kabinet wajib? (`AGENT.md` §5.2: opsional, maks. 40 karakter) | **Tetap opsional**, mengikuti §5.2. Wireframe yang mewajibkan diabaikan. | **Tetap opsional.** Boleh kosong, maks. 40 karakter, dengan tombol saran nama. Tidak ada perubahan kode. |
 | K5 | Grafik "Arah negara" di Meja kerja butuh history 5 kuartal. §5.17 hanya memuat history di Riwayat/Laporan. | Muat history secara lazy saat Meja kerja dibuka, ukur JS heap setelah 20 kuartal, catat di `docs/PERFORMANCE.md`. Bila heap > 30 MB, ganti grafik dengan delta kuartal lalu saja. | **Pertahankan yang sekarang.** History dimuat lazy dan diringkas ≤ 5 titik; heap 19,3 MB setelah 20 kuartal (target ≤ 30 MB), jadi grafik tetap dipakai. |
-| K6 | Aturan angka 6B (reshuffle, latar belakang, janji, provinsi). | Pakai usulan di Lampiran C, tandai `// DECISION:`, catat di `docs/DECISIONS.md`, lalu uji dengan `pnpm balance`. | |
+| K6 | Aturan angka 6B (reshuffle, latar belakang, janji, provinsi). | Pakai usulan di Lampiran C, tandai `// DECISION:`, catat di `docs/DECISIONS.md`, lalu uji dengan `pnpm balance`. | **Setujui usulan, satu perubahan:** reshuffle maksimal **1 kali per kuartal** (bukan per tahun). Field state `reshuffleUsedTurn`. Angka lain tetap; diuji `pnpm balance` dan boleh turun bila dominan. |
 | K7 | Konten 6B (nama provinsi, calon menteri, latar belakang, janji, tokoh pimpinan) ditulis siapa? | Pemilik, di `packages/game-data/content/`. Agent hanya membuat fixture `PLACEHOLDER-*` (`AGENT.md` §6). | |
 
 ---
@@ -180,7 +180,7 @@ Pemilik memainkan 2 kampanye di build desktop dan menjawab di `docs/PLAYTEST-UI-
   - Tambahan field `minister` (nama + penampilan) pada `ministries.json`, versi skema dinaikkan.
 - `GameState` baru:
   - `president { honorific, appearance, backgroundId }` dan `promiseIds[3]`.
-  - `cabinet { [ministryId]: { holderId } }`, `leaders { [roleId]: { holderId } }`, `reshuffleUsedYear`.
+  - `cabinet { [ministryId]: { holderId } }`, `leaders { [roleId]: { holderId } }`, `reshuffleUsedTurn`.
   - `provinces { [provinceId]: { satisfactionTenths, actionsThisTurn[] } }`.
 - Naikkan `rulesetVersion` dan `saveFormatVersion`. Migrator murni `vN → vN+1` di `packages/simulation/src/save/migrations/`:
   - Save lama mendapat `backgroundId: "BG-NONE"`, `promiseIds: []` (janji tidak dinilai), dan menteri awal dari konten.
@@ -204,7 +204,7 @@ Pemilik memainkan 2 kampanye di build desktop dan menjawab di `docs/PLAYTEST-UI-
 
 **Tugas**
 - Command baru `RESHUFFLE {roleId, candidateId}`:
-  - Biaya 1 AP, maksimal 1 kali per tahun (4 kuartal), masuk `pendingCommands`, bisa dibatalkan.
+  - Biaya 1 AP, maksimal 1 kali per kuartal, masuk `pendingCommands`, bisa dibatalkan.
   - Diproses di langkah resolusi baru **2b** (setelah respons event, sebelum lobi) agar perubahan dukungan berlaku pada voting kuartal yang sama.
   - Perbarui `SIMULATION_RULES.md` §urutan resolusi.
 - Efek untuk menteri: efektivitas kementerian = `candidate.baseEffectiveness` (clamp 40..90). Dukungan partai calon `+candidate.supportGain`, partai menteri lama `−6,0`.
@@ -212,7 +212,7 @@ Pemilik memainkan 2 kampanye di build desktop dan menjawab di `docs/PLAYTEST-UI-
 - UI: tombol Reshuffle aktif → dialog 3 calon (potret, partai, efektivitas, dampak dukungan) → "Lantik pengganti". Profil menampilkan rekam jejak dari ledger.
 
 **Acceptance criteria**
-- Test: kuota per tahun, AP, pembatalan, urutan langkah 2b, dan ledger `RESHUFFLE`. Command ganda dengan `commandId` sama tidak berefek dua kali.
+- Test: kuota per kuartal, AP, pembatalan, urutan langkah 2b, dan ledger `RESHUFFLE`. Command ganda dengan `commandId` sama tidak berefek dua kali.
 
 ### Bagian 6B.4 — Peta daerah
 
