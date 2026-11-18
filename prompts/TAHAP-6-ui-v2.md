@@ -19,7 +19,7 @@ Isi kolom **Jawaban** sebelum agent mulai. Kalau kosong, agent memakai **Default
 
 | # | Pertanyaan | Default | Jawaban |
 |---|---|---|---|
-| K1 | Wireframe memakai **Indonesia nyata** (38 provinsi, naskah sumpah Pasal 9 UUD 1945, MPR). `AGENT.md` §5.16 mewajibkan negara, lembaga, dan tokoh fiktif. Tetap fiktif atau ubah §5.16? | **Tetap fiktif.** Provinsi diberi nama fiktif oleh pemilik dengan tata letak kepulauan yang terinspirasi Indonesia; naskah sumpah ditulis ulang untuk republik fiktif dengan struktur yang sama. | |
+| K1 | Wireframe memakai **Indonesia nyata** (38 provinsi, naskah sumpah Pasal 9 UUD 1945, MPR). `AGENT.md` §5.16 mewajibkan negara, lembaga, dan tokoh fiktif. Tetap fiktif atau ubah §5.16? | **Tetap fiktif.** Provinsi diberi nama fiktif oleh pemilik dengan tata letak kepulauan yang terinspirasi Indonesia; naskah sumpah ditulis ulang untuk republik fiktif dengan struktur yang sama. | **Indonesia nyata.** Provinsi, lembaga (MPR, kementerian), dan naskah sumpah mengikuti Indonesia. Nama tokoh—termasuk tokoh di event/random event—fiktif. Partai/fraksi tetap fiktif. §5.16 sudah direvisi. |
 | K2 | Naskah sumpah/janji: teks final dari siapa? | Pemilik menulis di `copy/id.ts`. Agent memakai teks placeholder bertanda `PLACEHOLDER`. | |
 | K3 | Font tambahan: IBM Plex Mono 400 (angka/meta, ±20 KB subset Latin) dan Mrs Saint Delafield (tanda tangan, ±15 KB). Keduanya OFL. Boleh dibundel? | Boleh. Sebutkan ukuran di commit message. | |
 | K4 | Nama kabinet wajib? (`AGENT.md` §5.2: opsional, maks. 40 karakter) | **Tetap opsional**, mengikuti §5.2. Wireframe yang mewajibkan diabaikan. | |

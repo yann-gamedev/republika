@@ -1,7 +1,7 @@
 export const copy = {
   app: {
     name: 'REPUBLIKA',
-    kicker: 'Republik Fiktif',
+    kicker: 'Republik Indonesia',
     tagline: 'Ruang rapat negara untuk dua puluh kuartal yang menentukan.',
     loading: 'Menyiapkan ruang rapat…',
     offline: 'Offline penuh',
@@ -60,7 +60,7 @@ export const copy = {
     quit: 'Keluar',
     quitUnavailable: 'Aplikasi desktop tidak terdeteksi. Tutup tab ini untuk keluar.',
     footerNote: 'Offline · data tersimpan di perangkat ini',
-    sealLabel: 'Segel Republik Fiktif',
+    sealLabel: 'Segel Kepresidenan Republik Indonesia',
     versionLine: (version: string) => `Versi ${version}`,
   },
   inauguration: {

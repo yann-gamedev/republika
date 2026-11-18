@@ -95,3 +95,10 @@ Keputusan aturan yang tidak dirinci `AGENT.md` §5. Semua dipilih sebagai opsi p
 | Pengurus dan anggota      | Field opsional `leadership` (4 jabatan baku) dan `members`. Hanya tampilan; tidak masuk state atau save, dan tidak dibaca engine.                                                                                                                   |
 | Urutan tampilan Parlemen  | Diurutkan dari kursi terbanyak. Urutan engine tetap per ID.                                                                                                                                                                                         |
 | Nama partai di teks event | Event yang memakai efek tag ideologi (`nasionalis`, `regionalis`, `teknokrat`) menyebut partai yang saat ini memegang tag itu. Jika tag dipindah ke partai lain, teks event juga harus disesuaikan.                                                 |
+
+## Tahap 6 — UI v2 dan jawaban Bagian 0
+
+| Keputusan                      | Isi                                                                                                                                                                                                                                                        |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| K1 — latar nyata, tokoh fiktif | Negara, lembaga, dan 38 provinsi memakai nama nyata Indonesia; naskah sumpah memakai teks resmi. Nama orang fiktif, termasuk tokoh di event/random event. Partai dan fraksi tetap fiktif. `AGENT.md` §5.16 dan `docs/PANDUAN-KONTEN.md` sudah disesuaikan. |
+| Konsekuensi konten             | ID fraksi yang sudah ada (`FAC-CAKRAWALA` dan seterusnya) tetap dipakai. Nama provinsi, tokoh event baru, dan lembaga nyata wajib lolos `pnpm content:check`. Tidak ada foto/lambang/logo nyata yang dibundel.                                             |
