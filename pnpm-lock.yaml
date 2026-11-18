@@ -156,7 +156,24 @@ importers:
         specifier: workspace:*
         version: link:../game-data
 
-  tools/balance: {}
+  tools/balance:
+    dependencies:
+      '@republika/game-data':
+        specifier: workspace:*
+        version: link:../../packages/game-data
+      '@republika/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@republika/simulation':
+        specifier: workspace:*
+        version: link:../../packages/simulation
+    devDependencies:
+      tsx:
+        specifier: ^4.19.4
+        version: 4.23.15
+      vitest:
+        specifier: 3.2.7
+        version: 3.2.7(@types/node@22.20.5)(jiti@1.21.7)(tsx@4.23.15)
 
   tools/sim:
     dependencies:

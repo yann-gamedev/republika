@@ -11,3 +11,4 @@ packages/game-data/content/
 prompts/
 packages/simulation/test/fixtures/
 dist-stats/
+docs/balance/
