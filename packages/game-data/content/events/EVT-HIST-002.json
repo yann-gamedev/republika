@@ -1,0 +1,72 @@
+{
+  "id": "EVT-HIST-002",
+  "version": 1,
+  "title": "Kebuntuan Majelis Konstitusi",
+  "body": "Majelis gagal menyepakati rancangan konstitusi setelah beberapa putaran. Pimpinan partai kecil bersedia kembali berunding jika daerah mendapat jaminan keterwakilan. Sebagian anggota kabinet mendesak Presiden menetapkan kembali piagam sementara.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 6
+    },
+    {
+      "type": "INDICATOR_AT_MOST",
+      "target": "stability",
+      "value": 65
+    }
+  ],
+  "triggerWeight": 5,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Tetapkan kembali piagam sementara",
+      "hint": "Pemerintah memperoleh kepastian prosedur dengan cepat, tetapi pengesahan sepihak mengurangi kepercayaan pada lembaga.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_002_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -6,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_002_A_02"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Perpanjang perundingan dengan partai daerah",
+      "hint": "Kesepakatan lebih luas memerlukan waktu, sementara jaminan keterwakilan memperkuat dukungan daerah.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": -3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_002_B_01"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "regionalis",
+          "delta": 6,
+          "reasonCode": "EVT_HIST_002_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 3,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_002_B_03"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

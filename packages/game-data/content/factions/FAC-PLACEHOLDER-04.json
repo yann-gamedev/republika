@@ -1,13 +1,13 @@
 {
   "id": "FAC-PLACEHOLDER-04",
-  "version": 1,
-  "name": "Fraksi Placeholder Empat",
-  "shortName": "P4",
+  "version": 2,
+  "name": "Partai Harmoni Bangsa",
+  "shortName": "PHB",
   "seats": 16,
   "color": "#5C5470",
   "ideologyTags": ["religius-konservatif"],
   "baseSupport": 52,
   "initialSupport": 52,
   "policyPreferences": { "FISCAL": 1, "SOCIAL": 0, "ENERGY": 0, "GOVERNANCE": 2 },
-  "description": "Fraksi contoh yang menekankan ketertiban sosial."
+  "description": "Partai yang menekankan ketertiban sosial dan tata kelola pemerintahan."
 }

@@ -1,0 +1,67 @@
+{
+  "id": "EVT-HIST-001",
+  "version": 1,
+  "title": "Konferensi Negara-Negara Selatan",
+  "body": "Delegasi dari berbagai negara tiba di Kota Ranasari. Mereka sepakat memperluas kerja sama dagang, tetapi berbeda pendapat tentang seberapa tegas deklarasi bersama harus menyikapi tekanan negara-negara besar.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 2
+    }
+  ],
+  "triggerWeight": 7,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Perjuangkan deklarasi yang lebih tegas",
+      "hint": "Sikap tegas menarik dukungan di dalam negeri, tetapi beberapa delegasi dapat menarik diri.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_001_A_01"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "nasionalis",
+          "delta": 5,
+          "reasonCode": "EVT_HIST_001_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": -0.2,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_001_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Terima deklarasi kompromi",
+      "hint": "Lebih banyak negara dapat bertahan dalam kesepakatan, meski sebagian sekutu di parlemen kecewa.",
+      "effects": [
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "nasionalis",
+          "delta": -4,
+          "reasonCode": "EVT_HIST_001_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": 0.4,
+          "timing": "DELAYED",
+          "delayTurns": 2,
+          "reasonCode": "EVT_HIST_001_B_02"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

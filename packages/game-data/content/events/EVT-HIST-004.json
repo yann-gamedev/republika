@@ -1,0 +1,75 @@
+{
+  "id": "EVT-HIST-004",
+  "version": 1,
+  "title": "Krisis Perbankan dan Mata Uang",
+  "body": "Nilai mata uang republik melemah dan nasabah mulai menarik simpanan. Sejumlah bank kesulitan mencairkan dana, sementara usaha kecil bergantung pada kredit jangka pendek untuk memenuhi pesanan.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 4
+    },
+    {
+      "type": "INDICATOR_AT_MOST",
+      "target": "fiscalHealth",
+      "value": 60
+    }
+  ],
+  "triggerWeight": 8,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Jamin simpanan dan biayai likuiditas darurat",
+      "hint": "Kepanikan mereda lebih cepat, tetapi pemerintah harus menanggung biaya stabilisasi.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -9,
+          "reasonCode": "EVT_HIST_004_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "fiscalHealth",
+          "delta": -4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_004_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 5,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_004_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Restrukturisasi bank dan utamakan penabung kecil",
+      "hint": "Biaya kas lebih rendah, tetapi kredit usaha menyusut selama proses restrukturisasi.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -3,
+          "reasonCode": "EVT_HIST_004_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": -0.6,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_004_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_004_B_03"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

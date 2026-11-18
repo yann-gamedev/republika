@@ -1,0 +1,66 @@
+{
+  "id": "EVT-HIST-003",
+  "version": 1,
+  "title": "Mandat Darurat Istana",
+  "body": "Kabinet kesulitan mengoordinasikan pemerintahan setelah serangkaian gangguan layanan. Dewan Negara meminta Presiden segera menetapkan siapa yang akan mengoordinasikan respons dan kapan kewenangan darurat berakhir.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 7
+    },
+    {
+      "type": "INDICATOR_AT_MOST",
+      "target": "stability",
+      "value": 60
+    }
+  ],
+  "triggerWeight": 5,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Delegasikan mandat dengan batas waktu dan pengawasan",
+      "hint": "Koordinasi cepat meredakan gangguan, tetapi penerima mandat dapat memperdebatkan batas kewenangannya.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_003_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -3,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_003_A_02"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Pertahankan koordinasi melalui kabinet sipil",
+      "hint": "Pengawasan sipil terjaga, tetapi perbedaan sikap antarkementerian memperlambat keputusan.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": -3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_003_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_003_B_02"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}
