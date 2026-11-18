@@ -1,0 +1,71 @@
+{
+  "id": "EVT-HIST-005",
+  "version": 1,
+  "title": "Desakan Membentuk Kabinet Transisi",
+  "body": "Koalisi goyah setelah gelombang demonstrasi. Kelompok mahasiswa dan partai oposisi menuntut jadwal reformasi pemilu, sementara para pelaku usaha meminta tim ekonomi tetap bekerja selama transisi.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 8
+    },
+    {
+      "type": "INDICATOR_AT_MOST",
+      "target": "approval",
+      "value": 50
+    }
+  ],
+  "triggerWeight": 6,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Bentuk kesepakatan lintas partai untuk reformasi",
+      "hint": "Komitmen reformasi memulihkan kepercayaan, tetapi negosiasi kabinet memperlambat koordinasi ekonomi.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 5,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_005_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": -0.3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_005_A_02"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "teknokrat",
+          "delta": -4,
+          "reasonCode": "EVT_HIST_005_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Pertahankan tim ekonomi dan umumkan batas transisi",
+      "hint": "Pemulihan ekonomi lebih terarah, tetapi kelompok reformis menilai perubahan berjalan lambat.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": 0.4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_005_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_005_B_02"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

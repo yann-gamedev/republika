@@ -1,0 +1,66 @@
+{
+  "id": "EVT-HIST-008",
+  "version": 1,
+  "title": "Kesepakatan Damai Provinsi Serambi",
+  "body": "Wakil masyarakat Provinsi Serambi dan pemerintah pusat menyepakati garis besar penghentian konflik. Perundingan akhir tersendat pada ruang bagi partai lokal dan pembagian penerimaan wilayah.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 5
+    }
+  ],
+  "triggerWeight": 7,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Setujui otonomi dengan pengawasan bersama",
+      "hint": "Dukungan di daerah menguat, tetapi partai nasionalis menentang konsesi otonomi.",
+      "effects": [
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "regionalis",
+          "delta": 8,
+          "reasonCode": "EVT_HIST_008_A_01"
+        },
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "nasionalis",
+          "delta": -6,
+          "reasonCode": "EVT_HIST_008_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 5,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_008_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Sepakati jeda konflik dan tunda klausul otonomi",
+      "hint": "Pusat mendapat waktu berkonsultasi dengan parlemen, tetapi warga meragukan kepastian kesepakatan.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_008_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_008_B_02"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

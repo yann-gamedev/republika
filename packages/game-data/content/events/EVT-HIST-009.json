@@ -1,0 +1,72 @@
+{
+  "id": "EVT-HIST-009",
+  "version": 1,
+  "title": "Darurat Kesehatan Nasional",
+  "body": "Infeksi pernapasan menyebar di beberapa kota dan rumah sakit mendekati batas kapasitas. Pemerintah daerah menunggu keputusan tentang pembatasan kegiatan dan pendanaan tambahan.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 4
+    }
+  ],
+  "triggerWeight": 6,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Batasi kegiatan luas dan beri kompensasi usaha",
+      "hint": "Menekan beban layanan kesehatan, dengan biaya kas dan penurunan kegiatan ekonomi.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -8,
+          "reasonCode": "EVT_HIST_009_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": -0.6,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_009_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 5,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_009_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Batasi kegiatan di zona terdampak dan tambah kapasitas rumah sakit",
+      "hint": "Biaya awal lebih kecil dan lebih banyak usaha tetap buka, tetapi kapasitas tambahan belum langsung tersedia.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -4,
+          "reasonCode": "EVT_HIST_009_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": -3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_009_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 3,
+          "timing": "DELAYED",
+          "delayTurns": 2,
+          "reasonCode": "EVT_HIST_009_B_03"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

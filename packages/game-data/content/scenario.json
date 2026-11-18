@@ -1,6 +1,6 @@
 {
   "rulesetVersion": 1,
-  "maxTurns": 4,
+  "maxTurns": 20,
   "actionPointsPerTurn": 2,
   "maxEventsPerQuarter": 1,
   "lobbyCostTrillion": 2,

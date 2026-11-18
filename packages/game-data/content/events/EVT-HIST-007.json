@@ -1,0 +1,64 @@
+{
+  "id": "EVT-HIST-007",
+  "version": 1,
+  "title": "Rekonstruksi Pesisir Utara",
+  "body": "Gelombang besar merusak permukiman dan pelabuhan nelayan di Teluk Remba. Setelah layanan darurat berdiri, warga dan pemerintah provinsi meminta kepastian lokasi pembangunan kembali.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 3
+    }
+  ],
+  "triggerWeight": 6,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Bangun kembali dekat sumber penghidupan warga",
+      "hint": "Pekerjaan dan layanan pulih lebih cepat, tetapi pemerintah perlu menganggarkan perlindungan pesisir.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -5,
+          "reasonCode": "EVT_HIST_007_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_007_A_02"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Bangun permukiman baru di zona yang lebih aman",
+      "hint": "Pemindahan mengganggu penghidupan sementara. Manfaat baru terasa setelah hunian siap.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -7,
+          "reasonCode": "EVT_HIST_007_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_007_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 6,
+          "timing": "DELAYED",
+          "delayTurns": 2,
+          "reasonCode": "EVT_HIST_007_B_03"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "id": "EVT-HIST-010",
+  "version": 1,
+  "title": "Harga Energi dan Kompensasi Tunai",
+  "body": "Kenaikan harga minyak membuat anggaran subsidi energi membengkak. Kabinet harus memilih waktu penyaluran bantuan dan penyesuaian harga bahan bakar sebelum tagihan subsidi berikutnya jatuh tempo.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 2
+    }
+  ],
+  "triggerWeight": 8,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Salurkan bantuan tunai sebelum menyesuaikan harga",
+      "hint": "Kompensasi menjaga daya beli rumah tangga, tetapi negara harus menyediakan dana lebih dulu dan harga tetap naik.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -5,
+          "reasonCode": "EVT_HIST_010_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_010_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "inflationPct",
+          "delta": 0.4,
+          "timing": "DELAYED",
+          "delayTurns": 1,
+          "reasonCode": "EVT_HIST_010_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Sesuaikan harga sekarang dan fokuskan ulang subsidi",
+      "hint": "Beban subsidi berkurang lebih cepat, tetapi daya beli tertekan saat biaya transportasi naik.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "fiscalHealth",
+          "delta": 4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_010_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "inflationPct",
+          "delta": 0.7,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_010_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -4,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_010_B_03"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}

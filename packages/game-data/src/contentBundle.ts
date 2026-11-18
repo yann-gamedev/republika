@@ -1,5 +1,15 @@
 import archetypesJson from '../content/archetypes.json';
 import baselineJson from '../content/baseline.json';
+import historicalEvent01 from '../content/events/EVT-HIST-001.json';
+import historicalEvent02 from '../content/events/EVT-HIST-002.json';
+import historicalEvent03 from '../content/events/EVT-HIST-003.json';
+import historicalEvent04 from '../content/events/EVT-HIST-004.json';
+import historicalEvent05 from '../content/events/EVT-HIST-005.json';
+import historicalEvent06 from '../content/events/EVT-HIST-006.json';
+import historicalEvent07 from '../content/events/EVT-HIST-007.json';
+import historicalEvent08 from '../content/events/EVT-HIST-008.json';
+import historicalEvent09 from '../content/events/EVT-HIST-009.json';
+import historicalEvent10 from '../content/events/EVT-HIST-010.json';
 import eventPlaceholderOne from '../content/events/EVT-PLACEHOLDER-001.json';
 import eventPlaceholderTwo from '../content/events/EVT-PLACEHOLDER-002.json';
 import factionPlaceholderOne from '../content/factions/FAC-PLACEHOLDER-01.json';
@@ -33,6 +43,19 @@ export const rawContentBundle: RawContentBundle = {
   ],
   ministries: ministriesJson,
   policies: [policyFiscal, policySocial, policyEnergy, policyGovernance],
-  events: [eventPlaceholderOne, eventPlaceholderTwo],
+  events: [
+    eventPlaceholderOne,
+    eventPlaceholderTwo,
+    historicalEvent01,
+    historicalEvent02,
+    historicalEvent03,
+    historicalEvent04,
+    historicalEvent05,
+    historicalEvent06,
+    historicalEvent07,
+    historicalEvent08,
+    historicalEvent09,
+    historicalEvent10,
+  ],
   archetypes: archetypesJson,
 };

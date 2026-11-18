@@ -1,0 +1,63 @@
+{
+  "id": "EVT-HIST-006",
+  "version": 1,
+  "title": "Tawaran Dukungan Jelang Putaran Kedua",
+  "body": "Survei menjelang pemungutan suara kedua menunjukkan persaingan ketat. Sebuah partai yang tersingkir menawarkan dukungan kepada Presiden petahana jika program transfer layanan kabupaten dimasukkan ke agenda bersama.",
+  "eligibility": [
+    {
+      "type": "TURN_AT_LEAST",
+      "value": 16
+    }
+  ],
+  "triggerWeight": 8,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Terima dukungan dengan komitmen program daerah",
+      "hint": "Menguatkan dukungan partai daerah, tetapi komitmen program memerlukan alokasi kas dan dapat memicu kritik.",
+      "effects": [
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "regionalis",
+          "delta": 8,
+          "reasonCode": "EVT_HIST_006_A_01"
+        },
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -4,
+          "reasonCode": "EVT_HIST_006_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_006_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Pertahankan agenda awal dan cari dukungan langsung",
+      "hint": "Agenda kabinet tetap konsisten, tetapi partai penawar menarik dukungannya.",
+      "effects": [
+        {
+          "type": "CHANGE_FACTION_SUPPORT",
+          "ideologyTag": "regionalis",
+          "delta": -5,
+          "reasonCode": "EVT_HIST_006_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 3,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_HIST_006_B_02"
+        }
+      ],
+      "neutral": true
+    }
+  ]
+}
