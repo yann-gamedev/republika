@@ -172,7 +172,7 @@ export default function FinalReportPage() {
                         <div>
                           <p className="text-sm">
                             {sourceName(decision.sourceId) ?? decision.sourceId}
-                            <span className="ml-2 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+                            <span className="ml-2 text-xs text-muted-foreground">
                               {decision.sourceType === 'POLICY'
                                 ? copy.final.policy
                                 : copy.final.event}{' '}
@@ -193,7 +193,7 @@ export default function FinalReportPage() {
                     ))}
                   </ol>
                 )}
-                <p className="mt-4 text-[0.62rem] leading-relaxed text-muted-foreground/70">
+                <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
                   {copy.final.decisionsNote}
                 </p>
               </CardContent>

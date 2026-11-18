@@ -120,7 +120,7 @@ export function LineChart({
               x={xAt(index)}
               y={HEIGHT - 10}
               textAnchor="middle"
-              className="fill-muted-foreground text-[10px] uppercase"
+              className="fill-muted-foreground text-[10px]"
               letterSpacing="0.08em"
             >
               {label}

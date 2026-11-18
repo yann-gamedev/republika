@@ -63,7 +63,7 @@ function NavEntry({ item, pendingEvents }: { item: NavItem; pendingEvents: numbe
       <Icon className="h-[17px] w-[17px] shrink-0 opacity-80" />
       <span className="flex-1">{item.label}</span>
       {isEvent && pendingEvents > 0 && (
-        <span className="min-w-5 rounded-full bg-maroon/40 px-1.5 py-0.5 text-center text-[0.6rem] font-semibold text-red-100">
+        <span className="min-w-5 rounded-full bg-maroon/40 px-1.5 py-0.5 text-center text-xs font-semibold text-red-100">
           {pendingEvents}
         </span>
       )}
@@ -141,10 +141,8 @@ export function GameLayout() {
           <Link to="/" className="flex items-center gap-3">
             <Seal label={copy.menu.sealLabel} className="h-11 w-11" />
             <span>
-              <span className="block font-serif text-xl tracking-[0.14em]">{copy.app.name}</span>
-              <span className="mt-0.5 block text-[0.62rem] uppercase tracking-institutional text-muted-foreground">
-                {copy.game.office}
-              </span>
+              <span className="block font-serif text-xl">{copy.app.name}</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">{copy.game.office}</span>
             </span>
           </Link>
         </div>
@@ -195,11 +193,9 @@ export function GameLayout() {
             ) : (
               <Badge variant="outline">{copy.app.offline}</Badge>
             )}
-            <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-              {copy.app.version(APP_VERSION)}
-            </span>
+            <span className="text-xs text-muted-foreground">{copy.app.version(APP_VERSION)}</span>
           </div>
-          <p className="mt-3 px-2 text-[0.65rem] leading-relaxed text-muted-foreground/70">
+          <p className="mt-3 px-2 text-xs leading-relaxed text-muted-foreground">
             {copy.app.stageNote} · {copy.game.shortcutHint}
           </p>
         </div>
@@ -276,7 +272,7 @@ export function GameLayout() {
                   {unanswered > 0 && (
                     <Link
                       to="/game/events"
-                      className="mt-1 max-w-[220px] text-right text-[0.62rem] leading-snug text-red-200/80 hover:text-red-100"
+                      className="mt-1 max-w-[220px] text-right text-xs leading-snug text-red-200/80 hover:text-red-100"
                     >
                       {copy.game.endQuarterBlocked}
                     </Link>
@@ -296,7 +292,7 @@ export function GameLayout() {
         </main>
 
         <footer className="border-t border-border/40 px-8 py-5">
-          <div className="mx-auto flex max-w-[1180px] flex-wrap 2xl:max-w-[1480px] items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/60">
+          <div className="mx-auto flex max-w-[1180px] flex-wrap 2xl:max-w-[1480px] items-center justify-between gap-3 text-xs text-muted-foreground">
             <span>{copy.menu.footerNote}</span>
             <span>
               {copy.settings.contentHash} · {contentHash.slice(0, 12)}
@@ -341,9 +337,10 @@ export function GameLayout() {
         <div
           key={toast.id}
           role={toast.tone === 'error' ? 'alert' : 'status'}
+          aria-live={toast.tone === 'error' ? 'assertive' : 'polite'}
           className={cn(
-            'fixed bottom-6 right-6 z-50 max-w-sm border bg-card/95 p-4 shadow-document backdrop-blur',
-            toast.tone === 'error' ? 'border-maroon/70' : 'border-primary/40',
+            'fixed bottom-6 right-6 z-50 w-80 rounded-lg border bg-raised p-4 shadow-document',
+            toast.tone === 'error' ? 'border-negative/60' : 'border-primary/40',
           )}
         >
           <p className="text-sm leading-relaxed text-foreground">{toast.message}</p>

@@ -27,9 +27,7 @@ const COALITION_SUPPORT = 500;
 function TrendText({ delta }: { delta: number | null }) {
   if (delta === null || delta === 0) return null;
   return (
-    <span
-      className={cn('ml-1.5 text-[0.65rem]', delta > 0 ? 'text-emerald-300/85' : 'text-red-300/85')}
-    >
+    <span className={cn('ml-1.5 text-xs', delta > 0 ? 'text-emerald-300/85' : 'text-red-300/85')}>
       {delta > 0 ? '↑' : '↓'} {formatSignedIndicator(delta)}
       <span className="sr-only"> {copy.parliament.trendNote}</span>
     </span>
@@ -119,25 +117,19 @@ export default function ParliamentPage() {
             />
             <div className="mt-5 grid grid-cols-3 gap-4 border-t border-border/50 pt-4">
               <div>
-                <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                  {copy.parliament.coalition}
-                </p>
+                <p className="text-xs text-muted-foreground">{copy.parliament.coalition}</p>
                 <p className="numeric mt-1 text-sm">
                   {copy.parliament.coalitionSeats(coalitionSeats)}
                 </p>
               </div>
               <div>
-                <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                  {copy.parliament.opposition}
-                </p>
+                <p className="text-xs text-muted-foreground">{copy.parliament.opposition}</p>
                 <p className="numeric mt-1 text-sm">
                   {copy.parliament.oppositionSeats(totalSeats - coalitionSeats)}
                 </p>
               </div>
               <div>
-                <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                  {copy.parliament.threshold}
-                </p>
+                <p className="text-xs text-muted-foreground">{copy.parliament.threshold}</p>
                 <p className="numeric mt-1 text-sm">{copy.parliament.thresholdValue}</p>
               </div>
             </div>
@@ -170,7 +162,7 @@ export default function ParliamentPage() {
                 />
               </div>
             ))}
-            <p className="border-t border-border/50 pt-3 text-[0.65rem] leading-relaxed text-muted-foreground">
+            <p className="border-t border-border/50 pt-3 text-xs leading-relaxed text-muted-foreground">
               {copy.parliament.coalitionNote}
             </p>
           </CardContent>
@@ -204,7 +196,7 @@ export default function ParliamentPage() {
                     <span
                       key={item.factionId}
                       className={cn(
-                        'border px-1.5 py-0.5 text-[0.62rem]',
+                        'border px-1.5 py-0.5 text-xs',
                         item.vote === 'FOR'
                           ? 'border-emerald-800/50 text-emerald-300/85'
                           : 'border-maroon/50 text-red-300/80',
@@ -224,7 +216,7 @@ export default function ParliamentPage() {
       <section className="mt-8">
         <div className="mb-4 flex items-end justify-between gap-4">
           <h2 className="font-serif text-xl leading-none">{copy.parliament.kicker}</h2>
-          <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             {copy.parliament.lobbyCost(lobbyCost)} · {copy.parliament.lobbyBonus(lobbyBonus)}
           </span>
         </div>
@@ -263,7 +255,7 @@ export default function ParliamentPage() {
                       {faction.ideologyTags.map((tag) => (
                         <li
                           key={tag}
-                          className="border border-border/60 px-1.5 py-0.5 text-[0.6rem] text-muted-foreground"
+                          className="border border-border/60 px-1.5 py-0.5 text-xs text-muted-foreground"
                         >
                           #{tag}
                         </li>
@@ -279,13 +271,13 @@ export default function ParliamentPage() {
                     </p>
                     {(faction.leadership.length > 0 || faction.members.length > 0) && (
                       <details className="group mt-2 text-xs">
-                        <summary className="cursor-pointer select-none text-[0.65rem] uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+                        <summary className="cursor-pointer select-none text-xs text-muted-foreground hover:text-foreground">
                           {copy.parliament.rosterToggle}
                         </summary>
                         <div className="mt-2 grid gap-3 sm:grid-cols-2">
                           {faction.leadership.length > 0 && (
                             <div>
-                              <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+                              <p className="text-xs text-muted-foreground">
                                 {copy.parliament.rosterLeadership}
                               </p>
                               <dl className="mt-1 space-y-0.5">
@@ -302,7 +294,7 @@ export default function ParliamentPage() {
                           )}
                           {faction.members.length > 0 && (
                             <div>
-                              <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+                              <p className="text-xs text-muted-foreground">
                                 {copy.parliament.rosterMembers}
                               </p>
                               <ul className="mt-1 space-y-0.5">
@@ -323,26 +315,20 @@ export default function ParliamentPage() {
 
                 <div className="mt-4 grid grid-cols-3 gap-3 border-y border-border/40 py-3">
                   <div>
-                    <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.parliament.seats}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{copy.parliament.seats}</p>
                     <p className="numeric mt-0.5 text-sm">
                       {copy.parliament.seatShare(faction.seats)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.parliament.support}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{copy.parliament.support}</p>
                     <p className="numeric mt-0.5 text-sm">
                       {formatIndicator(supportTenths)}
                       <TrendText delta={trendOf(faction.id)} />
                     </p>
                   </div>
                   <div>
-                    <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-                      {copy.parliament.lobby}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{copy.parliament.lobby}</p>
                     <p className="numeric mt-0.5 text-sm">
                       {lobbied ? copy.parliament.lobbyPending : copy.common.available}
                     </p>
@@ -351,7 +337,7 @@ export default function ParliamentPage() {
 
                 <div className="mt-3 flex items-end justify-between gap-4">
                   <div>
-                    <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+                    <p className="text-xs text-muted-foreground">
                       {copy.parliament.preferences} · {copy.parliament.preferenceScale}
                     </p>
                     <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -361,7 +347,7 @@ export default function ParliamentPage() {
                           <span
                             key={category}
                             className={cn(
-                              'border px-1.5 py-0.5 text-[0.6rem]',
+                              'border px-1.5 py-0.5 text-xs',
                               value > 0
                                 ? 'border-emerald-800/50 text-emerald-300/85'
                                 : value < 0
@@ -404,7 +390,7 @@ export default function ParliamentPage() {
         </div>
       </section>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-border/50 bg-card/25 px-4 py-3 text-[0.68rem] text-muted-foreground">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border border-border/50 bg-card/25 px-4 py-3 text-xs text-muted-foreground">
         <span className="flex items-center gap-2">
           <IconCoins className="h-4 w-4 text-primary/70" />
           {copy.parliament.lobbyCost(lobbyCost)} · {copy.parliament.lobbyBonus(lobbyBonus)}

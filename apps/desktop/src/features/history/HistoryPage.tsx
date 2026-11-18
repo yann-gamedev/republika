@@ -97,7 +97,7 @@ export default function HistoryPage() {
                     aria-pressed={key === indicator}
                     onClick={() => setIndicator(key)}
                     className={cn(
-                      'border px-2 py-1 text-[0.65rem] transition-colors',
+                      'border px-2 py-1 text-xs transition-colors',
                       key === indicator
                         ? 'border-primary/60 bg-primary/10 text-primary'
                         : 'border-border/60 text-muted-foreground hover:text-foreground',
@@ -150,7 +150,7 @@ export default function HistoryPage() {
                       <span className="block">
                         {copy.history.turnTitle(report.year, report.quarter)}
                       </span>
-                      <span className="numeric text-[0.62rem] text-muted-foreground">
+                      <span className="numeric text-xs text-muted-foreground">
                         {INDICATOR_DOMAINS[indicator].shortLabel}{' '}
                         {deltaArrow(report.indicatorDeltas[indicator])}{' '}
                         {formatSignedIndicator(report.indicatorDeltas[indicator])}

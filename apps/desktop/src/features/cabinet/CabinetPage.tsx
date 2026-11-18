@@ -74,10 +74,10 @@ export default function CabinetPage() {
         <span className="numeric font-serif text-2xl leading-none">
           {formatInteger(averageEffectiveness)}
         </span>
-        <span className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+        <span className="text-xs text-muted-foreground">
           {copy.cabinet.multiplierValue(formatDecimal(ministryMultiplier(averageEffectiveness)))}
         </span>
-        <span className="ml-auto max-w-xl text-[0.65rem] leading-relaxed text-muted-foreground">
+        <span className="ml-auto max-w-xl text-xs leading-relaxed text-muted-foreground">
           {copy.cabinet.note}
         </span>
       </div>
@@ -99,7 +99,7 @@ export default function CabinetPage() {
             <Card key={definition.id}>
               <CardHeader className="flex-row items-start justify-between gap-4 pb-3">
                 <div>
-                  <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {definition.categories
                       .map((category) => copy.policies.categoryLabels[category])
                       .join(' · ')}
@@ -112,7 +112,7 @@ export default function CabinetPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     {copy.cabinet.effectiveness}
                   </span>
                   <span className="numeric text-xs text-muted-foreground">
@@ -127,9 +127,7 @@ export default function CabinetPage() {
 
                 <dl className="mt-5 grid grid-cols-2 gap-4 border-t border-border/40 pt-4">
                   <div>
-                    <dt className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                      {copy.cabinet.domain}
-                    </dt>
+                    <dt className="text-xs text-muted-foreground">{copy.cabinet.domain}</dt>
                     <dd className="mt-1 font-serif text-base">
                       {definition.categories
                         .map((category) => copy.policies.categoryLabels[category])
@@ -137,9 +135,7 @@ export default function CabinetPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                      {copy.cabinet.activePolicies}
-                    </dt>
+                    <dt className="text-xs text-muted-foreground">{copy.cabinet.activePolicies}</dt>
                     <dd className="mt-1 text-sm">
                       {copy.cabinet.policyCount(activePolicies.length)}
                     </dd>
@@ -173,9 +169,7 @@ export default function CabinetPage() {
                 </div>
 
                 <div className="mt-4 border-t border-border/40 pt-4">
-                  <p className="text-[0.58rem] uppercase tracking-[0.14em] text-muted-foreground/70">
-                    {copy.cabinet.historyTitle}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{copy.cabinet.historyTitle}</p>
                   {history === null ? (
                     <div className="mt-2 h-10 animate-pulse bg-secondary/30 motion-reduce:animate-none" />
                   ) : (history.get(definition.id) ?? []).length === 0 ? (
@@ -208,7 +202,7 @@ export default function CabinetPage() {
         })}
       </div>
 
-      <p className="mt-5 border border-border/40 bg-card/20 px-4 py-3 text-[0.68rem] leading-relaxed text-muted-foreground">
+      <p className="mt-5 border border-border/40 bg-card/20 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
         {copy.cabinet.note}
       </p>
     </>

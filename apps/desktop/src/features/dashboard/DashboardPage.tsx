@@ -31,11 +31,7 @@ function SectionHeading({ title, note }: { title: string; note?: string }) {
   return (
     <div className="mb-4 flex items-end justify-between gap-4">
       <h2 className="font-serif text-xl leading-none">{title}</h2>
-      {note !== undefined && (
-        <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
-          {note}
-        </span>
-      )}
+      {note !== undefined && <span className="text-xs text-muted-foreground">{note}</span>}
     </div>
   );
 }
@@ -118,7 +114,7 @@ export default function DashboardPage() {
                   className="absolute left-0 top-0 h-px w-10 bg-primary/50"
                   aria-hidden="true"
                 />
-                <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   <Term explanation={copy.glossary[key]}>{INDICATOR_DOMAINS[key].shortLabel}</Term>
                 </p>
                 <p className="numeric mt-3 font-serif text-[1.9rem] leading-none text-foreground">
@@ -126,9 +122,9 @@ export default function DashboardPage() {
                 </p>
                 <p
                   className={cn(
-                    'mt-2 text-[0.68rem] leading-snug',
+                    'mt-2 text-xs leading-snug',
                     delta === 0
-                      ? 'text-muted-foreground/70'
+                      ? 'text-muted-foreground'
                       : favourable
                         ? 'text-emerald-300/80'
                         : 'text-red-300/80',
@@ -167,7 +163,7 @@ export default function DashboardPage() {
                 >
                   <div>
                     <p className="text-sm leading-snug">{queueLabel(command)}</p>
-                    <p className="mt-1 text-[0.65rem] text-muted-foreground">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {command.apCost} {copy.common.ap}
                     </p>
                   </div>
@@ -209,7 +205,7 @@ export default function DashboardPage() {
                     <div>
                       <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <p className="text-sm">{definition.name}</p>
-                        <span className="text-[0.62rem] uppercase tracking-[0.12em] text-muted-foreground">
+                        <span className="text-xs text-muted-foreground">
                           {copy.cabinet.multiplierValue(
                             formatDecimal(ministryMultiplier(ministryState.effectiveness)),
                           )}
@@ -220,7 +216,7 @@ export default function DashboardPage() {
                         value={ministryState.effectiveness}
                         aria-label={`${definition.name} · ${copy.common.effectiveness}`}
                       />
-                      <p className="mt-1.5 text-[0.65rem] text-muted-foreground">
+                      <p className="mt-1.5 text-xs text-muted-foreground">
                         {copy.dashboard.ministryPolicyCount(activeCount)}
                       </p>
                     </div>
@@ -228,7 +224,7 @@ export default function DashboardPage() {
                       <p className="numeric font-serif text-2xl leading-none">
                         {formatInteger(ministryState.effectiveness)}
                       </p>
-                      <p className="mt-1 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         {copy.common.effectiveness}
                       </p>
                     </div>
@@ -263,7 +259,7 @@ export default function DashboardPage() {
                 >
                   <div>
                     <p className="text-sm leading-snug">{policyName(policy.policyId)}</p>
-                    <p className="mt-1 text-[0.65rem] text-muted-foreground">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {copy.policies.activeUntil(policy.remainingTurns)} ·{' '}
                       {policy.perTurnCostBillion === 0
                         ? copy.policies.noPerTurn

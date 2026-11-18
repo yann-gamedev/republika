@@ -72,7 +72,7 @@ function ChoiceConsequences({ choice }: { choice: EventChoice }) {
         <li
           key={item.key}
           className={cn(
-            'border px-1.5 py-0.5 text-[0.62rem]',
+            'border px-1.5 py-0.5 text-xs',
             item.good === true && 'border-emerald-800/40 text-emerald-800',
             item.good === false && 'border-maroon/40 text-maroon',
             item.good === null && 'border-ink/20 text-ink/75',
@@ -141,10 +141,8 @@ export default function EventsPage() {
             >
               <div className="flex items-start justify-between gap-6 border-b border-ink/20 pb-5">
                 <div>
-                  <p className="text-[0.6rem] font-semibold uppercase tracking-[0.24em] text-ink/75">
-                    {copy.events.memoKicker}
-                  </p>
-                  <p className="mt-1 text-[0.68rem] text-ink/75">
+                  <p className="text-xs font-semibold text-ink/75">{copy.events.memoKicker}</p>
+                  <p className="mt-1 text-xs text-ink/75">
                     {copy.events.memoMeta(state.presidentName, pending.arrivedTurn)}
                   </p>
                   <h2 className="mt-4 font-serif text-[1.8rem] leading-tight">
@@ -157,7 +155,7 @@ export default function EventsPage() {
                 {definition.body}
               </p>
 
-              <p className="mt-7 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-ink/75">
+              <p className="mt-7 text-xs font-semibold text-ink/75">
                 {copy.events.optionsTitle} · {copy.events.apFree}
               </p>
               <div className="mt-3 space-y-3">
@@ -175,9 +173,7 @@ export default function EventsPage() {
                         <p className="font-serif text-base leading-tight">
                           {choice.label}
                           {choice.neutral && (
-                            <span className="ml-2 text-[0.6rem] uppercase tracking-[0.14em] text-ink/75">
-                              {copy.events.neutral}
-                            </span>
+                            <span className="ml-2 text-xs text-ink/75">{copy.events.neutral}</span>
                           )}
                         </p>
                         {choice.hint !== undefined && (
@@ -201,7 +197,7 @@ export default function EventsPage() {
                 })}
               </div>
               {pending.resolvedChoiceId !== null && (
-                <p className="mt-4 text-[0.68rem] text-ink/75">{copy.events.changeNote}</p>
+                <p className="mt-4 text-xs text-ink/75">{copy.events.changeNote}</p>
               )}
             </article>
           ))}

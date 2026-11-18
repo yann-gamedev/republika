@@ -55,7 +55,7 @@ export function ReportView({ report }: { report: TurnReport }) {
         </CardHeader>
         <CardContent>
           <table className="w-full text-left text-sm">
-            <thead className="text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
+            <thead className="text-xs text-muted-foreground">
               <tr className="border-b border-border/50">
                 <th className="py-2 pr-3 font-medium">{copy.history.indicators}</th>
                 <th className="px-3 py-2 text-right font-medium">{copy.history.before}</th>
@@ -91,7 +91,7 @@ export function ReportView({ report }: { report: TurnReport }) {
                     </td>
                     <td className="py-2.5 pl-3">
                       {report.topCauses[key].length === 0 ? (
-                        <span className="text-xs text-muted-foreground/60">—</span>
+                        <span className="text-xs text-muted-foreground">—</span>
                       ) : (
                         <ul className="space-y-0.5 text-xs text-muted-foreground">
                           {report.topCauses[key].map((cause) => (
@@ -179,7 +179,7 @@ export function ReportView({ report }: { report: TurnReport }) {
                     <span
                       key={item.factionId}
                       className={cn(
-                        'border px-1.5 py-0.5 text-[0.6rem]',
+                        'border px-1.5 py-0.5 text-xs',
                         item.vote === 'FOR'
                           ? 'border-emerald-800/50 text-emerald-300/85'
                           : 'border-maroon/50 text-red-300/80',
@@ -203,9 +203,7 @@ export function ReportView({ report }: { report: TurnReport }) {
         </CardHeader>
         <CardContent className="grid gap-4 text-sm sm:grid-cols-2">
           <div>
-            <p className="text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-              {copy.report.eventsAnswered}
-            </p>
+            <p className="text-xs text-muted-foreground">{copy.report.eventsAnswered}</p>
             {report.resolvedEvents.length === 0 ? (
               <p className="mt-2 text-muted-foreground">{copy.history.noEvents}</p>
             ) : (
@@ -222,9 +220,7 @@ export function ReportView({ report }: { report: TurnReport }) {
             )}
           </div>
           <div>
-            <p className="text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
-              {copy.report.eventsNext}
-            </p>
+            <p className="text-xs text-muted-foreground">{copy.report.eventsNext}</p>
             {report.nextEventIds.length === 0 ? (
               <p className="mt-2 text-muted-foreground">{copy.report.noNextEvents}</p>
             ) : (
@@ -240,7 +236,7 @@ export function ReportView({ report }: { report: TurnReport }) {
         </CardContent>
       </Card>
 
-      <p className="text-[0.62rem] text-muted-foreground/70">
+      <p className="text-xs text-muted-foreground">
         {copy.report.ledgerCount(formatInteger(report.ledger.length))}
       </p>
     </div>

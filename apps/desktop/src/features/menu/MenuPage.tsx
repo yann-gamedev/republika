@@ -60,7 +60,7 @@ function ActionCard({
         <span className="flex items-center justify-between gap-3">
           <span className={cn('font-serif text-lg', primary && 'text-xl')}>{label}</span>
           {disabled ? (
-            <IconLock className="h-4 w-4 text-muted-foreground/50" />
+            <IconLock className="h-4 w-4 text-muted-foreground" />
           ) : (
             <IconChevronRight
               className={cn(
@@ -74,9 +74,7 @@ function ActionCard({
           {description}
         </span>
         {footnote !== undefined && (
-          <span className="mt-2 block text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground/60">
-            {footnote}
-          </span>
+          <span className="mt-2 block text-xs text-muted-foreground">{footnote}</span>
         )}
       </span>
     </>
@@ -195,23 +193,19 @@ export default function MenuPage() {
             <div className="flex items-center gap-3">
               <Seal label={copy.menu.sealLabel} className="h-12 w-12" />
               <div>
-                <p className="font-serif text-xl tracking-[0.18em]">{copy.app.name}</p>
-                <p className="text-[0.62rem] uppercase tracking-institutional text-muted-foreground">
-                  {copy.app.kicker}
-                </p>
+                <p className="font-serif text-xl">{copy.app.name}</p>
+                <p className="text-xs text-muted-foreground">{copy.app.kicker}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Badge variant="success">{copy.app.offline}</Badge>
-              <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-                {copy.app.version(APP_VERSION)}
-              </span>
+              <span className="text-xs text-muted-foreground">{copy.app.version(APP_VERSION)}</span>
             </div>
           </div>
 
           <div className="py-12">
             <p className="institutional-label">{copy.menu.kicker}</p>
-            <h1 className="mt-4 font-serif text-[5.6rem] leading-[0.86] tracking-[0.08em] text-foreground">
+            <h1 className="mt-4 font-serif text-[5.6rem] leading-[0.86] text-foreground">
               {copy.menu.title}
             </h1>
             <div className="mt-6 flex max-w-2xl items-start gap-5">
@@ -264,10 +258,10 @@ export default function MenuPage() {
           </div>
 
           <div className="flex items-center justify-between gap-4 border-t border-border/50 pt-5">
-            <p className="max-w-xl text-[0.68rem] leading-relaxed text-muted-foreground/70">
+            <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
               {copy.menu.footerNote}
             </p>
-            <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground/60">
+            <span className="text-xs text-muted-foreground">
               {copy.menu.versionLine(APP_VERSION)}
             </span>
           </div>
@@ -289,7 +283,7 @@ export default function MenuPage() {
                     key={item}
                     className="flex gap-4 border-t border-border/40 py-3 first:border-t-0"
                   >
-                    <span className="numeric text-[0.68rem] text-primary/80">
+                    <span className="numeric text-xs text-primary/80">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <span className="text-sm leading-relaxed text-foreground/85">{item}</span>
@@ -302,9 +296,7 @@ export default function MenuPage() {
           <div className="border-t border-border/50 pt-5">
             <div className="flex items-center justify-between">
               <Badge variant="outline">{copy.app.offline}</Badge>
-              <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground/60">
-                {copy.app.stageNote}
-              </span>
+              <span className="text-xs text-muted-foreground">{copy.app.stageNote}</span>
             </div>
             <Button asChild variant="ghost" size="sm" className="mt-4 px-0">
               <Link to="/settings">{copy.menu.settings}</Link>

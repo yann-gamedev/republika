@@ -87,7 +87,7 @@ function InfluenceLine({ category }: { category: PolicyDefinition['category'] })
   const influence = ministryInfluence(state, category);
   if (influence === null) return null;
   return (
-    <p className="mt-2 text-[0.65rem] uppercase tracking-[0.12em] text-primary/80">
+    <p className="mt-2 text-xs text-primary/80">
       {copy.cabinet.influence(influence.name, formatDecimal(influence.multiplier))}
     </p>
   );
@@ -96,9 +96,7 @@ function InfluenceLine({ category }: { category: PolicyDefinition['category'] })
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="px-2 py-3">
-      <dt className="text-[0.55rem] uppercase tracking-[0.12em] text-muted-foreground/70">
-        {label}
-      </dt>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
       <dd className="numeric mt-1 text-sm">{value}</dd>
     </div>
   );
@@ -175,7 +173,7 @@ export default function PoliciesPage() {
       <section>
         <div className="mb-4 flex items-end justify-between gap-4">
           <h2 className="font-serif text-xl leading-none">{copy.policies.availableTitle}</h2>
-          <span className="text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             {copy.dashboard.activeCount(state.activePolicies.length)}
           </span>
         </div>
@@ -184,7 +182,7 @@ export default function PoliciesPage() {
           role="search"
           className="mb-4 flex flex-wrap items-end gap-3 border border-border/50 bg-card/25 px-4 py-3"
         >
-          <label className="flex min-w-[220px] flex-1 flex-col gap-1 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <label className="flex min-w-[220px] flex-1 flex-col gap-1 text-xs text-muted-foreground">
             {copy.policies.searchLabel}
             <input
               ref={searchRef}
@@ -215,7 +213,7 @@ export default function PoliciesPage() {
               </button>
             ))}
           </div>
-          <label className="flex flex-col gap-1 text-[0.62rem] uppercase tracking-[0.14em] text-muted-foreground">
+          <label className="flex flex-col gap-1 text-xs text-muted-foreground">
             {copy.policies.sortLabel}
             <select
               value={sort}
@@ -255,11 +253,11 @@ export default function PoliciesPage() {
                   >
                     <span className="flex items-baseline justify-between gap-3">
                       <span className="font-serif text-base leading-tight">{policy.name}</span>
-                      <span className="shrink-0 text-[0.6rem] uppercase tracking-[0.14em] text-muted-foreground">
+                      <span className="shrink-0 text-xs text-muted-foreground">
                         {copy.policies.statusLabels[rank]}
                       </span>
                     </span>
-                    <span className="mt-1 block text-[0.68rem] text-muted-foreground">
+                    <span className="mt-1 block text-xs text-muted-foreground">
                       {categoryLabel(policy)} · {policy.apCost} {copy.common.ap} ·{' '}
                       {formatRupiahTriliun(
                         policy.fiscalCostBillion + policy.perTurnCostBillion * policy.durationTurns,
@@ -304,9 +302,7 @@ export default function PoliciesPage() {
                     <div className="border-b border-border/40 p-5">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
-                          <p className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-                            {categoryLabel(policy)}
-                          </p>
+                          <p className="text-xs text-muted-foreground">{categoryLabel(policy)}</p>
                           <h3 className="mt-1.5 font-serif text-lg leading-tight">{policy.name}</h3>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
@@ -400,7 +396,7 @@ export default function PoliciesPage() {
                             </span>
                           </p>
                         )}
-                        <p className="mt-2 text-[0.62rem] leading-relaxed text-muted-foreground/70">
+                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
                           {copy.policies.projectionNote}
                         </p>
                         {projection.vote !== null && (
@@ -457,7 +453,7 @@ export default function PoliciesPage() {
                     </div>
 
                     <div className="flex items-center justify-between gap-3 border-t border-border/40 px-5 py-3">
-                      <span className="text-[0.68rem] leading-snug text-muted-foreground">
+                      <span className="text-xs leading-snug text-muted-foreground">
                         {blockedCode !== null && active === undefined
                           ? `${copy.policies.unavailableReason}: ${copy.commandErrors[blockedCode]}`
                           : copy.policies.durationValue(policy.durationTurns)}
