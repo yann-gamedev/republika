@@ -17,7 +17,7 @@ Ilustrasi flat SVG sudah ada di repo dan terdaftar di `apps/desktop/src/content/
 | Fraksi          | `faction-*`                                                                                                          | ⬜ belum                         | —                                         |
 | Utilitas        | `texture-stripes`, `empty-archive`, `offline-notice`                                                                 | ⬜ belum (opsional)              | —                                         |
 
-Ukuran: 26 SVG ±266 KB mentah, ±53 KB gzip. Setiap berkas < 20 KB (dijaga `apps/desktop/test/art.test.ts`). Event baru: tambahkan `events/<id event huruf kecil>.svg`. Tanpa berkas, event otomatis memakai `dashboard-desk`, kecuali didaftarkan sengaja di `FALLBACK_EVENTS` pada test.
+Ukuran: 26 SVG — 260,2 KiB mentah, 67,4 KiB gzip. Setiap berkas < 14 KiB (dijaga `apps/desktop/test/art.test.ts`). Event baru: tambahkan `events/<id event huruf kecil>.svg`. Tanpa berkas, event otomatis memakai `dashboard-desk`, kecuali didaftarkan sengaja di `FALLBACK_EVENTS` pada test.
 
 Bagian 1–4 di bawah adalah rencana awal dan tetap berlaku untuk gaya, palet, dan aset yang belum ada.
 
