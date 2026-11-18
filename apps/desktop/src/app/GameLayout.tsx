@@ -7,7 +7,7 @@ import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { formatRupiahTriliun } from '@/format/formatters';
 import { gameController } from '@/store/controller';
-import { useGameStore } from '@/store/gameStore';
+import { gameStore, useGameStore } from '@/store/gameStore';
 import { ApTokens } from '@/ui/ApTokens';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
@@ -58,6 +58,14 @@ const UTILITY_NAV: readonly NavItem[] = [
   { to: '/settings', label: copy.nav.settings, icon: IconSettings },
   { to: '/', label: copy.nav.menu, icon: IconArrowLeft },
 ];
+
+/** Layar mode fokus: tanpa sidebar, dengan breadcrumb kembali ke Meja kerja. */
+const FOCUS_ROUTES: Readonly<
+  Record<string, { title: string; meta: (year: number, quarter: number) => string }>
+> = {
+  '/game/events': { title: copy.events.title, meta: copy.events.focusMeta },
+  '/game/session': { title: copy.session.breadcrumb, meta: () => copy.session.threshold },
+};
 
 /** Urutan halaman untuk pintasan angka 1–7. */
 export const SHORTCUT_ROUTES = [...MAIN_NAV, ...ARCHIVE_NAV].map((item) => item.to);
@@ -141,7 +149,9 @@ export function GameLayout() {
     void gameController.endQuarter().then((result) => {
       if (!result.ok) return;
       const finished = gameController.state?.status === 'completed';
-      navigate(finished ? '/game/final' : '/game/report');
+      // Sidang paripurna tampil lebih dulu bila laporan berisi hasil voting.
+      const hasVotes = (gameStore.getState().lastReport?.votes.length ?? 0) > 0;
+      navigate(hasVotes ? '/game/session' : finished ? '/game/final' : '/game/report');
     });
   }, [navigate]);
 
@@ -166,120 +176,155 @@ export function GameLayout() {
         ? copy.game.endQuarterReasonBusy
         : null;
 
-  return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 flex min-h-16 items-center gap-6 border-b border-border bg-sidebar px-6">
-        <Link to="/game/dashboard" className="flex w-[200px] shrink-0 items-center gap-2.5">
-          <RepublicMark />
-          <span className="font-serif text-[17px] font-medium">{copy.menu.wordmark}</span>
-        </Link>
+  const focus = FOCUS_ROUTES[location.pathname];
 
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <span className="text-xs text-muted-foreground">{copy.game.president}</span>
-          <span className="truncate text-sm font-medium">{state.presidentName}</span>
-        </div>
-
-        <div className="flex w-[300px] min-w-[220px] shrink flex-col gap-1.5">
-          <span className="flex justify-between text-xs text-muted-foreground">
-            <span>{copy.game.turnLabel(year, quarter)}</span>
-            <span className="font-mono">
-              {state.turn} / {state.maxTurns}
-            </span>
+  const shell =
+    focus !== undefined ? (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-border bg-sidebar px-6">
+          <Link
+            to="/game/dashboard"
+            className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-foreground"
+          >
+            <IconArrowLeft className="h-[18px] w-[18px]" />
+            {copy.nav.dashboard}
+          </Link>
+          <span aria-hidden="true" className="text-muted-foreground">
+            /
           </span>
-          <QuarterTrack
-            current={state.turn}
-            total={state.maxTurns}
-            label={copy.game.quarterTrack(state.turn, state.maxTurns)}
-            className="w-full [&>span]:flex-1"
-          />
-        </div>
-
-        <div className="ml-auto flex items-center gap-6">
-          <div className="flex items-center gap-2" title={copy.game.apLabel}>
-            <ApTokens
-              remaining={state.actionPointsRemaining}
-              total={state.actionPointsPerTurn}
-              label={copy.game.apTokens(state.actionPointsRemaining, state.actionPointsPerTurn)}
-            />
-            <span className="text-[13px] text-text-secondary">
-              {copy.game.apShort(state.actionPointsRemaining)}
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-0.5">
-            <span className="text-xs text-muted-foreground">{copy.game.treasuryLabel}</span>
-            <span className="numeric text-sm font-medium">
-              {formatRupiahTriliun(state.treasuryBillion)}
-            </span>
-          </div>
-
-          {completed ? (
-            <Button size="sm" variant="outline" onClick={() => navigate('/game/final')}>
-              {copy.game.campaignCompleted}
-            </Button>
-          ) : (
-            <div className="flex flex-col items-end gap-1">
-              <Button
-                size="sm"
-                disabled={blocked}
-                aria-describedby={blockedReason === null ? undefined : 'end-quarter-reason'}
-                title={blockedReason ?? copy.game.endQuarterHint}
-                onClick={() => setConfirmOpen(true)}
-              >
-                {copy.game.endQuarter}
-              </Button>
-              {blockedReason !== null && (
-                <Link
-                  id="end-quarter-reason"
-                  to="/game/events"
-                  className="text-xs text-text-secondary underline-offset-2 hover:text-foreground hover:underline"
-                >
-                  {blockedReason}
-                </Link>
-              )}
-            </div>
-          )}
-        </div>
-      </header>
-
-      <div className="flex flex-1">
-        <nav
-          aria-label={copy.nav.label}
-          className="sticky top-16 flex h-[calc(100vh-4rem)] w-[232px] shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-sidebar px-4 py-6"
-        >
-          <span className="px-3 pb-2 text-xs text-muted-foreground">{copy.nav.sectionMain}</span>
-          {MAIN_NAV.map((item) => (
-            <NavEntry key={item.to} item={item} counts={counts} />
-          ))}
-          <span className="px-3 pb-2 pt-6 text-xs text-muted-foreground">
-            {copy.nav.sectionArchive}
+          <h1 className="font-sans text-sm font-normal tracking-normal">{focus.title}</h1>
+          <span className="ml-auto text-[13px] text-muted-foreground">
+            {focus.meta(year, quarter)}
           </span>
-          {ARCHIVE_NAV.map((item) => (
-            <NavEntry key={item.to} item={item} counts={counts} />
-          ))}
-          <div className="mt-auto flex flex-col gap-0.5 pt-6">
-            {UTILITY_NAV.map((item) => (
-              <NavEntry key={item.to} item={item} counts={counts} />
-            ))}
-            <div className="mt-4 flex items-center justify-between gap-2 px-3">
-              {uiStatus === 'saveFailed' ? (
-                <Badge variant="destructive">{copy.game.saveFailed}</Badge>
-              ) : (
-                <span className="text-xs text-muted-foreground">{copy.app.offline}</span>
-              )}
-              <span className="font-mono text-xs text-muted-foreground">{APP_VERSION}</span>
-            </div>
-          </div>
-        </nav>
-
-        <main className="min-w-0 flex-1 px-8 pb-16 pt-8">
-          <div className="mx-auto max-w-[1280px]">
+        </header>
+        <main className="flex-1 px-8 py-10">
+          <div className="mx-auto max-w-[1360px]">
             <ScreenErrorBoundary resetKey={location.pathname}>
               <Outlet />
             </ScreenErrorBoundary>
           </div>
         </main>
       </div>
+    ) : (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-30 flex min-h-16 items-center gap-6 border-b border-border bg-sidebar px-6">
+          <Link to="/game/dashboard" className="flex w-[200px] shrink-0 items-center gap-2.5">
+            <RepublicMark />
+            <span className="font-serif text-[17px] font-medium">{copy.menu.wordmark}</span>
+          </Link>
+
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-xs text-muted-foreground">{copy.game.president}</span>
+            <span className="truncate text-sm font-medium">{state.presidentName}</span>
+          </div>
+
+          <div className="flex w-[300px] min-w-[220px] shrink flex-col gap-1.5">
+            <span className="flex justify-between text-xs text-muted-foreground">
+              <span>{copy.game.turnLabel(year, quarter)}</span>
+              <span className="font-mono">
+                {state.turn} / {state.maxTurns}
+              </span>
+            </span>
+            <QuarterTrack
+              current={state.turn}
+              total={state.maxTurns}
+              label={copy.game.quarterTrack(state.turn, state.maxTurns)}
+              className="w-full [&>span]:flex-1"
+            />
+          </div>
+
+          <div className="ml-auto flex items-center gap-6">
+            <div className="flex items-center gap-2" title={copy.game.apLabel}>
+              <ApTokens
+                remaining={state.actionPointsRemaining}
+                total={state.actionPointsPerTurn}
+                label={copy.game.apTokens(state.actionPointsRemaining, state.actionPointsPerTurn)}
+              />
+              <span className="text-[13px] text-text-secondary">
+                {copy.game.apShort(state.actionPointsRemaining)}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs text-muted-foreground">{copy.game.treasuryLabel}</span>
+              <span className="numeric text-sm font-medium">
+                {formatRupiahTriliun(state.treasuryBillion)}
+              </span>
+            </div>
+
+            {completed ? (
+              <Button size="sm" variant="outline" onClick={() => navigate('/game/final')}>
+                {copy.game.campaignCompleted}
+              </Button>
+            ) : (
+              <div className="flex flex-col items-end gap-1">
+                <Button
+                  size="sm"
+                  disabled={blocked}
+                  aria-describedby={blockedReason === null ? undefined : 'end-quarter-reason'}
+                  title={blockedReason ?? copy.game.endQuarterHint}
+                  onClick={() => setConfirmOpen(true)}
+                >
+                  {copy.game.endQuarter}
+                </Button>
+                {blockedReason !== null && (
+                  <Link
+                    id="end-quarter-reason"
+                    to="/game/events"
+                    className="text-xs text-text-secondary underline-offset-2 hover:text-foreground hover:underline"
+                  >
+                    {blockedReason}
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </header>
+
+        <div className="flex flex-1">
+          <nav
+            aria-label={copy.nav.label}
+            className="sticky top-16 flex h-[calc(100vh-4rem)] w-[232px] shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-sidebar px-4 py-6"
+          >
+            <span className="px-3 pb-2 text-xs text-muted-foreground">{copy.nav.sectionMain}</span>
+            {MAIN_NAV.map((item) => (
+              <NavEntry key={item.to} item={item} counts={counts} />
+            ))}
+            <span className="px-3 pb-2 pt-6 text-xs text-muted-foreground">
+              {copy.nav.sectionArchive}
+            </span>
+            {ARCHIVE_NAV.map((item) => (
+              <NavEntry key={item.to} item={item} counts={counts} />
+            ))}
+            <div className="mt-auto flex flex-col gap-0.5 pt-6">
+              {UTILITY_NAV.map((item) => (
+                <NavEntry key={item.to} item={item} counts={counts} />
+              ))}
+              <div className="mt-4 flex items-center justify-between gap-2 px-3">
+                {uiStatus === 'saveFailed' ? (
+                  <Badge variant="destructive">{copy.game.saveFailed}</Badge>
+                ) : (
+                  <span className="text-xs text-muted-foreground">{copy.app.offline}</span>
+                )}
+                <span className="font-mono text-xs text-muted-foreground">{APP_VERSION}</span>
+              </div>
+            </div>
+          </nav>
+
+          <main className="min-w-0 flex-1 px-8 pb-16 pt-8">
+            <div className="mx-auto max-w-[1280px]">
+              <ScreenErrorBoundary resetKey={location.pathname}>
+                <Outlet />
+              </ScreenErrorBoundary>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+
+  return (
+    <>
+      {shell}
 
       <ConfirmDialog
         open={helpOpen}
@@ -331,6 +376,6 @@ export function GameLayout() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

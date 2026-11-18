@@ -166,7 +166,7 @@ export default function HistoryPage() {
                   <h2 className="mb-4 font-serif text-xl">
                     {copy.report.reportTitle(selected.presidentName, selected.turn)}
                   </h2>
-                  <ReportView report={selected} />
+                  <ReportView report={selected} maxTurns={state.maxTurns} />
                 </>
               )}
             </div>

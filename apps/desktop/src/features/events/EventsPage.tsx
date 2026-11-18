@@ -1,208 +1,304 @@
-import { INDICATOR_DOMAINS, type EffectRule, type EventChoice } from '@republika/shared';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { PageHeader } from '@/app/PageHeader';
-import { isFavourable, useGameState } from '@/app/useGame';
-import { definitions, factionName } from '@/content/gameContent';
+import type { EventDefinition, PendingEvent } from '@republika/shared';
+
+import { campaignQuarter, campaignYear } from '@/app/time';
+import { useGameState } from '@/app/useGame';
+import { eventArt } from '@/content/art';
+import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { gameController } from '@/store/controller';
-import { Badge } from '@/ui/components/badge';
-import { Button } from '@/ui/components/button';
-import { Seal } from '@/ui/Seal';
+import { ArtImage } from '@/ui/ArtImage';
 import { cn } from '@/ui/lib/utils';
+import { Stamp } from '@/ui/Stamp';
 
-interface Consequence {
-  readonly key: string;
-  readonly text: string;
-  readonly good: boolean | null;
-}
+import { choiceConsequences, choiceImpact, stakeholders, type Stake } from './memo';
 
-/** Konsekuensi kualitatif: arah perubahan tanpa angka pasti. */
-function consequence(effect: EffectRule, index: number): Consequence | null {
-  switch (effect.type) {
-    case 'MODIFY_INDICATOR':
-      return {
-        key: `${index}`,
-        text: copy.events.qualitative(
-          INDICATOR_DOMAINS[effect.target].shortLabel,
-          effect.deltaTenths >= 0,
-          effect.timing === 'DELAYED',
-        ),
-        good: isFavourable(effect.target, effect.deltaTenths),
-      };
-    case 'MODIFY_TREASURY':
-      return {
-        key: `${index}`,
-        text: copy.events.qualitative(copy.common.treasury, effect.deltaBillion >= 0, false),
-        good: effect.deltaBillion > 0,
-      };
-    case 'CHANGE_FACTION_SUPPORT':
-      return {
-        key: `${index}`,
-        text: copy.events.qualitative(
-          effect.target.kind === 'faction'
-            ? copy.events.supportOf(factionName(effect.target.factionId))
-            : copy.events.supportOfTag(effect.target.ideologyTag),
-          effect.deltaTenths >= 0,
-          false,
-        ),
-        good: effect.deltaTenths > 0,
-      };
-    case 'MODIFY_MINISTRY_EFFECTIVENESS':
-      return {
-        key: `${index}`,
-        text: copy.events.qualitative(copy.cabinet.effectiveness, effect.delta >= 0, false),
-        good: effect.delta > 0,
-      };
-    case 'SET_FLAG':
-    case 'CLEAR_FLAG':
-      // Flag adalah mekanisme rantai peristiwa; tidak dibocorkan ke pemain.
-      return null;
-  }
-}
+const STAKE_LABEL: Record<Stake, string> = {
+  gain: copy.events.stakeGain,
+  loss: copy.events.stakeLoss,
+  waiting: copy.events.stakeWaiting,
+  neutral: copy.events.stakeNeutral,
+};
 
-function ChoiceConsequences({ choice }: { choice: EventChoice }) {
-  const items = choice.effects.flatMap((effect, index) => {
-    const item = consequence(effect, index);
-    return item === null ? [] : [item];
-  });
-  if (items.length === 0) return null;
+const inkButton =
+  'inline-flex h-11 items-center justify-center rounded-md bg-ink px-5 text-sm font-medium text-paper transition-colors duration-150 ease-standard hover:bg-[#2E2A22] disabled:cursor-not-allowed disabled:opacity-40';
+
+function Memo({
+  pending,
+  event,
+  presidentName,
+  turn,
+}: {
+  pending: PendingEvent;
+  event: EventDefinition;
+  presidentName: string;
+  turn: number;
+}) {
+  const signedChoice = pending.resolvedChoiceId;
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState<string | null>(signedChoice);
+  const signed = signedChoice !== null && !editing;
+  const picked = signed ? signedChoice : draft;
+  const pickedChoice = event.choices.find((choice) => choice.id === picked) ?? null;
+  const year = campaignYear(turn, definitions.scenario.startYear);
+  const quarter = campaignQuarter(turn);
+  const titleId = `memo-${event.id}-title`;
+
+  const sign = () => {
+    if (pickedChoice === null) return;
+    const result = gameController.dispatch({
+      type: 'RESPOND_EVENT',
+      commandId: gameController.newCommandId(),
+      eventId: event.id,
+      choiceId: pickedChoice.id,
+    });
+    if (result.ok) {
+      setEditing(false);
+      gameController.notify(copy.events.chosen(pickedChoice.label));
+    }
+  };
+
+  const impact = pickedChoice === null ? [] : choiceImpact(pickedChoice);
+  const parties = stakeholders(event, picked, definitions.factions);
+
   return (
-    <ul className="mt-2 flex flex-wrap gap-1.5">
-      {items.map((item) => (
-        <li
-          key={item.key}
-          className={cn(
-            'border px-1.5 py-0.5 text-xs',
-            item.good === true && 'border-emerald-800/40 text-emerald-800',
-            item.good === false && 'border-maroon/40 text-maroon',
-            item.good === null && 'border-ink/20 text-ink/75',
+    <div className="flex flex-wrap items-start justify-center gap-8">
+      <article
+        aria-labelledby={titleId}
+        data-testid={`event-${event.id}`}
+        className="relative min-w-0 max-w-[760px] flex-[1_1_600px] overflow-hidden rounded-lg bg-paper text-ink shadow-document"
+      >
+        <ArtImage
+          load={eventArt(event.id)}
+          alt={copy.art.event(event.title)}
+          className="h-[240px] w-full"
+        />
+
+        <div className="flex flex-col gap-4 px-10 pb-10 pt-8">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <span
+                className={cn('text-xs font-semibold', signed ? 'text-ink-muted' : 'text-urgent')}
+              >
+                {signed ? copy.events.memoKickerSigned : copy.events.memoKicker}
+              </span>
+              <span className="text-[13px] text-ink-muted">
+                {copy.events.memoMeta(presidentName)}
+              </span>
+            </div>
+            <span className="font-mono text-xs text-ink-muted">
+              {copy.events.memoNumber(pending.arrivedTurn, year)}
+            </span>
+          </div>
+          <h2 id={titleId} className="font-serif text-[34px] font-medium leading-tight">
+            {event.title}
+          </h2>
+          <p className="font-serif text-lg leading-[30px] text-[#3A352C]">{event.body}</p>
+
+          <div className="my-2 h-px bg-ink/15" />
+          <span className="text-[13px] font-medium text-[#4A443A]">
+            {copy.events.optionsTitle} · {copy.events.apFree}
+          </span>
+
+          <div
+            role="radiogroup"
+            aria-label={copy.events.optionsAria}
+            className="flex flex-col gap-2"
+          >
+            {event.choices.map((choice) => {
+              const checked = picked === choice.id;
+              return (
+                <button
+                  key={choice.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={checked}
+                  disabled={signed}
+                  onClick={() => setDraft(choice.id)}
+                  className={cn(
+                    'flex w-full flex-col gap-2 rounded-[10px] p-4 text-left text-sm text-ink transition-colors duration-150 ease-standard focus-visible:outline-[#7A5A0A]',
+                    checked
+                      ? 'bg-paper-dark shadow-[inset_0_0_0_1.5px_hsl(var(--ink))]'
+                      : 'shadow-[inset_0_0_0_1px_rgba(30,27,22,0.18)] enabled:hover:bg-paper-dark',
+                    signed && !checked && 'opacity-60',
+                  )}
+                >
+                  <span className="flex items-center gap-3">
+                    <span
+                      aria-hidden="true"
+                      className="inline-flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full shadow-[inset_0_0_0_1.5px_hsl(var(--ink))]"
+                    >
+                      <span className={cn('h-2 w-2 rounded-full', checked && 'bg-ink')} />
+                    </span>
+                    <span className="font-serif text-lg font-medium">{choice.label}</span>
+                    {choice.neutral && (
+                      <span className="text-xs text-ink-muted">{copy.events.neutral}</span>
+                    )}
+                  </span>
+                  {choice.hint !== undefined && (
+                    <span className="pl-[30px] text-sm leading-[22px] text-[#4A443A]">
+                      {choice.hint}
+                    </span>
+                  )}
+                  <span className="flex flex-wrap gap-1.5 pl-[30px]">
+                    {choiceConsequences(choice).map((item) => (
+                      <span
+                        key={item.key}
+                        className={cn(
+                          'rounded-[4px] bg-ink/[0.06] px-2 py-0.5 font-mono text-xs',
+                          item.good === true && 'text-[#17573A]',
+                          item.good === false && 'text-stamp',
+                          item.good === null && 'text-[#4A443A]',
+                        )}
+                      >
+                        {item.text}
+                      </span>
+                    ))}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-center gap-4">
+            {signed ? (
+              <>
+                <Link to="/game/dashboard" className={inkButton}>
+                  {copy.events.backToDesk}
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDraft(signedChoice);
+                    setEditing(true);
+                  }}
+                  className="text-sm font-medium text-[#7A5A0A] underline underline-offset-2"
+                >
+                  {copy.events.changeDecision}
+                </button>
+                <span className="text-[13px] text-ink-muted">{copy.events.changeNote}</span>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className={inkButton}
+                  disabled={pickedChoice === null}
+                  onClick={sign}
+                >
+                  {copy.events.sign}
+                </button>
+                <span className="text-[13px] text-ink-muted">
+                  {pickedChoice === null ? copy.events.signHintEmpty : copy.events.signHintReady}
+                </span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="pointer-events-none absolute right-12 top-[268px]">
+          <Stamp label={copy.events.stamp} visible={signed} className="bg-paper/60 text-[22px]" />
+          {signed && (
+            <span className="mt-1 block -rotate-[8deg] text-center font-mono text-[11px] text-stamp">
+              {copy.events.stampMeta(year, quarter)}
+            </span>
           )}
-        >
-          {item.text}
-        </li>
-      ))}
-    </ul>
+        </div>
+      </article>
+
+      <aside className="flex min-w-[260px] flex-[0_1_320px] flex-col gap-4">
+        <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-sans text-[15px] font-medium tracking-normal">
+            {copy.events.impactTitle}
+          </h3>
+          {impact.length === 0 ? (
+            <p className="text-[13px] leading-5 text-muted-foreground">{copy.events.impactEmpty}</p>
+          ) : (
+            <dl className="flex flex-col gap-2">
+              {impact.map((row) => (
+                <div key={row.key} className="flex justify-between gap-3 text-sm">
+                  <dt className="text-text-secondary">
+                    {row.label}
+                    {row.note !== undefined && (
+                      <span className="ml-1 text-xs text-muted-foreground">· {row.note}</span>
+                    )}
+                  </dt>
+                  <dd
+                    className={cn(
+                      'font-mono text-[13px]',
+                      row.good === true && 'text-positive',
+                      row.good === false && 'text-negative',
+                    )}
+                  >
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <span className="text-xs leading-[18px] text-muted-foreground">
+            {copy.events.impactNote}
+          </span>
+        </section>
+
+        <section className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-5">
+          <h3 className="font-sans text-[15px] font-medium tracking-normal">
+            {copy.events.stakeholdersTitle}
+          </h3>
+          {parties.length === 0 ? (
+            <p className="text-[13px] leading-5 text-muted-foreground">
+              {copy.events.stakeholdersEmpty}
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-2">
+              {parties.map((party) => (
+                <li key={party.factionId} className="flex justify-between gap-3 text-sm">
+                  <span>{party.name}</span>
+                  <span
+                    className={cn(
+                      'text-text-secondary',
+                      party.stake === 'gain' && 'text-positive',
+                      party.stake === 'loss' && 'text-negative',
+                    )}
+                  >
+                    {STAKE_LABEL[party.stake]}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </aside>
+    </div>
   );
 }
 
 export default function EventsPage() {
   const state = useGameState();
-  const pendingEvents = state.pendingEvents.flatMap((pending) => {
-    const definition = definitions.events.find((event) => event.id === pending.eventId);
-    return definition === undefined ? [] : [{ pending, definition }];
+  const memos = state.pendingEvents.flatMap((pending) => {
+    const event = definitions.events.find((item) => item.id === pending.eventId);
+    return event === undefined ? [] : [{ pending, event }];
   });
-  const unanswered = pendingEvents.filter(
-    ({ pending }) => pending.resolvedChoiceId === null,
-  ).length;
-
-  const respond = (eventId: string, choice: EventChoice) => {
-    const result = gameController.dispatch({
-      type: 'RESPOND_EVENT',
-      commandId: gameController.newCommandId(),
-      eventId,
-      choiceId: choice.id,
-    });
-    if (result.ok) gameController.notify(copy.events.chosen(choice.label));
-  };
 
   return (
-    <>
-      <PageHeader
-        kicker={copy.events.kicker}
-        title={copy.events.title}
-        subtitle={copy.events.subtitle}
-        actions={
-          <Badge variant={unanswered > 0 ? 'maroon' : 'outline'}>
-            {copy.events.pendingCount(unanswered)}
-          </Badge>
-        }
-      />
-
-      {unanswered > 0 && (
-        <p
-          role="note"
-          className="mb-5 border border-maroon/50 bg-maroon/10 px-5 py-3 text-xs leading-relaxed text-red-100/90"
-        >
-          {copy.events.lockExplanation}
-        </p>
-      )}
-
-      {pendingEvents.length === 0 ? (
-        <div className="border border-dashed border-border/60 px-5 py-8 text-center text-sm text-muted-foreground">
+    <div className="flex flex-col gap-10">
+      {memos.length === 0 ? (
+        <p className="rounded-2xl border border-dashed border-border px-5 py-10 text-center text-sm text-muted-foreground">
           {copy.events.empty}
-        </div>
+        </p>
       ) : (
-        <div className="space-y-8">
-          {pendingEvents.map(({ pending, definition }) => (
-            <article
-              key={definition.id}
-              data-testid={`event-${definition.id}`}
-              className="relative mx-auto max-w-[860px] bg-paper px-10 py-9 text-ink shadow-document"
-            >
-              <div className="flex items-start justify-between gap-6 border-b border-ink/20 pb-5">
-                <div>
-                  <p className="text-xs font-semibold text-ink/75">{copy.events.memoKicker}</p>
-                  <p className="mt-1 text-xs text-ink/75">
-                    {copy.events.memoMeta(state.presidentName, pending.arrivedTurn)}
-                  </p>
-                  <h2 className="mt-4 font-serif text-[1.8rem] leading-tight">
-                    {definition.title}
-                  </h2>
-                </div>
-                <Seal label={copy.menu.sealLabel} className="h-14 w-14 shrink-0 text-maroon/70" />
-              </div>
-              <p className="mt-5 font-serif text-base leading-relaxed text-ink/85">
-                {definition.body}
-              </p>
-
-              <p className="mt-7 text-xs font-semibold text-ink/75">
-                {copy.events.optionsTitle} · {copy.events.apFree}
-              </p>
-              <div className="mt-3 space-y-3">
-                {definition.choices.map((choice) => {
-                  const selected = pending.resolvedChoiceId === choice.id;
-                  return (
-                    <div
-                      key={choice.id}
-                      className={cn(
-                        'flex flex-wrap items-start justify-between gap-4 border px-4 py-3',
-                        selected ? 'border-maroon/60 bg-maroon/[0.06]' : 'border-ink/20',
-                      )}
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="font-serif text-base leading-tight">
-                          {choice.label}
-                          {choice.neutral && (
-                            <span className="ml-2 text-xs text-ink/75">{copy.events.neutral}</span>
-                          )}
-                        </p>
-                        {choice.hint !== undefined && (
-                          <p className="mt-1 text-xs italic leading-relaxed text-ink/75">
-                            {choice.hint}
-                          </p>
-                        )}
-                        <ChoiceConsequences choice={choice} />
-                      </div>
-                      <Button
-                        size="sm"
-                        variant={selected ? 'outline' : 'default'}
-                        className={selected ? 'border-maroon/60 text-maroon' : ''}
-                        disabled={selected}
-                        onClick={() => respond(definition.id, choice)}
-                      >
-                        {selected ? copy.events.selected : copy.events.choose}
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
-              {pending.resolvedChoiceId !== null && (
-                <p className="mt-4 text-xs text-ink/75">{copy.events.changeNote}</p>
-              )}
-            </article>
-          ))}
-        </div>
+        memos.map(({ pending, event }) => (
+          <Memo
+            key={`${event.id}-${pending.arrivedTurn}`}
+            pending={pending}
+            event={event}
+            presidentName={state.presidentName}
+            turn={state.turn}
+          />
+        ))
       )}
-    </>
+    </div>
   );
 }

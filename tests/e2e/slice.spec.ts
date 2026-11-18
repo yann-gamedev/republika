@@ -4,32 +4,12 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
+import { answerMemos, endQuarter, shortcut } from './helpers';
+
 const PRESIDENT = 'Sari Wening';
 
-/** Pintasan angka lalu tunggu judul halaman tujuan (rute dimuat lazy). */
-async function shortcut(page: Page, key: string, title: string): Promise<void> {
-  await page.keyboard.press(key);
-  await expect(page.getByRole('heading', { name: title, exact: true }).first()).toBeVisible();
-}
-
-async function answerPendingEvents(page: Page): Promise<number> {
-  await shortcut(page, '5', copy.events.title);
-  const memos = page.locator('[data-testid^="event-"]');
-  const count = await memos.count();
-  await page.screenshot({ path: 'test-results/events-1440.png', fullPage: true });
-  for (let index = 0; index < count; index += 1) {
-    await memos.nth(index).getByRole('button', { name: copy.events.choose }).first().click();
-    await expect(
-      memos.nth(index).getByRole('button', { name: copy.events.selected }),
-    ).toBeVisible();
-  }
-  return count;
-}
-
-async function endQuarter(page: Page, turn: number): Promise<void> {
-  await page.getByRole('button', { name: copy.game.endQuarter }).click();
-  await expect(page.getByRole('dialog')).toBeVisible();
-  await page.keyboard.press('Enter');
+async function endQuarterTo(page: Page, turn: number): Promise<void> {
+  await endQuarter(page);
   await expect(
     page.getByRole('heading', { name: copy.report.reportTitle(PRESIDENT, turn) }),
   ).toBeVisible();
@@ -61,7 +41,7 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   // AP habis: tombol lobi lain nonaktif dengan alasan dari engine.
   await expect(page.getByRole('button', { name: copy.parliament.lobby }).first()).toBeDisabled();
 
-  await endQuarter(page, 1);
+  await endQuarterTo(page, 1);
   await expect(page.getByTestId('report-1')).toContainText(copy.report.causes);
   await page.screenshot({ path: 'test-results/report-1440.png', fullPage: true });
 
@@ -71,10 +51,10 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
     const blockedLink = page.getByRole('link', { name: /nota dinas dulu$/ });
     if (await blockedLink.isVisible()) {
       await expect(page.getByRole('button', { name: copy.game.endQuarter })).toBeDisabled();
-      answered += await answerPendingEvents(page);
+      answered += await answerMemos(page);
       await expect(page.getByRole('button', { name: copy.game.endQuarter })).toBeEnabled();
     }
-    await endQuarter(page, turn);
+    await endQuarterTo(page, turn);
   }
 
   // Riwayat dimuat dari save: 4 laporan + grafik SVG.

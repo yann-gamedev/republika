@@ -46,7 +46,8 @@ test('pelantikan, aksi nyata, navigasi, dan pengaturan', async ({ page }) => {
   await expect(page.getByRole('status')).toContainText('diajukan');
   await expect(page.getByRole('button', { name: copy.policies.cancelPending })).toBeVisible();
 
-  for (const key of ['parliament', 'cabinet', 'events', 'history'] as const) {
+  // Nota dinas terakhir: layar mode fokus tanpa sidebar.
+  for (const key of ['parliament', 'cabinet', 'history', 'events'] as const) {
     await page.locator(`nav a[href="#/game/${key}"]`).click();
     await expect(
       page.getByRole('heading', { name: copy[key].title, exact: true }).first(),
