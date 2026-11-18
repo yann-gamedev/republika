@@ -1,6 +1,6 @@
 {
   "name": "republika",
-  "version": "0.1.0",
+  "version": "0.1.0-rc.1",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.15.4",
@@ -19,7 +19,10 @@
     "content:check": "pnpm --filter @republika/game-data content:check",
     "format": "prettier --write .",
     "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90",
-    "sim": "tsx tools/sim/src/cli.ts"
+    "sim": "tsx tools/sim/src/cli.ts",
+    "perf:report": "pnpm --filter @republika/desktop build:web:analyze && tsx tools/perf/report.ts",
+    "balance": "tsx tools/balance/src/cli.ts",
+    "version:set": "node scripts/version-set.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

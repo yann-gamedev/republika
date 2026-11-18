@@ -9,3 +9,6 @@ docs/source/
 packages/simulation/test/__fixtures__/
 packages/game-data/content/
 prompts/
+packages/simulation/test/fixtures/
+dist-stats/
+docs/balance/

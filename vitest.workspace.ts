@@ -35,6 +35,13 @@ export default defineWorkspace([
   },
   {
     test: {
+      name: 'tools',
+      environment: 'node',
+      include: ['tools/**/test/**/*.test.ts'],
+    },
+  },
+  {
+    test: {
       name: 'desktop',
       environment: 'node',
       include: ['apps/desktop/test/**/*.test.ts'],

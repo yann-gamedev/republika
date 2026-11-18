@@ -26,3 +26,14 @@ Engine/resolusi, `GameController`, save file atomik, backup dan migrasi, persist
 3. **Event bisa terasa berulang di kampanye 20 kuartal** bila konten hanya punya sedikit event non-unik. Usulan: penalti bobot untuk event yang baru saja muncul (selain cooldown).
 4. **Sisa AP hangus tanpa umpan balik.** Usulan: tampilkan peringatan ringan di dialog Akhiri Kuartal bila masih ada AP (sudah ada teks), atau beri opsi "tabung 1 AP" (perubahan aturan, perlu keputusan).
 5. **Kalimat laporan untuk reasonCode konten** masih fallback "Dampak {sumber}". Bukan aturan, tetapi sangat memengaruhi pertanyaan playtest "apakah laporan menjelaskan kenapa".
+
+## Tahap 5.4 — RAM belum terukur andal
+
+Pengukuran otomatis RAM di mesin pengembangan tidak konsisten (Windows memangkas working set jendela yang tidak di depan). Detail ada di `docs/PERFORMANCE.md`. **Pemilik perlu mengukur dengan Task Manager** (kolom *Memory (active private working set)*, jendela di depan) di menu dan setelah 20 kuartal.
+
+Jika total melewati 200 MB, opsi (perlu keputusan, bukan hack):
+
+1. Terima batas bawah WebView2 (±70–100 MB) dan revisi target §5.17 menjadi berbasis "di atas WebView2 kosong".
+2. Kurangi kerja renderer: matikan `backdrop-blur` (header/dialog) dan bayangan besar yang memicu komposit GPU; ukur ulang.
+3. Batasi jumlah layar yang tetap ter-mount (sudah lazy; cek di React DevTools Profiler).
+4. `--disable-gpu` **tidak** disarankan: di mesin uji justru menaikkan memori.

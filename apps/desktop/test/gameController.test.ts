@@ -64,7 +64,7 @@ describe('GameController', () => {
     expect(autosave.status).toBe('ok');
     if (autosave.status === 'ok') {
       expect(autosave.save.history.reports).toEqual([]);
-      expect(autosave.save.label).toBe(copy.controller.saveLabel('Sari Wening', 1));
+      expect(autosave.save.label).toBe(copy.controller.saveLabel('Sari Wening', undefined, 1));
       expect(autosave.save.contentHash).toBe(contentHash);
     }
 

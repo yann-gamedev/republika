@@ -1,6 +1,8 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 import { copy } from '@/copy/id';
+import { LOG_LOCATION } from '@/platform/logger';
+import { appLogger } from '@/store/controller';
 import { Button } from '@/ui/components/button';
 import { Seal } from '@/ui/Seal';
 
@@ -21,6 +23,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
 
   override componentDidCatch(error: Error, info: ErrorInfo): void {
     console.error('REPUBLIKA UI error', error, info.componentStack);
+    void appLogger.log('error', `fatal: ${error.message} ${info.componentStack ?? ''}`);
   }
 
   override render(): ReactNode {
@@ -34,6 +37,9 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
           <h1 className="mt-3 text-3xl">{copy.errors.boundaryTitle}</h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {copy.errors.boundaryBody}
+          </p>
+          <p className="mt-3 text-xs text-muted-foreground">
+            {copy.errors.logLocation(LOG_LOCATION)}
           </p>
           <Button className="mt-6" onClick={() => window.location.reload()}>
             {copy.errors.reload}

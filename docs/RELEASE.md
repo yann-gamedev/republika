@@ -42,3 +42,50 @@ Acuan `AGENT.md` §5.17: RAM target ≤150 MB / maksimum 200 MB; heap ≤30/50 M
 ## Sebelum rilis tahap lanjutan
 
 Validasi konten final dan versi; lengkapi save/backup/migrasi serta test kompatibilitas sebelum menerima save pemain. Update manual melalui GitHub Releases, tanpa updater atau pengecekan versi online. Peta migrasi ruleset dan formatnya belum diimplementasikan pada Tahap 1. Jangan membuat tag atau menerbitkan rilis dalam pekerjaan fondasi ini.
+
+## Checklist WAJIB saat format save atau ID konten berubah
+
+Jalankan setiap kali salah satu hal berikut terjadi sebelum rilis. Tujuannya: save pemain dari versi lama selalu bisa dibuka di versi baru (AGENT §5.13).
+
+### A. Format save berubah (bentuk `SaveFile`/`GameState`)
+
+1. Naikkan `SAVE_FORMAT_VERSION` di `packages/shared/src/types/constants.ts` (mis. 2 → 3).
+2. Tulis migrator murni `packages/simulation/src/save/migrations/v2ToV3.ts` (JSON mentah → JSON mentah, tanpa I/O) dan daftarkan di `SAVE_MIGRATORS` (`migrateSave.ts`).
+3. **Sebelum** mengubah kode penulis save, buat contoh save versi lama dari build sebelumnya dan simpan di `packages/simulation/test/fixtures/saves/` (mis. `save-v2-<nama>.json`). Jangan ubah fixture lama.
+4. Tambah test: fixture lama → `migrateSave` → valid di versi baru **dan** bisa dilanjutkan satu kuartal (`resolveTurn`).
+5. Bila `GameState` berubah, perbarui juga `migrateRuleset` bila field baru berisi ID konten.
+
+### B. ID konten diganti atau dihapus (kebijakan, event, fraksi, kementerian)
+
+1. Naikkan `rulesetVersion` di `packages/game-data/content/scenario.json`.
+2. Tulis `packages/game-data/migrations/ruleset-<N>.json` (`fromRuleset`, `toRuleset`, `renamed`, `removed`) dan daftarkan di `packages/game-data/src/rulesetMigrations.ts`.
+3. Kebijakan aktif yang dihapus akan dihentikan otomatis dengan ledger `RULESET_MIGRATED`; tidak perlu kode tambahan.
+4. Jalankan `pnpm content:check` dan `pnpm test`.
+
+### C. Aturan simulasi berubah tanpa mengganti ID
+
+1. Naikkan `rulesetVersion` (konten) dan perbarui snapshot fixture engine dengan alasan di commit.
+2. Catat perubahan di `docs/SIMULATION_RULES.md` dan `CHANGELOG.md`.
+
+### D. Uji update manual sebelum rilis
+
+1. Instal versi rilis sebelumnya, mainkan 2–3 kuartal, simpan ke slot.
+2. Instal versi baru di atasnya. Saat app dibuka, dialog "Perbarui save ke versi ini?" harus muncul.
+3. Pastikan file asli ada di `Documents/REPUBLIKA/saves/backup-v{versiLama}/` dan kampanye bisa dilanjutkan.
+
+## Prosedur rilis GitHub
+
+1. Pastikan `main` hijau di CI dan checklist di atas sudah dijalankan bila format save atau ID konten berubah.
+2. Setel versi dari satu sumber: `pnpm version:set 0.1.0-rc.1`. Ini memperbarui `package.json`, `apps/desktop/package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`, dan `APP_VERSION`. Test `tests/version.test.ts` gagal bila ada yang tertinggal.
+3. Tulis bagian `## [0.1.0-rc.1] - <tanggal>` di `CHANGELOG.md`. Isinya dipakai sebagai catatan rilis.
+4. Commit, lalu buat tag beranotasi dan push: `git tag -a v0.1.0-rc.1 -m "REPUBLIKA 0.1.0-rc.1"` → `git push origin v0.1.0-rc.1`. **Membuat tag rilis wajib dikonfirmasi pemilik proyek.**
+5. Workflow `release.yml` (windows-latest) memeriksa tag = versi `package.json`, menjalankan lint/typecheck/test/content:check/cargo test, membangun installer NSIS per-user, lalu membuat **draft** GitHub Release berisi `.exe`, `.exe.sha256`, dan catatan dari `CHANGELOG.md`. Versi dengan tanda `-` (mis. `-rc.1`) ditandai _pre-release_.
+6. Unduh installer dari draft, uji di Windows bersih (lihat di bawah), lalu publikasikan draft secara manual.
+
+### Uji instalasi bersih (manual)
+
+- Laptop/VM Windows 10/11 tanpa Node, Rust, atau alat pengembangan.
+- Instal dari installer draft; SmartScreen → _More info → Run anyway_.
+- Matikan Wi-Fi, buka game, mainkan beberapa kuartal: harus berjalan normal.
+- `Documents\REPUBLIKA\saves\autosave.json` tercipta.
+- Uninstall lewat _Settings → Apps_: folder `Documents\REPUBLIKA` tetap ada.

@@ -56,7 +56,7 @@ export const copy = {
     useBackup: 'Pakai cadangan',
     loadGame: 'Muat',
     loadDescription: 'Pulihkan kampanye dari slot penyimpanan.',
-    loadUnavailable: 'Slot save tersedia pada Tahap 3.',
+    loadUnavailable: 'Buka layar Simpan & Muat.',
     settings: 'Pengaturan',
     settingsDescription: 'Skala antarmuka, layar penuh, dan informasi konten.',
     quit: 'Keluar',
@@ -460,6 +460,77 @@ export const copy = {
     open: 'Buka Laporan Akhir',
     bannerTitle: 'Masa jabatan telah berakhir',
   },
+  migration: {
+    updateTitle: 'Perbarui save ke versi ini?',
+    updateBody: (count: number) =>
+      `Ada ${count} save dari versi sebelumnya. Save akan diperbarui; file asli dicadangkan ke saves/backup-v{versi}/ lebih dulu.`,
+    update: 'Perbarui save',
+    later: 'Nanti',
+    askTitle: 'Apakah Anda pernah bermain di versi sebelumnya?',
+    askBody:
+      'Bila ya, pilih file save lama (.json). Salinannya diperbarui ke versi ini dan ditaruh di slot kosong; file aslinya tidak diubah.',
+    askYes: 'Ya, pilih file',
+    askNo: 'Tidak',
+    resultTitle: 'Hasil pembaruan save',
+    resultSummary: (ok: number, failed: number) =>
+      `${ok} save berhasil diperbarui, ${failed} gagal.`,
+    resultOk: (file: string, slot: string) => `${file} → ${slot}`,
+    resultFailed: (file: string, reason: string) => `${file}: ${reason}`,
+    resultBackup: (path: string) => `Cadangan: ${path}`,
+    continuedWith: (ruleset: number) => `Kampanye dilanjutkan dengan aturan v${ruleset}.`,
+    importFromPrevious: 'Impor dari versi sebelumnya',
+    importUnavailable: 'Impor save hanya tersedia di aplikasi desktop.',
+    missing: 'File tidak ditemukan.',
+    backupFailed: 'Cadangan gagal ditulis; migrasi dibatalkan agar file asli aman.',
+    notJson: 'File bukan JSON yang valid.',
+    newerFormat: (version: number) =>
+      `Save dibuat oleh versi aplikasi yang lebih baru (format v${version}).`,
+    noMigrator: (version: number) => `Tidak ada migrator untuk format v${version}.`,
+    invalid: (detail: string) => `Isi save tidak valid (${detail}).`,
+    newerRuleset: (version: number) => `Save memakai aturan yang lebih baru (v${version}).`,
+    noFreeSlot: 'Semua slot manual terisi. Kosongkan satu slot lalu impor lagi.',
+  },
+  saves: {
+    kicker: 'Arsip Kampanye',
+    title: 'Simpan & Muat',
+    subtitle:
+      'Autosave terjadi setiap akhir kuartal. Lima slot manual menyimpan titik kampanye pilihan Anda; memuat slot tidak mengubah slot lain.',
+    nav: 'Simpan & Muat',
+    slotName: (slot: string) =>
+      slot === 'autosave' ? 'Autosave' : `Slot ${slot.replace('slot-', '')}`,
+    empty: 'Kosong',
+    corrupt: 'Save rusak — tidak bisa dibaca',
+    savedAt: (date: string) => `Disimpan ${date}`,
+    version: (version: string) => `Versi ${version}`,
+    quarter: (turn: number, maxTurns: number) => `Kuartal ${turn} dari ${maxTurns}`,
+    completed: 'Masa jabatan selesai',
+    save: 'Simpan di sini',
+    load: 'Muat',
+    rename: 'Ganti nama',
+    renameSave: 'Simpan nama',
+    delete: 'Hapus',
+    labelField: (slot: string) => `Nama untuk ${slot}`,
+    openFolder: 'Buka folder save',
+    openFolderUnavailable: 'Folder save hanya bisa dibuka di aplikasi desktop.',
+    noCampaign: 'Mulai atau lanjutkan kampanye untuk menyimpan ke slot.',
+    confirmOverwriteTitle: 'Timpa slot ini?',
+    confirmOverwriteBody: (slot: string) =>
+      `${slot} sudah berisi save. Isinya akan diganti dengan kampanye saat ini.`,
+    confirmLoadTitle: 'Muat tanpa menyimpan?',
+    confirmLoadBody:
+      'Keputusan kuartal ini (antrean kebijakan, lobi, jawaban peristiwa) belum tersimpan dan akan hilang.',
+    confirmDeleteTitle: 'Hapus save ini?',
+    confirmDeleteBody: (slot: string) =>
+      `${slot} dipindahkan ke folder saves/trash/. Anda masih bisa memulihkannya secara manual.`,
+    savedTo: (slot: string) => `Kampanye disimpan ke ${slot}.`,
+    loadedFrom: (slot: string) => `Kampanye dimuat dari ${slot}.`,
+    deleted: (slot: string) => `${slot} dipindahkan ke trash.`,
+    saveFailed: 'Save gagal ditulis. Periksa ruang disk dan izin folder Documents.',
+    deleteFailed: 'Save gagal dipindahkan ke trash.',
+    labelInvalid: 'Nama save wajib diisi, maksimal 80 karakter.',
+    slotUnreadable: 'Slot ini tidak bisa dibaca.',
+    back: 'Kembali',
+  },
   settings: {
     kicker: 'Pengaturan',
     title: 'Pengaturan',
@@ -487,6 +558,9 @@ export const copy = {
     ruleset: 'Versi ruleset',
     appVersion: 'Versi aplikasi',
     back: 'Kembali ke menu',
+    resetDefaults: 'Kembalikan default',
+    resetDone: 'Skala 100% dan mode jendela dipulihkan.',
+    fullscreenShortcut: 'Pintasan: F11',
     persistNote: 'Preferensi disimpan di Documents/REPUBLIKA/settings.json pada aplikasi desktop.',
     scaleOption: (scale: number) => `${scale}%`,
   },
@@ -575,10 +649,10 @@ export const copy = {
     unexpected: 'Terjadi kesalahan tak terduga. Keputusan tidak diterapkan.',
     autosaveFailed:
       'Autosave gagal. Permainan tetap berjalan, tetapi kemajuan terakhir belum tersimpan.',
-    saveLabel: (presidentName: string, turn: number) =>
-      `Presiden ${presidentName} — Kuartal ${turn}`,
+    saveLabel: (presidentName: string, cabinetName: string | undefined, turn: number) =>
+      `Presiden ${presidentName}${cabinetName === undefined ? '' : ` — ${cabinetName}`} — Kuartal ${turn}`,
     rulesetMismatch: (saveVersion: number, appVersion: number) =>
-      `Save memakai aturan v${saveVersion}, aplikasi memakai v${appVersion}. Migrasi save tersedia pada versi berikutnya.`,
+      `Save memakai aturan v${saveVersion}, lebih baru dari aplikasi ini (v${appVersion}). Perbarui aplikasi untuk memuatnya.`,
     inaugurated: (presidentName: string) => `Presiden ${presidentName} resmi dilantik.`,
     quarterClosed: (turn: number) => `Kuartal ${turn} ditutup. Laporan siap dibaca.`,
     campaignCompleted: 'Masa jabatan selesai. Ringkasan akhir siap dibaca.',
@@ -590,5 +664,17 @@ export const copy = {
     fullscreenUnavailable: 'Layar penuh tidak dapat diubah di lingkungan ini.',
     quitUnavailable: 'Menutup jendela hanya tersedia di aplikasi desktop.',
     settingsSaveFailed: 'Preferensi belum dapat disimpan.',
+    screenKicker: 'Gangguan layar',
+    screenTitle: 'Layar ini gagal ditampilkan',
+    screenBody:
+      'Kampanye Anda aman: autosave terakhir tidak terpengaruh. Kembali ke Menu Utama lalu Lanjutkan.',
+    logLocation: (path: string) =>
+      `Detail tercatat di ${path}. Lampirkan file ini saat melapor di GitHub Issues.`,
+    backToMenu: 'Kembali ke Menu Utama',
+  },
+  closeGuard: {
+    title: 'Keluar dari REPUBLIKA?',
+    body: 'Keputusan kuartal ini belum tersimpan. Autosave terakhir aman, tetapi antrean kebijakan, lobi, dan jawaban peristiwa kuartal ini akan hilang.',
+    leave: 'Keluar (antrean kebijakan kuartal ini hilang)',
   },
 } as const;

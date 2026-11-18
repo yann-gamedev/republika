@@ -1,5 +1,58 @@
 # Progres REPUBLIKA
 
+## Tahap 5 — Save slot, migrasi, optimasi, balancing, dan rilis
+
+Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-5-release`.
+
+### Status
+
+**Implementasi 5.1–5.6 selesai dan terverifikasi lokal.** Tag rilis `v0.1.0-rc.1` **belum dibuat**, karena membuat tag rilis wajib dikonfirmasi pemilik (lihat tindakan di bawah). Gate closed playtest menunggu pemilik. Tahap 5 adalah tahap terakhir di `prompts/`.
+
+| Bagian          | Hasil                                                                                                                                                                                                                                                   | Commit    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| 5.1 Slot manual | Layar Simpan & Muat (autosave + 5 slot: label, tanggal, versi, 3 indikator), simpan/timpa, muat, ganti nama, hapus ke `saves/trash/`, "Buka folder save" (path tetap di Rust).                                                                          | `42f52e5` |
+| 5.2 Migrasi     | Format save v2 (`playTimeSeconds`, ledger ringkas), rantai migrator murni + fixture v1 beku, `migrateRuleset` + `RULESET_MIGRATED`, cadangan ke `saves/backup-v{versi}/` sebelum migrasi, alur "versi sebelumnya" + impor file, checklist `RELEASE.md`. | `f5414d6` |
+| 5.3 Desktop     | F11, preferensi layar penuh saat dibuka, "Kembalikan default", konfirmasi tutup bila ada keputusan belum tersimpan, log lokal 1 MB × 3 rotasi, error boundary per layar.                                                                                | `72893ca` |
+| 5.4 Optimasi    | `pnpm perf:report`, Tauri API lazy, dependensi tak terpakai dibuang, `docs/PERFORMANCE.md`.                                                                                                                                                             | `24bca3e` |
+| 5.5 Balancing   | `pnpm balance` (worker threads, deterministik), laporan `docs/balance/latest.md`.                                                                                                                                                                       | `4cd7aa5` |
+| 5.6 Rilis       | NSIS per-user, `pnpm version:set`, `release.yml` (draft + SHA-256 + CHANGELOG), README pemain, `CHANGELOG.md`, `CREDITS.md`, `docs/DEVELOPMENT.md`.                                                                                                     | `95e7fb0` |
+
+### Bukti verifikasi lokal
+
+| Perintah                        | Hasil                                                                                                                                                                                                                       |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`, `pnpm typecheck`   | Lulus.                                                                                                                                                                                                                      |
+| `pnpm test`                     | 265 test lulus (termasuk migrasi v1→v2, `RULESET_MIGRATED`, cadangan saat gagal, slot, log, versi sinkron, agregasi balance).                                                                                               |
+| `pnpm test:e2e`                 | 9 test lulus (terakhir dijalankan setelah 5.4): slot Simpan & Muat, error boundary paksa, reset pengaturan, kampanye 20 kuartal, audit axe.                                                                                 |
+| `cargo test` / `clippy` / `fmt` | Lulus.                                                                                                                                                                                                                      |
+| `pnpm content:check`            | Lulus tanpa error.                                                                                                                                                                                                          |
+| `pnpm balance --runs=5000`      | 5000 kampanye dalam 4,8–6,6 dtk (12 worker), **0 softlock**, save maksimum **230 KiB** (≤ 1 MB). Hasil 12 worker identik dengan 1 worker.                                                                                   |
+| `pnpm build`                    | Installer NSIS per-user **3,15 MiB** (3.307.633 byte).                                                                                                                                                                      |
+| Performa                        | Lihat `docs/PERFORMANCE.md`: cold start ±1,49 dtk, JS heap 20 kuartal 12,7–18,2 MB, resolve 0,25–1,05 ms, save 111–230 KiB. **RAM belum terukur andal** (pemangkasan working set Windows); perlu Task Manager oleh pemilik. |
+
+### Temuan balancing (konten placeholder, bukan diubah agent)
+
+- Semua voting kebijakan selalu lolos (fraksi placeholder terlalu mendukung).
+- Bot greedy memilih bantuan sosial placeholder di 100% kampanye (tidak punya sisi negatif).
+- Satu arketipe per strategi (konten baru punya 1 aturan + fallback).
+- Pengangguran turun sampai 0% di ±10% kuartal (rumus Okun dengan baseline placeholder).
+
+### Tindakan pemilik
+
+1. **Konfirmasi rilis kandidat.** Bila disetujui, agent menjalankan `pnpm version:set 0.1.0-rc.1`, commit, push, lalu membuat dan push tag `v0.1.0-rc.1`. `release.yml` membuat draft release berisi installer + checksum.
+2. Uji instalasi bersih di laptop lain (checklist di `docs/RELEASE.md` → _Uji instalasi bersih_): offline, save tercipta, uninstall tidak menghapus `Documents\REPUBLIKA`.
+3. Ukur RAM dengan Task Manager dan isi tabel di `docs/PERFORMANCE.md`.
+4. Simulasi update `rc.1` → `rc.2` (lihat `docs/RELEASE.md` → bagian D).
+5. Tinjau `docs/balance/latest.md`, tulis konten final, naikkan `rulesetVersion`.
+6. Closed playtest 3–5 teman → `docs/PLAYTEST-CLOSED.md` (template tersedia).
+7. Masih terbuka dari tahap sebelumnya: `rulesetVersion` konten (masih 1), kalimat `contentReasons`, `PLAYTEST-SLICE.md`, `PLAYTEST-MVP.md`, usulan di `OPEN_QUESTIONS.md`.
+
+### Catatan untuk save Anda yang sudah ada
+
+Di mesin ini ada `Documents\REPUBLIKA\saves\autosave.json` dari build sebelumnya. Saat versi baru dibuka, dialog **"Perbarui save ke versi ini?"** akan muncul. File aslinya dicadangkan dulu ke `saves\backup-v0.1.0\`. Agent tidak mengubah file tersebut.
+
+---
+
 ## Tahap 4 — Sistem lengkap dan konten MVP
 
 Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-4-mvp` (bertumpuk di atas `feat/stage-3-vertical-slice`, PR #2).

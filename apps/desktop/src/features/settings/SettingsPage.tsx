@@ -20,6 +20,14 @@ export default function SettingsPage() {
   const setUiScale = useAppStore((store) => store.setUiScale);
   const setFullscreenPreference = useAppStore((store) => store.setFullscreenPreference);
   const [fullscreenError, setFullscreenError] = useState<string | null>(null);
+  const [resetNotice, setResetNotice] = useState(false);
+  const updateSettings = useAppStore((store) => store.updateSettings);
+
+  const resetDefaults = async () => {
+    if (settings.fullscreen) await setApplicationFullscreen(false).catch(() => undefined);
+    updateSettings({ uiScale: 100, fullscreen: false });
+    setResetNotice(true);
+  };
   const [fullscreenBusy, setFullscreenBusy] = useState(false);
 
   const toggleFullscreen = async () => {
@@ -123,11 +131,29 @@ export default function SettingsPage() {
               >
                 {settings.fullscreen ? copy.settings.fullscreenOff : copy.settings.fullscreenOn}
               </Button>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {copy.settings.fullscreenShortcut}
+              </p>
               {fullscreenError !== null && (
                 <p role="alert" className="mt-3 text-xs text-red-300">
                   {fullscreenError}
                 </p>
               )}
+              <div className="mt-5 border-t border-border/40 pt-4">
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    void resetDefaults();
+                  }}
+                >
+                  {copy.settings.resetDefaults}
+                </Button>
+                {resetNotice && (
+                  <p role="status" className="mt-2 text-xs text-muted-foreground">
+                    {copy.settings.resetDone}
+                  </p>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>

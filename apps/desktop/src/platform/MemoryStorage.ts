@@ -17,6 +17,20 @@ export class MemoryFilePort implements FilePort {
   async writeTextAtomic(relativePath: string, contents: string): Promise<void> {
     this.files.set(relativePath, contents);
   }
+
+  async rename(fromRelative: string, toRelative: string): Promise<void> {
+    const contents = this.files.get(fromRelative);
+    if (contents === undefined) throw new Error(`File tidak ada: ${fromRelative}`);
+    this.files.set(toRelative, contents);
+    this.files.delete(fromRelative);
+  }
+
+  async listSaveFiles(): Promise<string[]> {
+    return [...this.files.keys()]
+      .filter((path) => /^saves\/[^/]+\.json$/u.test(path))
+      .map((path) => path.slice('saves/'.length))
+      .sort();
+  }
 }
 
 /** Penyimpanan in-memory (dev browser dan test) dengan perilaku sama seperti versi file. */

@@ -1,86 +1,67 @@
 # REPUBLIKA
 
-Game desktop Windows 10/11 x64, single-player, offline, berbahasa Indonesia. Stack: Tauri 2, Vite, React, TypeScript, pnpm workspaces. Aturan utama: [AGENT.md](AGENT.md); addendum v0.3 mengesampingkan rancangan web lama.
+Game simulasi politik untuk **Windows 10/11 (64-bit)**. Anda dilantik sebagai presiden sebuah negara fiktif dan memerintah selama 20 kuartal: mengajukan kebijakan, melobi parlemen, mengelola kementerian, dan menghadapi peristiwa tak terduga. Setiap kuartal ada laporan yang menjelaskan _kenapa_ angka berubah.
 
-## Status Tahap 1
+- Sepenuhnya **offline**: tanpa akun, tanpa internet, tanpa telemetri.
+- Berbahasa Indonesia.
+- Semua negara, fraksi, tokoh, dan lembaga dalam game adalah **fiktif**.
 
-Fondasi tersedia: schema domain, validasi dan loader konten, shell Tauri, serta UI mock. Menu, pelantikan, dashboard, kebijakan, parlemen, kabinet, peristiwa, dan riwayat memakai data demonstrasi; **belum ada simulasi**.
+> Versi saat ini adalah rilis kandidat untuk playtest terbatas. Konten (kebijakan, peristiwa) masih contoh dan angkanya belum seimbang.
 
-- Mock UI menggambarkan 20 kuartal; `packages/game-data/content/scenario.json` masih placeholder `maxTurns: 4`. Bukan kampanye 20 kuartal yang sudah bisa dimainkan.
-- Browser memakai `MemoryStorage` tanpa disk. `TauriFileStorage` masih stub; save/load file, autosave, dan migrasi belum aktif.
-- Preferensi UI hanya bertahan selama sesi; belum ada persistensi pengaturan desktop. Fullscreen memakai adapter platform (Tauri native atau Fullscreen API browser); pemeriksaan manual toggle native masih diperlukan.
-- Font dibundel lokal dengan lisensi OFL; tidak memakai CDN. Runtime rilis tidak membutuhkan jaringan, akun, DB, server, atau telemetri. Instalasi dependency dan pengunduhan WebView2 dapat membutuhkan internet; Vite dev memakai server lokal khusus pengembangan.
-- Identifier `id.republika.game` sudah dikonfirmasi pemilik. Jangan diubah setelah rilis.
-- Run GitHub Actions aktual, instalasi artifact oleh pemilik, dan pengukuran RAM masih pending. Lihat [RELEASE.md](docs/RELEASE.md) dan [PROGRESS.md](docs/PROGRESS.md) untuk bukti verifikasi tahap.
+## Unduh dan instal
 
-## Prasyarat Windows
+1. Buka halaman [Releases](https://github.com/yann-gamedev/republika/releases) lalu unduh file `REPUBLIKA_<versi>_x64-setup.exe` dari rilis terbaru.
+2. (Opsional) Cocokkan checksum: buka PowerShell di folder unduhan, jalankan `Get-FileHash .\REPUBLIKA_<versi>_x64-setup.exe -Algorithm SHA256`, lalu bandingkan dengan isi file `.sha256` di halaman rilis.
+3. Jalankan installer. Instalasi hanya untuk akun Windows Anda dan **tidak butuh hak administrator**.
 
-1. Pasang Node.js LTS **versi >=22**, melalui installer x64 dari <https://nodejs.org/>. Buka ulang PowerShell, cek `node --version` dan `npm --version`.
-2. Pasang pnpm versi terkunci:
-   ```powershell
-   npm install --global pnpm@9.15.4
-   pnpm --version
-   ```
-3. Pasang **Visual Studio Build Tools 2022** dari <https://visualstudio.microsoft.com/visual-cpp-build-tools/>. Pilih workload **Desktop development with C++**, termasuk MSVC x64/x86 dan Windows SDK.
-4. Pasang **Rust stable** melalui `rustup-init.exe` dari <https://rustup.rs/>. Gunakan toolchain MSVC Windows x64, lalu buka ulang terminal:
-   ```powershell
-   rustup default stable
-   rustc --version
-   cargo --version
-   ```
-5. Pastikan **Microsoft Edge WebView2 Runtime** tersedia; bila belum, pasang Evergreen Runtime dari <https://developer.microsoft.com/microsoft-edge/webview2/>. WebView2 dipakai jendela Tauri. Installer saat ini memakai `embedBootstrapper`; pemasangan WebView2 yang belum tersedia dapat memerlukan unduhan.
+### Peringatan "Windows protected your PC"
 
-## Menjalankan
+Installer REPUBLIKA belum ditandatangani secara digital (sertifikat berbayar), jadi Windows SmartScreen bisa menampilkan layar biru **"Windows protected your PC"**. Ini wajar untuk proyek open source kecil.
 
-Jalankan dari root repo, satu perintah per langkah:
+1. Klik **More info** (Info selengkapnya).
+2. Pastikan nama file sama dengan yang Anda unduh dari halaman Releases resmi.
+3. Klik **Run anyway** (Tetap jalankan).
 
-```powershell
-pnpm install
-pnpm dev
+Jika ragu, cocokkan checksum SHA-256 seperti langkah 2 di atas.
+
+Game memakai **Microsoft Edge WebView2**, yang sudah ada di hampir semua Windows 10/11. Bila belum ada, installer akan memasangnya; hanya langkah ini yang mungkin membutuhkan internet.
+
+## Lokasi save
+
+Semua data ada di folder **Documents** Anda:
+
+```
+Documents\REPUBLIKA\
+  saves\      autosave.json, autosave.bak.json, slot-1.json … slot-5.json
+    trash\    save yang Anda "hapus" dari layar Simpan & Muat
+    backup-v<versi>\   cadangan otomatis sebelum save diperbarui ke versi baru
+  logs\       republika.log (untuk laporan bug)
+  settings.json
 ```
 
-`pnpm dev` membuka shell Tauri; file storage belum aktif pada Tahap 1. Untuk iterasi UI tanpa Rust/Tauri:
+- Autosave terjadi setiap akhir kuartal. Keputusan yang belum diakhiri kuartalnya belum tersimpan.
+- Dari game, buka **Simpan & Muat → Buka folder save** untuk langsung ke folder ini.
+- **Uninstall tidak menghapus folder ini.** Save Anda tetap aman; hapus manual bila memang tidak diperlukan lagi.
 
-```powershell
-pnpm dev:web
-```
+## Pindah ke versi baru
 
-Browser dev bukan produk rilis. Ukuran jendela desktop default 1440×900, minimum 1280×720.
+1. Unduh dan jalankan installer versi baru (tidak perlu uninstall versi lama).
+2. Saat game dibuka, bila ada save dari versi sebelumnya, muncul dialog **"Perbarui save ke versi ini?"**. Pilih **Perbarui save**.
+3. File asli selalu dicadangkan lebih dulu ke `saves\backup-v<versiLama>\`.
 
-## Pemeriksaan
+Save dari komputer lain atau folder lain: buka **Simpan & Muat → Impor dari versi sebelumnya**, lalu pilih file `.json`-nya. Salinannya diperbarui dan ditaruh di slot kosong.
 
-```powershell
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm content:check
-pnpm build:web
-pnpm exec playwright install chromium
-pnpm test:e2e
-cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
-```
+## Melaporkan bug
 
-`content:check` membaca JSON dari disk, menolak schema/referensi tidak valid, dan memperingatkan konten `PLACEHOLDER`. Hasil pemeriksaan harus dicatat dari output aktual, bukan diasumsikan dari daftar perintah ini. CLI `sim`, `balance`, dan `perf:report` belum tersedia pada Tahap 1.
+1. Buka [Issues](https://github.com/yann-gamedev/republika/issues) → **New issue**.
+2. Ceritakan apa yang Anda lakukan, apa yang terjadi, dan apa yang Anda harapkan.
+3. **Lampirkan** `Documents\REPUBLIKA\logs\republika.log`. Log hanya berisi pesan error dan durasi perhitungan; tidak ada data pribadi selain nama presiden yang Anda ketik.
+4. Bila masalahnya terkait save, lampirkan juga file save-nya.
 
-## Build Windows
+## Pintasan
 
-```powershell
-pnpm build
-```
+`1–6` pindah halaman · `?` daftar pintasan · `F11` layar penuh · `Enter`/`Esc` di dialog · `/` cari kebijakan.
 
-Target installer NSIS: `apps/desktop/src-tauri/target/release/bundle/nsis/`. Workflow desktop mengunggah installer sebagai artifact, **bukan GitHub Release**. Build sukses belum membuktikan installer terpasang, jendela terbuka, atau target RAM tercapai.
+## Untuk pengembang
 
-## Peta repo
-
-| Lokasi                                        | Isi                                                            |
-| --------------------------------------------- | -------------------------------------------------------------- |
-| `apps/desktop`                                | Shell React/Tauri, copy Indonesia, chart SVG, adapter platform |
-| `packages/shared`                             | Tipe dan schema Zod domain/konten/save                         |
-| `packages/game-data`                          | JSON placeholder, import statis, loader, validator, hash       |
-| `packages/simulation`                         | Batas package engine murni; resolusi simulasi belum dibuat     |
-| `tools`                                       | Ruang CLI tahap lanjutan                                       |
-| `docs/PANDUAN-KONTEN.md`                      | Format konten sesuai schema Tahap 1                            |
-| `docs/SIMULATION_RULES.md`                    | Kontrak aturan dan batas implementasi                          |
-| `docs/DECISIONS.md`, `docs/OPEN_QUESTIONS.md` | Keputusan dan gate yang belum ditutup                          |
-
-`docs/GDD.md` dan `docs/TDD.md` memuat konversi teks seluruh 9 halaman PDF v0.1: GDD halaman 1–4, TDD halaman 1 dan 5–9 (sampul/daftar isi bersama diduplikasi). Penomoran, tabel, pseudocode, dan rancangan historis web/API/DB dipertahankan. Addendum v0.3 di `AGENT.md` menimpa rancangan lama; arsip ini bukan klaim fitur sudah berjalan.
+Lihat [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (prasyarat, perintah, alat konten, cara rilis) dan [AGENT.md](AGENT.md) (aturan proyek). Lisensi: [MIT](LICENSE). Kredit font dan dependensi: [CREDITS.md](CREDITS.md). Riwayat perubahan: [CHANGELOG.md](CHANGELOG.md).

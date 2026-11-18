@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ComponentType, type SVGProps } from 'react';
-import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
 
@@ -15,6 +15,7 @@ import {
   IconCabinet,
   IconDashboard,
   IconEvent,
+  IconFolder,
   IconHistory,
   IconParliament,
   IconPolicy,
@@ -23,6 +24,7 @@ import {
 import { cn } from '@/ui/lib/utils';
 import { Seal } from '@/ui/Seal';
 
+import { ScreenErrorBoundary } from './ScreenErrorBoundary';
 import { campaignQuarter, campaignYear } from './time';
 
 interface NavItem {
@@ -84,6 +86,7 @@ export function GameLayout() {
   const toast = useGameStore((store) => store.toast);
   const uiStatus = useGameStore((store) => store.uiStatus);
   const navigate = useNavigate();
+  const location = useLocation();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -164,6 +167,13 @@ export function GameLayout() {
 
         <div className="border-t border-border/50 px-4 py-5">
           <div className="space-y-2">
+            <Link
+              to="/saves"
+              className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <IconFolder className="h-3.5 w-3.5" />
+              {copy.saves.nav}
+            </Link>
             <Link
               to="/settings"
               className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
@@ -279,7 +289,9 @@ export function GameLayout() {
 
         <main className="px-8 pb-16 pt-8">
           <div className="mx-auto max-w-[1180px] 2xl:max-w-[1480px]">
-            <Outlet />
+            <ScreenErrorBoundary resetKey={location.pathname}>
+              <Outlet />
+            </ScreenErrorBoundary>
           </div>
         </main>
 

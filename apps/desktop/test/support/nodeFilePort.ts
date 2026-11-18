@@ -1,4 +1,4 @@
-import { mkdir, open, readFile, rename } from 'node:fs/promises';
+import { mkdir, open, readFile, readdir, rename } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 
 import type { FilePort } from '../../src/platform/SaveStorage';
@@ -27,6 +27,24 @@ export class NodeFilePort implements FilePort {
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
       throw error;
+    }
+  }
+
+  async rename(fromRelative: string, toRelative: string): Promise<void> {
+    const target = join(this.root, toRelative);
+    await mkdir(dirname(target), { recursive: true });
+    await rename(join(this.root, fromRelative), target);
+  }
+
+  async listSaveFiles(): Promise<string[]> {
+    try {
+      const entries = await readdir(join(this.root, 'saves'), { withFileTypes: true });
+      return entries
+        .filter((entry) => entry.isFile() && entry.name.endsWith('.json'))
+        .map((entry) => entry.name)
+        .sort();
+    } catch {
+      return [];
     }
   }
 

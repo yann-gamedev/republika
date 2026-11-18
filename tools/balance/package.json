@@ -3,6 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "CLI balancing Monte Carlo (diisi pada Tahap 5).",
-  "scripts": {}
+  "description": "CLI balancing Monte Carlo untuk penulis konten.",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@republika/game-data": "workspace:*",
+    "@republika/shared": "workspace:*",
+    "@republika/simulation": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.4",
+    "vitest": "3.2.7"
+  }
 }
