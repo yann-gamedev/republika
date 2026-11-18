@@ -19,7 +19,8 @@
     "content:check": "pnpm --filter @republika/game-data content:check",
     "format": "prettier --write .",
     "test:coverage": "vitest run --project simulation --coverage.enabled --coverage.provider=v8 --coverage.include=packages/simulation/src/** --coverage.reporter=text-summary --coverage.reporter=text --coverage.thresholds.lines=90",
-    "sim": "tsx tools/sim/src/cli.ts"
+    "sim": "tsx tools/sim/src/cli.ts",
+    "perf:report": "pnpm --filter @republika/desktop build:web:analyze && tsx tools/perf/report.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

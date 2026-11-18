@@ -1,4 +1,4 @@
-import { useCallback, useState, type ComponentType, type SVGProps } from 'react';
+import { useCallback, useEffect, useState, type ComponentType, type SVGProps } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
@@ -10,6 +10,7 @@ import type { ContinueResult } from '@/store/gameController';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { PreviousVersionFlow } from '@/features/migration/PreviousVersionFlow';
+import { appLogger } from '@/store/controller';
 import { ConfirmDialog } from '@/ui/components/dialog';
 import {
   IconChevronRight,
@@ -113,8 +114,16 @@ function ActionCard({
   );
 }
 
+/** Dicatat sekali per sesi untuk mengukur cold start (lihat docs/PERFORMANCE.md). */
+let startupLogged = false;
+
 export default function MenuPage() {
   const navigate = useNavigate();
+  useEffect(() => {
+    if (startupLogged) return;
+    startupLogged = true;
+    void appLogger.log('info', `menu siap (navigasi +${performance.now().toFixed(0)} ms)`);
+  }, []);
   const [quitNotice, setQuitNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [corrupt, setCorrupt] = useState<{ hasBackup: boolean } | null>(null);
