@@ -7,7 +7,10 @@ export { createCampaignSeed, createCommandId, nowIso } from './entropy';
 export { FileBackedStorage, parseSaveText, serializeSave } from './FileBackedStorage';
 export { MemoryFilePort, MemoryStorage } from './MemoryStorage';
 export { TauriFileStorage } from './TauriFileStorage';
+export { LOG_LOCATION, createLogger, type Logger } from './logger';
 export {
+  forceCloseWindow,
+  onWindowCloseRequested,
   importSaveFile,
   isTauriRuntime,
   openSavesFolder,

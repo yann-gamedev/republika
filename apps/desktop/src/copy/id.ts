@@ -558,6 +558,9 @@ export const copy = {
     ruleset: 'Versi ruleset',
     appVersion: 'Versi aplikasi',
     back: 'Kembali ke menu',
+    resetDefaults: 'Kembalikan default',
+    resetDone: 'Skala 100% dan mode jendela dipulihkan.',
+    fullscreenShortcut: 'Pintasan: F11',
     persistNote: 'Preferensi disimpan di Documents/REPUBLIKA/settings.json pada aplikasi desktop.',
     scaleOption: (scale: number) => `${scale}%`,
   },
@@ -661,5 +664,17 @@ export const copy = {
     fullscreenUnavailable: 'Layar penuh tidak dapat diubah di lingkungan ini.',
     quitUnavailable: 'Menutup jendela hanya tersedia di aplikasi desktop.',
     settingsSaveFailed: 'Preferensi belum dapat disimpan.',
+    screenKicker: 'Gangguan layar',
+    screenTitle: 'Layar ini gagal ditampilkan',
+    screenBody:
+      'Kampanye Anda aman: autosave terakhir tidak terpengaruh. Kembali ke Menu Utama lalu Lanjutkan.',
+    logLocation: (path: string) =>
+      `Detail tercatat di ${path}. Lampirkan file ini saat melapor di GitHub Issues.`,
+    backToMenu: 'Kembali ke Menu Utama',
+  },
+  closeGuard: {
+    title: 'Keluar dari REPUBLIKA?',
+    body: 'Keputusan kuartal ini belum tersimpan. Autosave terakhir aman, tetapi antrean kebijakan, lobi, dan jawaban peristiwa kuartal ini akan hilang.',
+    leave: 'Keluar (antrean kebijakan kuartal ini hilang)',
   },
 } as const;

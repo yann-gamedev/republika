@@ -34,6 +34,7 @@ export interface SaveStorage {
   /** Akses teks mentah untuk migrasi dan cadangan (path relatif folder data). */
   readFile(relativePath: string): Promise<string | null>;
   writeFile(relativePath: string, contents: string): Promise<void>;
+  renameFile(fromRelative: string, toRelative: string): Promise<void>;
 
   readSettings(): Promise<Settings | null>;
   writeSettings(settings: Settings): Promise<void>;

@@ -108,3 +108,26 @@ test('semua layar muat pada jendela minimum', async ({ page }) => {
     }
   }
 });
+
+test('error di satu layar tidak membuat aplikasi crash', async ({ page }) => {
+  await inaugurate(page, 'Presiden Tangguh');
+  await gotoHash(page, 'game/__crash');
+  await expect(page.getByRole('heading', { name: copy.errors.screenTitle })).toBeVisible();
+  // Sidebar tetap hidup; navigasi ke layar lain memulihkan tampilan.
+  await page.locator('nav a[href="#/game/policies"]').click();
+  await expect(page.getByRole('heading', { name: copy.policies.title, exact: true })).toBeVisible();
+  await gotoHash(page, 'game/__crash');
+  await page.getByRole('link', { name: copy.errors.backToMenu }).click();
+  await expect(page.getByRole('heading', { name: copy.menu.title, exact: true })).toBeVisible();
+  await page.getByRole('button', { name: new RegExp(copy.menu.continueGame) }).click();
+  await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
+});
+
+test('Kembalikan default memulihkan skala 100%', async ({ page }) => {
+  await page.goto('/#/settings');
+  await page.getByRole('button', { name: /125%/ }).click();
+  await expect(page.locator('html')).toHaveCSS('font-size', '20px');
+  await page.getByRole('button', { name: copy.settings.resetDefaults }).click();
+  await expect(page.locator('html')).toHaveCSS('font-size', '16px');
+  await expect(page.getByRole('status')).toContainText(copy.settings.resetDone);
+});

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ComponentType, type SVGProps } from 'react';
-import { Link, Navigate, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
 
@@ -24,6 +24,7 @@ import {
 import { cn } from '@/ui/lib/utils';
 import { Seal } from '@/ui/Seal';
 
+import { ScreenErrorBoundary } from './ScreenErrorBoundary';
 import { campaignQuarter, campaignYear } from './time';
 
 interface NavItem {
@@ -85,6 +86,7 @@ export function GameLayout() {
   const toast = useGameStore((store) => store.toast);
   const uiStatus = useGameStore((store) => store.uiStatus);
   const navigate = useNavigate();
+  const location = useLocation();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
 
@@ -287,7 +289,9 @@ export function GameLayout() {
 
         <main className="px-8 pb-16 pt-8">
           <div className="mx-auto max-w-[1180px] 2xl:max-w-[1480px]">
-            <Outlet />
+            <ScreenErrorBoundary resetKey={location.pathname}>
+              <Outlet />
+            </ScreenErrorBoundary>
           </div>
         </main>
 

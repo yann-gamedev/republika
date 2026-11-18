@@ -2,6 +2,13 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Izin minimal untuk jendela utama REPUBLIKA.",
-  "windows": ["main"],
-  "permissions": ["core:default", "core:window:allow-set-fullscreen", "core:window:allow-close"]
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "core:window:allow-set-fullscreen",
+    "core:window:allow-close",
+    "core:window:allow-destroy"
+  ]
 }

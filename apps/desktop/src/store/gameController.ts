@@ -37,6 +37,8 @@ export interface GameControllerDeps {
   readonly rulesetMaps?: readonly RulesetMigrationMap[];
   /** Jam monotonik (ms) untuk lama bermain; default dari `now()`. */
   readonly nowMs?: () => number;
+  /** Log lokal (error dan durasi); opsional. */
+  readonly log?: (level: 'info' | 'warn' | 'error', message: string) => void;
 }
 
 export interface OldSaveFile {
@@ -169,15 +171,21 @@ export class GameController {
     const current = this.state;
     if (current === null) return this.fail(copy.controller.noCampaign);
     let resolved: ReturnType<typeof resolveTurn>;
+    const started = performance.now();
     try {
       resolved = resolveTurn(
         current,
         { type: 'END_QUARTER', commandId: this.deps.createCommandId() },
         this.deps.definitions,
       );
-    } catch {
+    } catch (error) {
+      this.deps.log?.('error', `resolve kuartal ${current.turn} gagal: ${String(error)}`);
       return this.fail(copy.controller.unexpected);
     }
+    this.deps.log?.(
+      'info',
+      `resolve kuartal ${current.turn}: ${(performance.now() - started).toFixed(1)} ms`,
+    );
     if (!resolved.ok) {
       return this.fail(commandErrorMessage(resolved.error.code), resolved.error.code);
     }

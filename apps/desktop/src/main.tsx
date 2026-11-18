@@ -1,6 +1,8 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { appLogger } from '@/store/controller';
+
 import { App } from '@/app/App';
 
 import './globals.css';
@@ -15,3 +17,11 @@ createRoot(container).render(
     <App />
   </StrictMode>,
 );
+
+// Error di luar React (mis. promise yang gagal) dicatat ke log lokal.
+window.addEventListener('error', (event) => {
+  void appLogger.log('error', `window: ${event.message}`);
+});
+window.addEventListener('unhandledrejection', (event) => {
+  void appLogger.log('error', `promise: ${String(event.reason)}`);
+});

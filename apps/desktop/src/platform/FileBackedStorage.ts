@@ -159,6 +159,10 @@ export class FileBackedStorage implements SaveStorage {
     await this.port.writeTextAtomic(relativePath, contents);
   }
 
+  async renameFile(fromRelative: string, toRelative: string): Promise<void> {
+    await this.port.rename(fromRelative, toRelative);
+  }
+
   async readSettings(): Promise<Settings | null> {
     const text = await this.port.readText(SETTINGS_FILE);
     if (text === null) return null;

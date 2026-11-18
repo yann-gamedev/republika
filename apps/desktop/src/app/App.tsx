@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppErrorBoundary } from '@/app/AppErrorBoundary';
+import { DesktopShell } from '@/app/DesktopShell';
 import { GameLayout } from '@/app/GameLayout';
 import { RouteFallback } from '@/app/RouteFallback';
 import { useAppStore } from '@/store/useAppStore';
@@ -20,6 +21,11 @@ const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
 const SavesPage = lazy(() => import('@/features/saves/SavesPage'));
 const NotFoundPage = lazy(() => import('@/features/not-found/NotFoundPage'));
 
+/** Hanya ada di build E2E: memaksa error untuk menguji error boundary per layar. */
+function CrashForTest(): never {
+  throw new Error('Crash uji E2E');
+}
+
 export function App() {
   const initialize = useAppStore((store) => store.initialize);
   const uiScale = useAppStore((store) => store.settings.uiScale);
@@ -34,6 +40,7 @@ export function App() {
 
   return (
     <AppErrorBoundary>
+      <DesktopShell />
       <HashRouter>
         <Suspense fallback={<RouteFallback />}>
           <Routes>
@@ -52,6 +59,9 @@ export function App() {
               <Route path="history" element={<HistoryPage />} />
               <Route path="report" element={<ReportPage />} />
               <Route path="final" element={<FinalReportPage />} />
+              {import.meta.env.MODE === 'e2e' && (
+                <Route path="__crash" element={<CrashForTest />} />
+              )}
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />
