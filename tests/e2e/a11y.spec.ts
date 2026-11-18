@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { endQuarter } from './helpers';
+import { endQuarter, signOath } from './helpers';
 
 async function audit(page: Page, label: string): Promise<string[]> {
   const result = await new AxeBuilder({ page })
@@ -42,9 +42,9 @@ test('aksesibilitas: tanpa pelanggaran axe serius/kritis di semua halaman', asyn
   violations.push(...(await audit(page, 'pelantikan')));
   await page.getByLabel(copy.inauguration.presidentLabel).fill('Sari Wening');
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
-  await expect(page.getByRole('button', { name: copy.inauguration.ceremonyEnter })).toBeVisible();
+  await expect(page.getByRole('button', { name: copy.inauguration.signSumpah })).toBeVisible();
   violations.push(...(await audit(page, 'sumpah')));
-  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+  await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
   await page.getByRole('button', { name: copy.common.close }).click();
 

@@ -54,3 +54,13 @@ export async function endQuarter(page: Page): Promise<void> {
   await page.keyboard.press('Enter');
   await throughSession(page);
 }
+
+/**
+ * Langkah 2 pelantikan: tandatangani naskah sumpah, pastikan stempel DILANTIK
+ * tampil, lalu masuk ke Meja kerja.
+ */
+export async function signOath(page: Page): Promise<void> {
+  await page.getByRole('button', { name: copy.inauguration.signSumpah }).click();
+  await expect(page.getByTestId('stamp')).toHaveAttribute('data-visible', 'true');
+  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+}

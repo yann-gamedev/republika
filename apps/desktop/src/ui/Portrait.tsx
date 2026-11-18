@@ -1,15 +1,8 @@
 import { cn } from '@/ui/lib/utils';
 
-export const PORTRAIT_HEADS = [
-  'peci',
-  'rambut',
-  'panjang',
-  'uban',
-  'baret',
-  'botak',
-  'hijab',
-] as const;
-export type PortraitHead = (typeof PORTRAIT_HEADS)[number];
+import type { PortraitHead } from '@republika/shared';
+
+export { PORTRAIT_HEADS, type PortraitHead } from '@republika/shared';
 
 export interface PortraitLook {
   readonly head: PortraitHead;

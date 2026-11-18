@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { answerMemos, endQuarter, shortcut } from './helpers';
+import { answerMemos, endQuarter, shortcut, signOath } from './helpers';
 
 const PRESIDENT = 'Raka Pradipta';
 /** Build E2E (`vite build --mode e2e`) memakai kampanye 20 kuartal. */
@@ -20,7 +20,7 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
   await page.getByLabel(copy.inauguration.cabinetLabel).fill('Kabinet Fajar');
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
-  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+  await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
   await expect(page.getByRole('img', { name: copy.game.quarterTrack(1, MAX_TURNS) })).toBeVisible();
 
@@ -33,7 +33,7 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
     // Sesekali ajukan kebijakan yang tersedia agar ledger berisi keputusan.
     if (turn % 3 === 1) {
       await shortcut(page, '2', copy.policies.title);
-      const enact = page.getByRole('button', { name: copy.policies.enact, exact: true });
+      const enact = page.getByRole('button', { name: copy.policies.enactAp(1), exact: true });
       if ((await enact.count()) > 0 && (await enact.first().isEnabled()))
         await enact.first().click();
     }

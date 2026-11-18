@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SAVE_FORMAT_VERSION, UI_SCALES } from '../types/constants.js';
+import { HONORIFICS, PORTRAIT_HEADS, SAVE_FORMAT_VERSION, UI_SCALES } from '../types/constants.js';
 import { appVersionSchema, idSchema, isoDateTimeSchema, versionSchema } from './common.js';
 import { gameStateSchema, ledgerEntrySchema, turnReportSchema } from './state.js';
 
@@ -57,6 +57,13 @@ export const settingsSchema = z.object({
   fullscreen: z.boolean().default(false),
   lastRunAppVersion: appVersionSchema.default('0.1.0'),
   askedAboutPreviousVersion: z.boolean().default(false),
+  /**
+   * Preferensi kosmetik pelantikan (UI v2, TAHAP-6 §6A.5): sapaan dan potret
+   * presiden. Disimpan di settings.json, bukan di save, sampai Tahap 6B.1.
+   */
+  presidentLook: z
+    .object({ honorific: z.enum(HONORIFICS), head: z.enum(PORTRAIT_HEADS) })
+    .optional(),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;

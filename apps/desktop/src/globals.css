@@ -60,7 +60,8 @@
     --destructive: 358 75% 59%; /* #E5484D */
     --destructive-foreground: 42 33% 6%;
     --positive: 151 50% 53%; /* #4CC38A */
-    --negative: 358 75% 59%;
+    /* DECISION: teks negatif #EA5A5E (bukan #E5484D) agar ≥ 4,5:1 di kartu dan permukaan naik. */
+    --negative: 358 77% 64%;
     /* Garis rambut = teks utama 8% di atas latar, ditulis solid (#1E2227). */
     --border: 213 13% 14%;
     --input: 218 20% 18%;

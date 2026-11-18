@@ -4,7 +4,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { answerMemos, endQuarter, shortcut } from './helpers';
+import { answerMemos, endQuarter, shortcut, signOath } from './helpers';
 
 const PRESIDENT = 'Sari Wening';
 
@@ -24,15 +24,15 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
-  await expect(
-    page.getByRole('heading', { name: copy.inauguration.ceremonyTitle(PRESIDENT) }),
-  ).toBeVisible();
-  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+  await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
 
   // Kuartal 1: ajukan kebijakan + lobi fraksi.
   await shortcut(page, '2', copy.policies.title);
-  await page.getByRole('button', { name: copy.policies.enact, exact: true }).first().click();
+  await page
+    .getByRole('button', { name: copy.policies.enactAp(1), exact: true })
+    .first()
+    .click();
   await expect(page.getByRole('status')).toContainText('diajukan');
   await shortcut(page, '3', copy.parliament.title);
   await page.getByRole('button', { name: copy.parliament.lobby }).first().click();

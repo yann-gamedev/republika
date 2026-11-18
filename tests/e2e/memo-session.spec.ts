@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { shortcut, throughSession } from './helpers';
+import { shortcut, signOath, throughSession } from './helpers';
 
 const PRESIDENT = 'Laras Pertiwi';
 
@@ -15,7 +15,7 @@ test('nota dinas → stempel → akhiri kuartal → sidang paripurna → warta',
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
-  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+  await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
 
   // Kuartal 1 tanpa keputusan: nota pertama tiba di kuartal 2.
@@ -39,7 +39,10 @@ test('nota dinas → stempel → akhiri kuartal → sidang paripurna → warta',
 
   // Ajukan kebijakan yang butuh voting, lalu akhiri kuartal.
   await shortcut(page, '2', copy.policies.title);
-  await page.getByRole('button', { name: copy.policies.enact, exact: true }).first().click();
+  await page
+    .getByRole('button', { name: copy.policies.enactAp(1), exact: true })
+    .first()
+    .click();
   await expect(page.getByRole('status')).toContainText('diajukan');
   await page.getByRole('button', { name: copy.game.endQuarter }).click();
   await page.keyboard.press('Enter');
