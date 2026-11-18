@@ -35,11 +35,13 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
-  await expect(page.getByText(copy.dashboard.quarterOf(1, MAX_TURNS)).first()).toBeVisible();
+  await expect(
+    page.getByRole('img', { name: copy.game.quarterTrack(1, MAX_TURNS) }),
+  ).toBeVisible();
 
   for (let turn = 1; turn <= MAX_TURNS; turn += 1) {
     if (turn > 1) await shortcut(page, '1', copy.dashboard.title);
-    if (await page.getByRole('link', { name: copy.game.endQuarterBlocked }).isVisible()) {
+    if (await page.getByRole('link', { name: /nota dinas dulu$/ }).isVisible()) {
       await answerEvents(page);
     }
     // Sesekali ajukan kebijakan yang tersedia agar ledger berisi keputusan.

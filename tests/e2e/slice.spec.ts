@@ -68,7 +68,7 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   let answered = 0;
   for (let turn = 2; turn <= 4; turn += 1) {
     await shortcut(page, '1', copy.dashboard.title);
-    const blockedLink = page.getByRole('link', { name: copy.game.endQuarterBlocked });
+    const blockedLink = page.getByRole('link', { name: /nota dinas dulu$/ });
     if (await blockedLink.isVisible()) {
       await expect(page.getByRole('button', { name: copy.game.endQuarter })).toBeDisabled();
       answered += await answerPendingEvents(page);
@@ -78,7 +78,7 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   }
 
   // Riwayat dimuat dari save: 4 laporan + grafik SVG.
-  await shortcut(page, '6', copy.history.title);
+  await shortcut(page, '7', copy.history.title);
   await expect(page.getByText(copy.history.reportCount(4))).toBeVisible();
   await expect(page.locator('svg[role="img"]').first()).toBeVisible();
 

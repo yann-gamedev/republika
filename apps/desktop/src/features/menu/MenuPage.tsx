@@ -1,114 +1,77 @@
 import { useCallback, useEffect, useState, type ComponentType, type SVGProps } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { APP_VERSION } from '@republika/shared';
+import { APP_VERSION, type SaveSlotInfo } from '@republika/shared';
 
+import { campaignQuarter, campaignYear } from '@/app/time';
+import { sceneArt } from '@/content/art';
+import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
-import { isTauriRuntime, quitApplication } from '@/platform';
-import { gameController } from '@/store/controller';
-import type { ContinueResult } from '@/store/gameController';
-import { Badge } from '@/ui/components/badge';
-import { Button } from '@/ui/components/button';
 import { PreviousVersionFlow } from '@/features/migration/PreviousVersionFlow';
-import { appLogger } from '@/store/controller';
+import { isTauriRuntime, quitApplication } from '@/platform';
+import { appLogger, gameController } from '@/store/controller';
+import type { ContinueResult } from '@/store/gameController';
+import { ArtImage } from '@/ui/ArtImage';
 import { ConfirmDialog } from '@/ui/components/dialog';
-import {
-  IconChevronRight,
-  IconFolder,
-  IconLock,
-  IconPlay,
-  IconPower,
-  IconSettings,
-} from '@/ui/icons';
+import { IconArrowRight, IconFolder, IconPlus, IconPower, IconSettings } from '@/ui/icons';
 import { cn } from '@/ui/lib/utils';
-import { Seal } from '@/ui/Seal';
+import { RepublicMark } from '@/ui/RepublicMark';
 
-interface ActionCardProps {
+const heroArt = sceneArt('menu-hero');
+
+const itemClass =
+  'flex h-12 w-full items-center gap-3 rounded-[10px] px-4 text-left text-[15px] text-foreground transition-colors duration-150 ease-standard hover:bg-raised';
+
+interface MenuItemProps {
   readonly icon: ComponentType<SVGProps<SVGSVGElement>>;
   readonly label: string;
-  readonly description: string;
+  readonly meta?: string;
   readonly to?: string;
   readonly onClick?: () => void;
-  readonly disabled?: boolean;
-  readonly primary?: boolean;
-  readonly footnote?: string;
 }
 
-function ActionCard({
-  icon: Icon,
-  label,
-  description,
-  to,
-  onClick,
-  disabled = false,
-  primary = false,
-  footnote,
-}: ActionCardProps) {
+function MenuItem({ icon: Icon, label, meta, to, onClick }: MenuItemProps) {
   const content = (
     <>
-      <span
-        className={cn(
-          'grid h-10 w-10 shrink-0 place-items-center border',
-          primary
-            ? 'border-primary/40 bg-primary/15 text-primary'
-            : 'border-border/70 bg-secondary/40 text-muted-foreground',
-        )}
-      >
-        <Icon className="h-[18px] w-[18px]" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="flex items-center justify-between gap-3">
-          <span className={cn('font-serif text-lg', primary && 'text-xl')}>{label}</span>
-          {disabled ? (
-            <IconLock className="h-4 w-4 text-muted-foreground" />
-          ) : (
-            <IconChevronRight
-              className={cn(
-                'h-4 w-4 transition-transform group-hover:translate-x-0.5',
-                primary ? 'text-primary' : 'text-muted-foreground',
-              )}
-            />
-          )}
-        </span>
-        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
-          {description}
-        </span>
-        {footnote !== undefined && (
-          <span className="mt-2 block text-xs text-muted-foreground">{footnote}</span>
-        )}
-      </span>
+      <Icon className="h-[18px] w-[18px] text-text-secondary" />
+      <span className="flex-1">{label}</span>
+      {meta !== undefined && (
+        <span className="font-mono text-xs text-muted-foreground">{meta}</span>
+      )}
     </>
   );
-
-  const classes = cn(
-    'group flex w-full items-start gap-4 border p-4 text-left transition-colors',
-    primary
-      ? 'border-primary/35 bg-primary/[0.07] hover:border-primary/60 hover:bg-primary/[0.11]'
-      : 'border-border/60 bg-card/30 hover:border-primary/35 hover:bg-card/60',
-    disabled && 'cursor-not-allowed opacity-45 hover:border-border/60 hover:bg-card/30',
-    primary && 'sm:col-span-2',
-  );
-
-  if (disabled) {
-    return (
-      <div className={classes} aria-disabled="true">
-        {content}
-      </div>
-    );
-  }
-
-  if (to !== undefined) {
-    return (
-      <Link to={to} className={classes}>
-        {content}
-      </Link>
-    );
-  }
-
-  return (
-    <button type="button" className={classes} onClick={onClick}>
+  return to !== undefined ? (
+    <Link to={to} className={itemClass}>
+      {content}
+    </Link>
+  ) : (
+    <button type="button" className={itemClass} onClick={onClick}>
       {content}
     </button>
+  );
+}
+
+function formatSavedTime(iso: string): string {
+  return new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit' }).format(
+    new Date(iso),
+  );
+}
+
+function continueInfo(autosave: SaveSlotInfo | undefined): string {
+  if (
+    autosave === undefined ||
+    autosave.isCorrupt ||
+    autosave.presidentName === undefined ||
+    autosave.turn === undefined ||
+    autosave.savedAt === undefined
+  ) {
+    return copy.menu.continueNone;
+  }
+  return copy.menu.continueInfo(
+    autosave.presidentName,
+    campaignYear(autosave.turn, definitions.scenario.startYear),
+    campaignQuarter(autosave.turn),
+    formatSavedTime(autosave.savedAt),
   );
 }
 
@@ -117,14 +80,27 @@ let startupLogged = false;
 
 export default function MenuPage() {
   const navigate = useNavigate();
-  useEffect(() => {
-    if (startupLogged) return;
-    startupLogged = true;
-    void appLogger.log('info', `menu siap (navigasi +${performance.now().toFixed(0)} ms)`);
-  }, []);
-  const [quitNotice, setQuitNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [corrupt, setCorrupt] = useState<{ hasBackup: boolean } | null>(null);
+  const [slots, setSlots] = useState<readonly SaveSlotInfo[]>([]);
+
+  useEffect(() => {
+    if (!startupLogged) {
+      startupLogged = true;
+      void appLogger.log('info', `menu siap (navigasi +${performance.now().toFixed(0)} ms)`);
+    }
+    let active = true;
+    void gameController
+      .listSlots()
+      .then((list) => {
+        if (active) setSlots(list);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const handleContinueResult = useCallback(
     (result: ContinueResult) => {
@@ -132,9 +108,9 @@ export default function MenuPage() {
       if (result.status === 'loaded') {
         navigate('/game/dashboard');
       } else if (result.status === 'missing') {
-        setQuitNotice(copy.menu.continueMissing);
+        setNotice(copy.menu.continueMissing);
       } else if (result.status === 'incompatible') {
-        setQuitNotice(result.message);
+        setNotice(result.message);
       } else {
         setCorrupt({ hasBackup: result.hasBackup });
       }
@@ -143,8 +119,9 @@ export default function MenuPage() {
   );
 
   const handleContinue = () => {
+    if (loading) return;
     setLoading(true);
-    setQuitNotice(copy.menu.continueLoading);
+    setNotice(copy.menu.continueLoading);
     void gameController.continueCampaign().then(handleContinueResult);
   };
 
@@ -161,148 +138,82 @@ export default function MenuPage() {
 
   const closeCorrupt = useCallback(() => {
     setCorrupt(null);
-    setQuitNotice(null);
+    setNotice(null);
   }, []);
 
   const handleQuit = () => {
     if (!isTauriRuntime()) {
-      setQuitNotice(copy.menu.quitUnavailable);
+      setNotice(copy.menu.quitUnavailable);
       return;
     }
-    void quitApplication().catch(() => setQuitNotice(copy.errors.quitUnavailable));
+    void quitApplication().catch(() => setNotice(copy.errors.quitUnavailable));
   };
 
+  const autosave = slots.find((slot) => slot.slot === 'autosave');
+  const manualSlots = slots.filter(
+    (slot) => slot.slot !== 'autosave' && slot.savedAt !== undefined,
+  ).length;
+
   return (
-    <main className="relative min-h-screen overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-40 [background-image:linear-gradient(hsl(var(--border)/0.22)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--border)/0.22)_1px,transparent_1px)] [background-size:64px_64px]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-40 top-1/2 h-[42rem] w-[42rem] -translate-y-1/2 rounded-full border border-primary/10"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-20 top-1/2 h-[30rem] w-[30rem] -translate-y-1/2 rounded-full border border-primary/10"
-      />
+    <main className="flex min-h-screen">
+      <div className="relative min-w-0 flex-[999_1_640px] overflow-hidden bg-[#181830]">
+        <ArtImage
+          load={heroArt}
+          alt={copy.art.scenes['menu-hero']}
+          className="absolute inset-0 h-full w-full bg-[#181830]"
+        />
+      </div>
 
-      <div className="relative mx-auto grid min-h-screen max-w-[1500px] grid-cols-[minmax(0,1.18fr)_minmax(420px,0.82fr)]">
-        <section className="flex flex-col justify-between px-14 py-10 2xl:px-20">
-          <div className="flex items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <Seal label={copy.menu.sealLabel} className="h-12 w-12" />
-              <div>
-                <p className="font-serif text-xl">{copy.app.name}</p>
-                <p className="text-xs text-muted-foreground">{copy.app.kicker}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Badge variant="success">{copy.app.offline}</Badge>
-              <span className="text-xs text-muted-foreground">{copy.app.version(APP_VERSION)}</span>
-            </div>
+      <div className="flex min-w-0 flex-[1_1_440px] flex-col justify-between gap-12 border-l border-border bg-background px-14 py-16">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <RepublicMark size={32} />
+            <span className="font-serif text-lg font-medium">{copy.menu.wordmark}</span>
           </div>
+          <h1 className="mt-6 font-serif text-5xl font-normal leading-[1.08] tracking-[-0.02em]">
+            {copy.menu.title}
+          </h1>
+          <p className="max-w-[34rem] text-base leading-relaxed text-text-secondary">
+            {copy.menu.subtitle}
+          </p>
+        </div>
 
-          <div className="py-12">
-            <p className="institutional-label">{copy.menu.kicker}</p>
-            <h1 className="mt-4 font-serif text-[5.6rem] leading-[0.86] text-foreground">
-              {copy.menu.title}
-            </h1>
-            <div className="mt-6 flex max-w-2xl items-start gap-5">
-              <span className="mt-2 h-px w-16 shrink-0 bg-primary/70" aria-hidden="true" />
-              <p className="text-base leading-relaxed text-muted-foreground">
-                {copy.menu.subtitle}
-              </p>
-            </div>
-
-            <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-2">
-              <ActionCard
-                icon={IconPlay}
-                label={copy.menu.newGame}
-                description={copy.menu.newGameDescription}
-                to="/inauguration"
-                primary
-              />
-              <ActionCard
-                icon={IconChevronRight}
-                label={copy.menu.continueGame}
-                description={copy.menu.continueDescription}
-                onClick={handleContinue}
-                disabled={loading}
-              />
-              <ActionCard
-                icon={IconFolder}
-                label={copy.menu.loadGame}
-                description={copy.menu.loadDescription}
-                to="/saves"
-              />
-              <ActionCard
-                icon={IconSettings}
-                label={copy.menu.settings}
-                description={copy.menu.settingsDescription}
-                to="/settings"
-              />
-              <ActionCard
-                icon={IconPower}
-                label={copy.menu.quit}
-                description={copy.menu.quitDescription}
-                onClick={handleQuit}
-              />
-            </div>
-
-            {quitNotice !== null && (
-              <p role="status" className="mt-4 max-w-2xl text-xs text-primary">
-                {quitNotice}
-              </p>
+        <nav aria-label={copy.menu.navLabel} className="flex flex-col gap-1">
+          <button
+            type="button"
+            onClick={handleContinue}
+            disabled={loading}
+            className={cn(
+              'flex h-16 w-full items-center justify-between gap-3 rounded-[10px] bg-primary px-4 text-left text-primary-foreground transition-colors duration-150 ease-standard hover:bg-[#D9B33A] disabled:opacity-60',
             )}
-          </div>
-
-          <div className="flex items-center justify-between gap-4 border-t border-border/50 pt-5">
-            <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-              {copy.menu.footerNote}
-            </p>
-            <span className="text-xs text-muted-foreground">
-              {copy.menu.versionLine(APP_VERSION)}
+          >
+            <span className="flex flex-col gap-0.5">
+              <span className="text-[15px] font-medium">{copy.menu.continueGame}</span>
+              <span className="text-[13px]">{continueInfo(autosave)}</span>
             </span>
-          </div>
-        </section>
+            <IconArrowRight className="h-[18px] w-[18px]" />
+          </button>
+          <div className="mt-2" />
+          <MenuItem icon={IconPlus} label={copy.menu.newGame} to="/inauguration" />
+          <MenuItem
+            icon={IconFolder}
+            label={copy.menu.loadGame}
+            meta={copy.menu.slotCount(manualSlots)}
+            to="/saves"
+          />
+          <MenuItem icon={IconSettings} label={copy.menu.settings} to="/settings" />
+          <MenuItem icon={IconPower} label={copy.menu.quit} onClick={handleQuit} />
+          {notice !== null && (
+            <p role="status" className="mt-3 px-4 text-sm text-primary">
+              {notice}
+            </p>
+          )}
+        </nav>
 
-        <aside className="relative flex flex-col justify-between border-l border-border/50 bg-card/20 px-12 py-10 backdrop-blur-[2px]">
-          <div className="flex items-center justify-between">
-            <p className="institutional-label">{copy.menu.sessionLabel}</p>
-            <p className="text-xs text-muted-foreground">{copy.menu.sessionValue}</p>
-          </div>
-
-          <div className="py-12">
-            <Seal label={copy.menu.sealLabel} className="mx-auto h-56 w-56 text-primary/80" />
-            <div className="mx-auto mt-12 max-w-sm">
-              <p className="institutional-label">{copy.menu.agendaTitle}</p>
-              <ol className="mt-4 space-y-0">
-                {copy.menu.agendaItems.map((item, index) => (
-                  <li
-                    key={item}
-                    className="flex gap-4 border-t border-border/40 py-3 first:border-t-0"
-                  >
-                    <span className="numeric text-xs text-primary/80">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-sm leading-relaxed text-foreground/85">{item}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-
-          <div className="border-t border-border/50 pt-5">
-            <div className="flex items-center justify-between">
-              <Badge variant="outline">{copy.app.offline}</Badge>
-              <span className="text-xs text-muted-foreground">{copy.app.stageNote}</span>
-            </div>
-            <Button asChild variant="ghost" size="sm" className="mt-4 px-0">
-              <Link to="/settings">{copy.menu.settings}</Link>
-            </Button>
-          </div>
-        </aside>
+        <div className="flex justify-between gap-4 font-mono text-xs text-muted-foreground">
+          <span>{copy.menu.versionLine(APP_VERSION)}</span>
+          <span>{copy.menu.footerNote}</span>
+        </div>
       </div>
 
       <PreviousVersionFlow />

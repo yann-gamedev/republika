@@ -195,3 +195,37 @@ export function IconVote(props: IconProps) {
     </Svg>
   );
 }
+
+/** Meja kerja (gedung bertiang). */
+export function IconDesk(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M3 10h18M5 10v9M19 10v9M2 19h20M12 4l9 6H3z" />
+    </Svg>
+  );
+}
+
+/** Warta (koran). */
+export function IconNews(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M8 9h5M8 13h5" />
+    </Svg>
+  );
+}
+
+export function IconPlus(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M12 5v14M5 12h14" />
+    </Svg>
+  );
+}
+
+export function IconArrowRight(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </Svg>
+  );
+}

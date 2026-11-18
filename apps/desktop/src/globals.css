@@ -69,7 +69,7 @@
     --paper: 42 34% 86%; /* #E8E1D0 */
     --paper-dark: 43 29% 81%; /* #DDD5C1 */
     --ink: 38 15% 10%; /* #1E1B16 */
-    --ink-muted: 39 11% 38%;
+    --ink-muted: 39 12% 33%; /* ≥ 5:1 di atas kertas */
     --gold: 46 68% 47%;
     --stamp: 9 71% 38%; /* #A8301C */
     --urgent: 8 73% 35%; /* #9A2A18 */
