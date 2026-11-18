@@ -14,36 +14,73 @@
   src: url('./assets/fonts/source-serif-4-latin-wght-normal.woff2') format('woff2-variations');
 }
 
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('./assets/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Mrs Saint Delafield';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('./assets/fonts/mrs-saint-delafield-latin-400-normal.woff2') format('woff2');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* Token UI v2 (prompts/TAHAP-6-ui-v2.md Lampiran A). Nilai HSL tanpa alpha agar
+     modifier Tailwind (`/50`) tetap bekerja. */
   :root {
-    --background: 216 32% 8%;
-    --foreground: 39 30% 88%;
-    --card: 216 28% 10%;
-    --card-foreground: 39 30% 88%;
-    --popover: 216 28% 10%;
-    --popover-foreground: 39 30% 88%;
-    --primary: 41 42% 58%;
-    --primary-foreground: 216 32% 8%;
-    --secondary: 215 22% 16%;
-    --secondary-foreground: 39 24% 84%;
-    --muted: 215 20% 14%;
-    --muted-foreground: 39 12% 62%;
-    --accent: 41 30% 20%;
-    --accent-foreground: 41 42% 78%;
-    --destructive: 2 48% 42%;
-    --destructive-foreground: 39 30% 92%;
-    --border: 39 18% 24%;
-    --input: 39 15% 22%;
-    --ring: 41 42% 58%;
-    --radius: 0.25rem;
-    --paper: 39 30% 86%;
-    --ink: 216 32% 10%;
-    --gold: 41 42% 58%;
-    --maroon: 2 40% 34%;
+    --background: 220 24% 7%; /* #0E1117 */
+    --sidebar: 218 27% 6%; /* #0B0E13 */
+    --foreground: 44 29% 90%; /* #EDE9DE */
+    --card: 217 24% 11%; /* #151A22 */
+    --card-foreground: 44 29% 90%;
+    --popover: 217 24% 11%;
+    --popover-foreground: 44 29% 90%;
+    --raised: 218 22% 14%; /* #1C222C */
+    --raised-hover: 218 20% 18%; /* #252C38 */
+    --primary: 46 68% 47%; /* #C9A227 */
+    --primary-foreground: 42 33% 6%; /* #14110A */
+    --secondary: 218 22% 14%;
+    --secondary-foreground: 44 29% 90%;
+    --muted: 218 22% 14%;
+    /* DECISION: #8A877E dinaikkan ke #8E8C85 agar ≥ 4,5:1 juga di permukaan #1C222C. */
+    --muted-foreground: 45 4% 54%;
+    --text-secondary: 44 8% 63%; /* #A9A59A */
+    --accent: 218 20% 18%;
+    --accent-foreground: 44 29% 90%;
+    --destructive: 358 75% 59%; /* #E5484D */
+    --destructive-foreground: 42 33% 6%;
+    --positive: 151 50% 53%; /* #4CC38A */
+    /* DECISION: teks negatif #EA5A5E (bukan #E5484D) agar ≥ 4,5:1 di kartu dan permukaan naik. */
+    --negative: 358 77% 64%;
+    /* Garis rambut = teks utama 8% di atas latar, ditulis solid (#1E2227). */
+    --border: 213 13% 14%;
+    --input: 218 20% 18%;
+    --ring: 46 68% 47%;
+    --radius: 0.875rem;
+    --paper: 42 34% 86%; /* #E8E1D0 */
+    --paper-dark: 43 29% 81%; /* #DDD5C1 */
+    --ink: 38 15% 10%; /* #1E1B16 */
+    --ink-muted: 39 12% 33%; /* ≥ 5:1 di atas kertas */
+    --gold: 46 68% 47%;
+    --stamp: 9 71% 38%; /* #A8301C */
+    --urgent: 8 73% 35%; /* #9A2A18 */
+    --maroon: 9 71% 38%;
+    --sat-1: 150 59% 30%; /* ≥70 */
+    --sat-2: 103 29% 50%; /* 55–69 */
+    --sat-3: 44 63% 56%; /* 40–54 */
+    --sat-4: 30 70% 51%; /* 25–39 */
+    --sat-5: 7 62% 43%; /* <25 */
+    --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   * {
@@ -63,11 +100,6 @@
     @apply bg-background text-foreground font-sans antialiased;
     min-width: 1280px;
     min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse 70% 50% at 15% -10%, hsl(var(--gold) / 0.09), transparent 60%),
-      radial-gradient(ellipse 45% 40% at 100% 100%, hsl(var(--maroon) / 0.14), transparent 65%),
-      linear-gradient(180deg, hsl(216 32% 9%) 0%, hsl(216 34% 7%) 100%);
-    background-attachment: fixed;
   }
 
   #root {
@@ -92,12 +124,12 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(216 30% 8%);
+    background: hsl(var(--background));
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(39 18% 26%);
-    border: 2px solid hsl(216 30% 8%);
+    background: hsl(var(--raised-hover));
+    border: 2px solid hsl(var(--background));
     border-radius: 999px;
   }
 
@@ -108,8 +140,9 @@
 }
 
 @layer components {
+  /* Label sentence case (UI v2): tanpa huruf kapital berspasi lebar. */
   .institutional-label {
-    @apply text-[0.65rem] font-semibold uppercase tracking-institutional text-muted-foreground;
+    @apply text-xs font-medium text-muted-foreground;
   }
 
   .rule-line {
@@ -123,10 +156,7 @@
   }
 
   .paper-panel {
-    background-image:
-      linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent 42%),
-      linear-gradient(180deg, hsl(var(--card)), hsl(216 30% 9%));
-    box-shadow: inset 0 1px 0 hsl(var(--gold) / 0.06);
+    background-color: hsl(var(--card));
   }
 
   .grid-paper {
@@ -138,7 +168,23 @@
 
   .numeric {
     font-variant-numeric: tabular-nums lining-nums;
-    letter-spacing: -0.02em;
+  }
+
+  .meta {
+    @apply font-mono text-xs text-muted-foreground;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Kertas nota/koran: teks tinta di atas kertas, kontras ≥ 11:1. */
+  .paper-sheet {
+    background-color: hsl(var(--paper));
+    color: hsl(var(--ink));
+    border-radius: 6px;
+    box-shadow: 0 18px 60px -30px rgba(0, 0, 0, 0.85);
+  }
+
+  .ease-standard {
+    transition-timing-function: var(--ease-standard);
   }
 
   .vertical-rule {
@@ -155,6 +201,10 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .motion-transform {
+    transform: none !important;
   }
 }
 

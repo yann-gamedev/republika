@@ -14,4 +14,4 @@ Contoh isi:
 }
 ```
 
-Belum ada migrasi pada Tahap 1.
+- `ruleset-2.json`: ID fraksi `FAC-PLACEHOLDER-01..06` diganti ID final (`FAC-CAKRAWALA`, `FAC-SUARA-JELATA`, `FAC-TUNAS-LESTARI`, `FAC-MADANI`, `FAC-PANJI-MERDEKA`, `FAC-SIMPUL-DAERAH`).

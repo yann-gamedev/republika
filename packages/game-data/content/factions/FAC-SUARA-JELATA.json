@@ -1,0 +1,25 @@
+{
+  "id": "FAC-SUARA-JELATA",
+  "version": 3,
+  "name": "Partai Suara Jelata",
+  "shortName": "PSJ",
+  "seats": 18,
+  "color": "#B04A3A",
+  "ideologyTags": ["populis"],
+  "baseSupport": 50,
+  "initialSupport": 50,
+  "policyPreferences": { "FISCAL": -2, "SOCIAL": 2, "ENERGY": -1, "GOVERNANCE": 0 },
+  "description": "Partai populis yang memprioritaskan bantuan langsung dan perlindungan daya beli rumah tangga. Kuat di kantong buruh dan pasar tradisional.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Darsono Wiryoatmojo" },
+    { "role": "SECRETARY_GENERAL", "name": "Euis Nurhayati" },
+    { "role": "TREASURER", "name": "Syamsuddin Lubis" },
+    { "role": "CAUCUS_LEADER", "name": "Marlina Siregar" }
+  ],
+  "members": [
+    "Ujang Sopandi",
+    "Made Suarjana",
+    "Rukmini Handayani",
+    "Fransiskus Lewar"
+  ]
+}

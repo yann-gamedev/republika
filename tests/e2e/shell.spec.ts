@@ -2,6 +2,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
+import { signOath } from './helpers';
+
 /** Pindah rute tanpa reload, agar state di MemoryStorage (dev:web) tetap ada. */
 async function gotoHash(page: Page, route: string): Promise<void> {
   await page.evaluate((target) => {
@@ -15,10 +17,7 @@ async function inaugurate(page: Page, name = 'Presiden Uji'): Promise<void> {
   await page.getByLabel(copy.inauguration.presidentLabel).fill(name);
   await page.getByLabel(copy.inauguration.cabinetLabel).fill('Kabinet Uji');
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
-  await expect(
-    page.getByRole('heading', { name: copy.inauguration.ceremonyTitle(name) }),
-  ).toBeVisible();
-  await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
+  await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
 }
 
@@ -42,11 +41,15 @@ test('pelantikan, aksi nyata, navigasi, dan pengaturan', async ({ page }) => {
   await expect(page.getByRole('button', { name: copy.game.endQuarter })).toBeEnabled();
 
   await page.locator('nav a[href="#/game/policies"]').click();
-  await page.getByRole('button', { name: copy.policies.enact, exact: true }).first().click();
+  await page
+    .getByRole('button', { name: copy.policies.enactAp(1), exact: true })
+    .first()
+    .click();
   await expect(page.getByRole('status')).toContainText('diajukan');
   await expect(page.getByRole('button', { name: copy.policies.cancelPending })).toBeVisible();
 
-  for (const key of ['parliament', 'cabinet', 'events', 'history'] as const) {
+  // Nota dinas terakhir: layar mode fokus tanpa sidebar.
+  for (const key of ['parliament', 'cabinet', 'history', 'events'] as const) {
     await page.locator(`nav a[href="#/game/${key}"]`).click();
     await expect(
       page.getByRole('heading', { name: copy[key].title, exact: true }).first(),

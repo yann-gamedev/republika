@@ -4,6 +4,13 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Diubah
+
+- Enam partai mendapat nama fiktif final (Cakrawala Maju, Suara Jelata, Tunas Lestari, Musyawarah Madani, Panji Merdeka, Simpul Daerah) yang tidak menyerupai partai nyata.
+- Layar Parlemen menampilkan ketua umum serta daftar pengurus dan anggota tiap partai.
+- Teks peristiwa sejarah menyebut partai yang terdampak.
+- Aturan permainan v2. Save lama otomatis dilanjutkan dengan aturan baru, dan dukungan partai tetap terbawa.
+
 ## [0.1.0-rc.1] - 2026-11-18
 
 Rilis kandidat pertama untuk closed playtest. Konten masih placeholder.

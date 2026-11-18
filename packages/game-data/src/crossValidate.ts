@@ -254,6 +254,27 @@ export function validateContent(definitions: GameDefinitions): ValidationOutput 
     );
   }
 
+  // Tokoh partai fiktif: satu nama hanya untuk satu kursi/jabatan di seluruh parlemen.
+  const personOwners = new Map<string, string>();
+  for (const faction of definitions.factions) {
+    const names = [...faction.leadership.map((item) => item.name), ...faction.members];
+    for (const name of names) {
+      const key = name.toLocaleLowerCase('id-ID');
+      const owner = personOwners.get(key);
+      if (owner !== undefined) {
+        warnings.push(
+          warning(
+            'DUPLICATE_PERSON_NAME',
+            `factions.${faction.id}`,
+            `Nama "${name}" sudah dipakai di ${owner}. Gunakan nama tokoh yang berbeda.`,
+          ),
+        );
+      } else {
+        personOwners.set(key, faction.id);
+      }
+    }
+  }
+
   for (const [id, path] of seenIds) {
     if (id.includes('PLACEHOLDER')) {
       warnings.push(

@@ -1,6 +1,6 @@
 {
   "id": "EVT-HIST-001",
-  "version": 1,
+  "version": 2,
   "title": "Konferensi Negara-Negara Selatan",
   "body": "Delegasi dari berbagai negara tiba di Kota Ranasari. Mereka sepakat memperluas kerja sama dagang, tetapi berbeda pendapat tentang seberapa tegas deklarasi bersama harus menyikapi tekanan negara-negara besar.",
   "eligibility": [
@@ -16,7 +16,7 @@
     {
       "id": "A",
       "label": "Perjuangkan deklarasi yang lebih tegas",
-      "hint": "Sikap tegas menarik dukungan di dalam negeri, tetapi beberapa delegasi dapat menarik diri.",
+      "hint": "Sikap tegas menarik dukungan di dalam negeri dan Partai Panji Merdeka, tetapi beberapa delegasi dapat menarik diri.",
       "effects": [
         {
           "type": "MODIFY_INDICATOR",
@@ -44,7 +44,7 @@
     {
       "id": "B",
       "label": "Terima deklarasi kompromi",
-      "hint": "Lebih banyak negara dapat bertahan dalam kesepakatan, meski sebagian sekutu di parlemen kecewa.",
+      "hint": "Lebih banyak negara bertahan dalam kesepakatan, meski Partai Panji Merdeka kecewa dengan rumusan yang lunak.",
       "effects": [
         {
           "type": "CHANGE_FACTION_SUPPORT",

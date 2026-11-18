@@ -1,0 +1,25 @@
+{
+  "id": "FAC-MADANI",
+  "version": 3,
+  "name": "Partai Musyawarah Madani",
+  "shortName": "PMM",
+  "seats": 16,
+  "color": "#5C5470",
+  "ideologyTags": ["religius-konservatif"],
+  "baseSupport": 52,
+  "initialSupport": 52,
+  "policyPreferences": { "FISCAL": 1, "SOCIAL": 0, "ENERGY": 0, "GOVERNANCE": 2 },
+  "description": "Partai religius-konservatif yang menekankan ketertiban sosial, musyawarah, dan tata kelola pemerintahan yang bersih.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Abdul Rasyid Fauzan" },
+    { "role": "SECRETARY_GENERAL", "name": "Nur Aini Zulaikha" },
+    { "role": "TREASURER", "name": "Muhammad Iqbal Harahap" },
+    { "role": "CAUCUS_LEADER", "name": "Ahmad Zainuddin Nasution" }
+  ],
+  "members": [
+    "Siti Khodijah Rangkuti",
+    "Fadhil Alaydrus",
+    "Rahmat Hidayatullah",
+    "Aisyah Pulungan"
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "id": "EVT-HIST-008",
-  "version": 1,
+  "version": 2,
   "title": "Kesepakatan Damai Provinsi Serambi",
-  "body": "Wakil masyarakat Provinsi Serambi dan pemerintah pusat menyepakati garis besar penghentian konflik. Perundingan akhir tersendat pada ruang bagi partai lokal dan pembagian penerimaan wilayah.",
+  "body": "Wakil masyarakat Provinsi Serambi dan pemerintah pusat menyepakati garis besar penghentian konflik. Perundingan akhir tersendat pada ruang bagi partai lokal dan pembagian penerimaan wilayah. Partai Simpul Daerah mendukung otonomi, sementara Partai Panji Merdeka menolaknya.",
   "eligibility": [
     {
       "type": "TURN_AT_LEAST",
@@ -16,7 +16,7 @@
     {
       "id": "A",
       "label": "Setujui otonomi dengan pengawasan bersama",
-      "hint": "Dukungan di daerah menguat, tetapi partai nasionalis menentang konsesi otonomi.",
+      "hint": "Dukungan di daerah menguat, tetapi Partai Panji Merdeka menentang konsesi otonomi.",
       "effects": [
         {
           "type": "CHANGE_FACTION_SUPPORT",

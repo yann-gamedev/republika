@@ -1,5 +1,63 @@
 # Progres REPUBLIKA
 
+## Tahap 6A — UI v2
+
+Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-6a-ui-v2`, dibuat dari `feat/content-factions`.
+
+**Status: 6A.1–6A.6 selesai dan terverifikasi lokal. Gate playtest menunggu pemilik. 6B belum dimulai** karena Bagian 0 (K1–K7) belum dijawab; 6A memakai **Default**.
+
+| Bagian                              | Hasil                                                                                                                                                                                                                                                                | Commit     |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 6A.1 Token, komponen, font          | Token Lampiran A di `globals.css`/`tailwind.config.ts`; `PaperSheet`, `Stamp`, `ApTokens`, `QuarterTrack`, `Portrait`; font IBM Plex Mono + Mrs Saint Delafield (OFL, dicatat di `CREDITS.md`); toast kanan bawah; semua gerak menghormati `prefers-reduced-motion`. | `11d2f1f`  |
+| 6A.2 Registrasi aset                | 26 SVG di `assets/images/`; `src/content/art.ts` (`eventArt`, `sceneArt`, `policyArt`) dengan `import.meta.glob(... eager: false, query: '?url')`; fallback `dashboard-desk`; `ArtImage` memakai `<img loading="lazy">`; test cakupan event↔gambar.                  | `b996240`  |
+| 6A.3 Shell, Menu, Meja kerja        | Header (nama, `QuarterTrack`, AP, kas, "Akhiri kuartal"), sidebar baru, menu berilustrasi, Meja kerja (map masuk, 8 indikator, "Arah negara", Warta, peta dukungan).                                                                                                 | `6c0905c`  |
+| 6A.4 Nota, sidang, Warta            | Nota dinas mode fokus + stempel, layar sidang hemicycle dengan reveal per fraksi 650 ms (dibersihkan saat unmount), Warta bergaya koran dengan penyebab dari ledger.                                                                                                 | `586f21d`  |
+| 6A.5 Kebijakan, Kabinet, Pelantikan | Katalog bergambar + detail proyeksi, kartu kabinet + laci profil, pelantikan dua langkah (berkas + naskah sumpah) dengan tanda tangan dan stempel.                                                                                                                   | `1c14453`  |
+| 6A.6 E2E, performa, dokumentasi     | Spec E2E memakai selector v2; 10/10 lolos; angka performa dicatat di `docs/PERFORMANCE.md`; template gate di `docs/PLAYTEST-UI-V2.md`.                                                                                                                               | commit ini |
+
+### Bukti verifikasi lokal
+
+| Perintah                      | Hasil                                                                                                                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`, `pnpm typecheck` | Lulus tanpa peringatan.                                                                                                                                                      |
+| `pnpm test`                   | 285 test dalam 36 file lulus (termasuk `session.test.ts`: urutan reveal = urutan fraksi, total kursi 100; `art.test.ts`: setiap event punya gambar atau fallback eksplisit). |
+| `pnpm test:e2e`               | **10 test lulus**: shell, slice 4 kuartal, kampanye 20 kuartal, nota→sidang→warta, save slot, error boundary, jendela minimum 1280×720 + skala 90/110/125%, audit axe.       |
+| `pnpm build:web`              | Lulus; entry JS 494,8 KiB (gzip 153,2 KiB).                                                                                                                                  |
+| `pnpm perf:report`            | JS total 638,4 KiB; CSS 38,9 KiB; font 129,6 KiB; 26 ilustrasi 260,2 KiB mentah / 67,4 KiB gzip. Tidak ada aset yang masuk chunk JS.                                         |
+| JS heap 20 kuartal            | **19,3 MB** (`test-results/final-metrics.json`, 1 run Chromium) — target ≤ 30 MB. 4 kuartal: 14,3 MB.                                                                        |
+| `pnpm build`                  | Installer NSIS per-user versi 0.1.0-rc.1 ikut dibangun ulang; ukuran dicatat di `docs/PERFORMANCE.md`.                                                                       |
+| `pnpm content:check`          | Valid, 16 peringatan konten placeholder (bukan regresi UI).                                                                                                                  |
+
+### Catatan 6A
+
+- `rulesetVersion`, `saveFormatVersion`, dan seluruh aturan simulasi tidak berubah. Sapaan/potret presiden disimpan sebagai preferensi kosmetik di `settings.json`, bukan di `GameState`.
+- K5 diterapkan: Meja kerja memuat history secara lazy lalu meringkasnya menjadi ≤ 5 titik; heap 19,3 MB jauh di bawah ambang 30 MB, jadi grafik tidak perlu diganti delta kuartal.
+- Vite memberi peringatan "chunk > 500 kB" untuk entry (494,8 KiB). Ini ambang peringatan Vite, bukan pelanggaran anggaran `AGENT.md` §5.17; memecah entry akan menambah request tanpa manfaat offline.
+- Ilustrasi 260,2 KiB mentah melewati target ≤ 100 KB di `prompts/TAHAP-6`, tetapi tiap berkas < 14 KiB dan total gzip 67,4 KiB; SVG dimuat lazy per layar, bukan di awal.
+- `apps/desktop/src/assets/images/arrested.jpg` tetap acuan gaya dan tidak diimpor ke bundle.
+
+### Gate akhir 6A — menunggu pemilik
+
+Isi `docs/PLAYTEST-UI-V2.md` setelah 2 kampanye di build desktop: kejelasan Meja kerja, rasa stempel/voting/Warta, teks terpotong di 1280×720 atau skala 125%, dan RAM dari Task Manager. 6B tidak boleh dimulai sebelum gate ini lolos dan K1/K6/K7 dijawab.
+
+### Tindakan pemilik
+
+1. Mainkan 2 kampanye di installer, isi `docs/PLAYTEST-UI-V2.md`.
+2. Ukur RAM (app + semua `msedgewebview2.exe` milik REPUBLIKA) dengan jendela di depan, lalu isi tabel di `docs/PERFORMANCE.md`.
+3. Jawab K1–K7 di `prompts/TAHAP-6-ui-v2.md` bila 6B akan dilanjutkan.
+
+## Konten — partai final dan sinkronisasi event (ruleset 2)
+
+Tanggal: 18 November 2026. Branch `feat/content-factions`. Diminta langsung oleh pemilik.
+
+- 6 fraksi: nama, singkatan, deskripsi, dan ID final. Kursi, dukungan, preferensi, dan tag tidak berubah, sehingga balancing tetap sama.
+- Pengurus (Ketua Umum, Sekjen, Bendahara Umum, Ketua Fraksi) dan 4 anggota per partai. Semua nama fiktif. Tampil di layar Parlemen dan tidak memengaruhi simulasi.
+- `rulesetVersion` 1 → 2 dengan `packages/game-data/migrations/ruleset-2.json`.
+- `EVT-HIST-001/002/005/006/008` dan `copy.contentReasons` menyebut partai pemegang tag ideologi yang terkena efek.
+- Verifikasi: `pnpm content:check` valid (16 peringatan, sebelumnya 22), lint dan typecheck lolos, 271 test lolos, `pnpm test:e2e` 9/9 lolos.
+
+Langkah manual untuk pemilik: buka layar Parlemen dan periksa nama partai serta daftar pengurus. Lalu muat save rc.1 lama dan pastikan muncul "dilanjutkan dengan aturan v2" dengan dukungan partai yang tidak berubah.
+
 ## Tahap 5 — Save slot, migrasi, optimasi, balancing, dan rilis
 
 Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-5-release`.

@@ -1,0 +1,13 @@
+{
+  "fromRuleset": 1,
+  "toRuleset": 2,
+  "renamed": {
+    "FAC-PLACEHOLDER-01": "FAC-CAKRAWALA",
+    "FAC-PLACEHOLDER-02": "FAC-SUARA-JELATA",
+    "FAC-PLACEHOLDER-03": "FAC-TUNAS-LESTARI",
+    "FAC-PLACEHOLDER-04": "FAC-MADANI",
+    "FAC-PLACEHOLDER-05": "FAC-PANJI-MERDEKA",
+    "FAC-PLACEHOLDER-06": "FAC-SIMPUL-DAERAH"
+  },
+  "removed": []
+}

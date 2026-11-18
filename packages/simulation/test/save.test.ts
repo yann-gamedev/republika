@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { loadGameDefinitions, rawContentBundle, rulesetMigrationMaps } from '@republika/game-data';
 import { SAVE_FORMAT_VERSION, type GameDefinitions, type SaveFile } from '@republika/shared';
 
 import { applyCommand } from '../src/core/commands.js';
@@ -152,5 +153,47 @@ describe('migrasi ruleset', () => {
       code: 'NEWER_RULESET',
       version: 9,
     });
+  });
+});
+
+describe('migrasi ruleset konten rilis (v1 → v2: ID fraksi final)', () => {
+  it('dukungan fraksi lama dipindahkan ke ID baru dan kampanye bisa dilanjutkan', () => {
+    const content = loadGameDefinitions(rawContentBundle).definitions;
+    const map = rulesetMigrationMaps.find((item) => item.toRuleset === 2);
+    if (map === undefined) throw new Error('Peta ruleset-2 tidak ada.');
+    const oldIds = Object.keys(map.renamed).sort();
+    const base = migratedV1();
+    const old: SaveFile = {
+      ...base,
+      rulesetVersion: 1,
+      state: {
+        ...base.state,
+        rulesetVersion: 1,
+        activePolicies: [],
+        pendingCommands: [],
+        pendingEvents: [],
+        delayedEffects: [],
+        factions: oldIds.map((factionId, index) => ({
+          factionId,
+          supportTenths: 400 + index * 10,
+        })),
+        lobbyThisTurn: [],
+      },
+    };
+    const result = migrateRuleset(old, content, rulesetMigrationMaps);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.migrated).toBe(true);
+    expect(result.save.state.rulesetVersion).toBe(2);
+    for (const [index, oldId] of oldIds.entries()) {
+      const newId = map.renamed[oldId];
+      expect(result.save.state.factions).toContainEqual({
+        factionId: newId,
+        supportTenths: 400 + index * 10,
+      });
+    }
+    expect(result.save.state.factions.map((item) => item.factionId)).toEqual(
+      content.factions.map((faction) => faction.id),
+    );
   });
 });

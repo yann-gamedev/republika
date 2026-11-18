@@ -1,0 +1,25 @@
+{
+  "id": "FAC-SIMPUL-DAERAH",
+  "version": 3,
+  "name": "Partai Simpul Daerah",
+  "shortName": "PSD",
+  "seats": 14,
+  "color": "#7A6A52",
+  "ideologyTags": ["regionalis"],
+  "baseSupport": 51,
+  "initialSupport": 51,
+  "policyPreferences": { "FISCAL": -1, "SOCIAL": 1, "ENERGY": 0, "GOVERNANCE": 2 },
+  "description": "Partai gabungan tokoh daerah yang memperjuangkan kewenangan provinsi, dana desa, dan pemerataan anggaran di luar ibu kota.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Andi Tenri Ajeng" },
+    { "role": "SECRETARY_GENERAL", "name": "Syafri Datuk Rajo Ameh" },
+    { "role": "TREASURER", "name": "Paulus Ginting" },
+    { "role": "CAUCUS_LEADER", "name": "Yakobus Inggamer" }
+  ],
+  "members": [
+    "Wa Ode Sitti Rahma",
+    "Lambertus Juhan",
+    "Hendra Kiong",
+    "Antonius Lejap"
+  ]
+}

@@ -51,10 +51,8 @@ export default function SettingsPage() {
           <Link to="/" className="flex items-center gap-3">
             <Seal label={copy.menu.sealLabel} className="h-10 w-10" />
             <span>
-              <span className="block font-serif text-lg tracking-[0.16em]">{copy.app.name}</span>
-              <span className="text-[0.6rem] uppercase tracking-institutional text-muted-foreground">
-                {copy.settings.kicker}
-              </span>
+              <span className="block font-serif text-lg">{copy.app.name}</span>
+              <span className="text-xs text-muted-foreground">{copy.settings.kicker}</span>
             </span>
           </Link>
           <Link
@@ -101,7 +99,7 @@ export default function SettingsPage() {
                       aria-pressed={active}
                     >
                       <span className="numeric">{copy.settings.scaleOption(scale)}</span>
-                      <span className="text-[0.55rem] uppercase tracking-[0.12em] opacity-70">
+                      <span className="text-xs">
                         {active ? copy.settings.scaleActive : copy.common.available}
                       </span>
                     </button>
@@ -176,9 +174,7 @@ export default function SettingsPage() {
               <dl className="divide-y divide-border/40 border-y border-border/40">
                 <div className="flex flex-wrap items-center justify-between gap-3 py-2.5">
                   <dt className="text-xs text-muted-foreground">{copy.settings.contentHash}</dt>
-                  <dd className="numeric break-all text-[0.68rem] text-foreground/85">
-                    {contentHash}
-                  </dd>
+                  <dd className="numeric break-all text-xs text-foreground/85">{contentHash}</dd>
                 </div>
                 <div className="flex items-center justify-between gap-3 py-2.5">
                   <dt className="text-xs text-muted-foreground">{copy.settings.ruleset}</dt>
@@ -189,7 +185,7 @@ export default function SettingsPage() {
                   <dd className="numeric text-xs">{APP_VERSION}</dd>
                 </div>
               </dl>
-              <p className="mt-3 text-[0.65rem] leading-relaxed text-muted-foreground">
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                 {copy.settings.persistNote}
               </p>
             </CardContent>
@@ -210,14 +206,14 @@ export default function SettingsPage() {
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {copy.settings.offlineBody}
                 </p>
-                <div className="mt-4 flex items-center gap-2 border-t border-border/40 pt-3 text-[0.65rem] text-muted-foreground">
+                <div className="mt-4 flex items-center gap-2 border-t border-border/40 pt-3 text-xs text-muted-foreground">
                   <IconLock className="h-3.5 w-3.5 text-primary/70" />
                   {copy.settings.localOnly}
                 </div>
               </CardContent>
             </Card>
 
-            <div className="flex items-center gap-3 border border-border/40 bg-card/20 px-4 py-3 text-[0.68rem] text-muted-foreground">
+            <div className="flex items-center gap-3 border border-border/40 bg-card/20 px-4 py-3 text-xs text-muted-foreground">
               <IconCheck className="h-4 w-4 shrink-0 text-emerald-300/80" />
               {copy.settings.persistNote}
             </div>
@@ -225,9 +221,7 @@ export default function SettingsPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border/50 pt-5">
-          <p className="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground/60">
-            {copy.menu.versionLine(APP_VERSION)}
-          </p>
+          <p className="text-xs text-muted-foreground">{copy.menu.versionLine(APP_VERSION)}</p>
           <Button asChild variant="outline" size="sm">
             <Link to="/">{copy.settings.back}</Link>
           </Button>

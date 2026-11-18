@@ -4,10 +4,12 @@ REPUBLIKA dirilis dengan lisensi MIT (lihat [LICENSE](LICENSE)). Semua nama nega
 
 ## Font (dibundel lokal, SIL Open Font License 1.1)
 
-| Font           | Pemegang hak                                                | Lisensi                                                         |
-| -------------- | ----------------------------------------------------------- | --------------------------------------------------------------- |
-| Inter          | The Inter Project Authors (<https://github.com/rsms/inter>) | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-Inter.txt)          |
-| Source Serif 4 | Adobe (Source Serif)                                        | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-Source-Serif-4.txt) |
+| Font                                    | Pemegang hak                                                | Lisensi                                                              |
+| --------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------- |
+| Inter                                   | The Inter Project Authors (<https://github.com/rsms/inter>) | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-Inter.txt)               |
+| Source Serif 4                          | Adobe (Source Serif)                                        | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-Source-Serif-4.txt)      |
+| IBM Plex Mono (400, subset Latin)       | IBM Corp.                                                   | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-IBM-Plex-Mono.txt)       |
+| Mrs Saint Delafield (400, subset Latin) | Alejandro Paul (Sudtipos)                                   | [OFL 1.1](apps/desktop/src/assets/fonts/OFL-Mrs-Saint-Delafield.txt) |
 
 ## Ikon dan grafis
 

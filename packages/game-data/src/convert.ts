@@ -169,6 +169,8 @@ export function convertFaction(faction: FactionJson): FactionDefinition {
     initialSupportTenths: toTenths(faction.initialSupport),
     policyPreferences: { ...faction.policyPreferences },
     description: faction.description,
+    leadership: faction.leadership.map((item) => ({ role: item.role, name: item.name })),
+    members: [...faction.members],
   };
 }
 

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>REPUBLIKA — Pemerintahan baru</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E1117}
+a{color:#C9A227}a:hover{color:#E0BE4A}
+.field{width:100%;box-sizing:border-box;height:44px;padding:0 14px;border-radius:8px;border:0;background:#1C222C;color:#EDE9DE;font:400 15px Inter,sans-serif;box-shadow:inset 0 0 0 1px rgba(237,233,222,0.1)}
+.field:focus{outline:2px solid #C9A227;outline-offset:1px}
+.seg{height:36px;padding:0 14px;border-radius:8px;border:0;font:500 14px Inter,sans-serif;cursor:pointer;transition:background-color 150ms,color 150ms}
+.chip{height:32px;padding:0 12px;border-radius:8px;border:0;background:#1C222C;color:#A9A59A;font:400 13px Inter,sans-serif;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(237,233,222,0.08);transition:background-color 150ms,color 150ms}
+.chip:hover{background:#252C38;color:#EDE9DE}
+.card{display:flex;flex-direction:column;width:100%;padding:0;border:0;border-radius:12px;overflow:hidden;text-align:left;cursor:pointer;font:400 14px Inter,sans-serif;color:#EDE9DE;transition:box-shadow 150ms,transform 180ms cubic-bezier(0.22,1,0.36,1)}
+.card:hover{transform:translateY(-2px)}
+.promise{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;width:100%;padding:14px;border:0;border-radius:10px;text-align:left;cursor:pointer;font:400 14px Inter,sans-serif;color:#EDE9DE;transition:background-color 150ms,box-shadow 150ms}
+.promise:disabled{opacity:0.45;cursor:not-allowed}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 20px;border-radius:8px;border:0;font:500 15px Inter,sans-serif;cursor:pointer;text-decoration:none;transition:background-color 150ms,transform 120ms}
+.btn:active{transform:scale(0.98)}
+.gold{background:#C9A227;color:#14110A}.gold:hover{background:#D9B33A;color:#14110A}
+.off{background:#1C222C;color:#8A877E;cursor:not-allowed}
+.seg:focus-visible,.chip:focus-visible,.card:focus-visible,.promise:focus-visible,.btn:focus-visible{outline:2px solid #C9A227;outline-offset:2px}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #EDE9DE; background: #0E1117; min-height: 1240px; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 16px; height: 56px; padding: 0 24px; border-bottom: 1px solid rgba(237,233,222,0.08); background: #0B0E13">
+    <a href="Main.dc.html" style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #A9A59A; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Menu utama</a>
+    <span style="color: #8A877E">/</span><span style="font-size: 14px">Pemerintahan baru</span>
+    <span style="margin-left: auto; font-size: 13px; color: #8A877E">Langkah 1 dari 2 · berkas pencalonan, lalu pelantikan</span>
+  </header>
+
+  <div style="flex: 1; display: flex; flex-wrap: wrap; gap: 32px; padding: 32px; max-width: 1400px; width: 100%; box-sizing: border-box; margin: 0 auto; align-items: flex-start">
+    <main style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 40px">
+      <div>
+        <h1 style="margin: 0; font-family: 'Source Serif 4', Georgia, serif; font-weight: 400; font-size: 36px; line-height: 1.15">Berkas pencalonan presiden</h1>
+        <p style="margin: 8px 0 0; font-size: 15px; color: #A9A59A">Isi identitas, pilih latar belakang, beri nama kabinet, dan tetapkan tiga janji kampanye. Janji diperiksa di akhir masa jabatan.</p>
+      </div>
+
+      <section aria-labelledby="s1" style="display: flex; flex-direction: column; gap: 16px">
+        <h2 id="s1" style="margin: 0; font-size: 17px; font-weight: 500; display: flex; gap: 10px; align-items: baseline"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #C9A227">01</span>Identitas</h2>
+        <div style="display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px">
+          <label style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #A9A59A">Nama presiden
+            <input class="field" type="text" value="{{nama}}" onInput="{{setNama}}" placeholder="Nama lengkap">
+          </label>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #A9A59A">
+            <span id="sapaan">Sapaan</span>
+            <div role="radiogroup" aria-labelledby="sapaan" style="display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #151A22; box-shadow: inset 0 0 0 1px rgba(237,233,222,0.08)">
+              <sc-for list="{{sapaanOpts}}" as="o" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{o.on}}" class="seg" onClick="{{o.pick}}" style="flex: 1; background: {{o.bg}}; color: {{o.fg}}">{{o.label}}</button></sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: #A9A59A">
+          <span id="tampil">Penampilan potret</span>
+          <div role="radiogroup" aria-labelledby="tampil" style="display: flex; gap: 12px">
+            <sc-for list="{{looks}}" as="l" hint-placeholder-count="3">
+              <button type="button" role="radio" aria-checked="{{l.on}}" aria-label="{{l.label}}" onClick="{{l.pick}}" style="padding: 0; border: 0; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: {{l.ring}}; background: none">
+                <dc-import name="Potret" kepala="{{l.kepala}}" ukuran="{{ 64 }}" latar="#2A2C44" jas="#181A1F" dasi="{{l.dasi}}" hint-size="64px,64px"></dc-import>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="s2" style="display: flex; flex-direction: column; gap: 16px">
+        <h2 id="s2" style="margin: 0; font-size: 17px; font-weight: 500; display: flex; gap: 10px; align-items: baseline"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #C9A227">02</span>Latar belakang</h2>
+        <div role="radiogroup" aria-labelledby="s2" style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{backgrounds}}" as="b" hint-placeholder-count="5">
+            <button type="button" role="radio" aria-checked="{{b.on}}" class="card" onClick="{{b.pick}}" style="background: #151A22; box-shadow: {{b.ring}}">
+              <dc-import name="Ilustrasi" scene="{{b.scene}}" tinggi="104px" hint-size="100%,104px"></dc-import>
+              <span style="display: flex; flex-direction: column; gap: 6px; padding: 12px">
+                <span style="font-weight: 500">{{b.label}}</span>
+                <span style="font-size: 12px; line-height: 18px; color: #A9A59A">{{b.desc}}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4CC38A">{{b.plus}}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #E5484D">{{b.minus}}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section aria-labelledby="s3" style="display: flex; flex-direction: column; gap: 12px">
+        <h2 id="s3" style="margin: 0; font-size: 17px; font-weight: 500; display: flex; gap: 10px; align-items: baseline"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #C9A227">03</span>Nama kabinet</h2>
+        <input class="field" type="text" aria-labelledby="s3" value="{{kabinet}}" onInput="{{setKabinet}}" placeholder="Kabinet …" style="max-width: 480px">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{suggest}}" as="s" hint-placeholder-count="4"><button type="button" class="chip" onClick="{{s.pick}}">{{s.label}}</button></sc-for>
+        </div>
+      </section>
+
+      <section aria-labelledby="s4" style="display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <h2 id="s4" style="margin: 0; font-size: 17px; font-weight: 500; display: flex; gap: 10px; align-items: baseline"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #C9A227">04</span>Janji kampanye</h2>
+          <span style="font-size: 13px; color: #A9A59A">Dipilih <span style="font-family: 'IBM Plex Mono', monospace; color: #EDE9DE">{{count}} / 3</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{promises}}" as="p" hint-placeholder-count="9">
+            <button type="button" class="promise" aria-pressed="{{p.on}}" onClick="{{p.toggle}}" disabled="{{p.locked}}" style="background: {{p.bg}}; box-shadow: {{p.ring}}">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{p.iconColor}}" stroke-width="1.5" aria-hidden="true"><path d="{{p.icon}}"></path></svg>
+              <span style="display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 500">{{p.label}}</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A9A59A">{{p.target}}</span></span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+    </main>
+
+    <!-- Kartu ringkasan -->
+    <aside style="flex: 1 1 340px; max-width: 380px; min-width: 300px; background: #E8E1D0; color: #1E1B16; border-radius: 10px; overflow: hidden; box-shadow: 0 24px 48px rgba(0,0,0,0.35)">
+      <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px">
+        <span style="font-size: 12px; font-weight: 600; color: #6B6255">Kartu calon presiden</span>
+        <div style="display: flex; gap: 16px; align-items: center">
+          <div style="border-radius: 8px; overflow: hidden; flex: none">
+            <dc-import name="Potret" kepala="{{look.kepala}}" ukuran="{{ 112 }}" latar="#C9BFA8" jas="#181A1F" dasi="{{look.dasi}}" hint-size="112px,112px"></dc-import>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-size: 13px; color: #6B6255">{{sapaanLabel}} Presiden</span>
+            <span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 24px; line-height: 1.2; overflow-wrap: anywhere">{{namaShown}}</span>
+            <span style="font-size: 13px; color: #4A443A">{{bg.label}}</span>
+          </div>
+        </div>
+        <div style="height: 1px; background: rgba(30,27,22,0.15)"></div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #6B6255">Kabinet</span><span style="font-weight: 500">{{kabinetShown}}</span></div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; color: #6B6255">Modal awal</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #2F7A50">{{bg.plus}}</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #A8301C">{{bg.minus}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 14px; color: #6B6255">Janji kampanye</span>
+          <sc-for list="{{chosen}}" as="c" hint-placeholder-count="3"><span style="font-family: 'Source Serif 4', Georgia, serif; font-size: 16px; display: flex; gap: 8px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6B6255; padding-top: 3px">{{c.n}}</span>{{c.label}}</span></sc-for>
+          <sc-if value="{{noneChosen}}" hint-placeholder-val="{{ true }}"><span style="font-size: 13px; color: #6B6255">Belum ada janji dipilih</span></sc-if>
+        </div>
+      </div>
+      <div style="padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 8px; background: #DDD5C1">
+        <sc-if value="{{ready}}" hint-placeholder-val="{{ false }}"><a href="Sumpah.dc.html" class="btn gold">Lanjut ke pelantikan</a></sc-if>
+        <sc-if value="{{notReady}}" hint-placeholder-val="{{ true }}"><button type="button" class="btn off" disabled="{{ true }}">Lanjut ke pelantikan</button><span style="font-size: 12px; color: #6B6255">{{missing}}</span></sc-if>
+      </div>
+    </aside>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { nama: 'Sari Wening', sapaan: 'Ibu', look: 'hijab', bg: 'walikota', kabinet: '', janji: ['inflasi', 'kerja'] }; }
+  renderVals() {
+    const s = this.state;
+    const sel = (on) => on ? 'inset 0 0 0 2px #C9A227' : 'inset 0 0 0 1px rgba(237,233,222,0.08)';
+    const lookSets = { Bapak: [['peci', 'Peci'], ['rambut', 'Rambut pendek'], ['uban', 'Rambut beruban']], Ibu: [['hijab', 'Berhijab'], ['panjang', 'Rambut panjang'], ['uban', 'Rambut beruban']] };
+    const looks = lookSets[s.sapaan].map(([k, label]) => ({ kepala: k, label, dasi: s.sapaan === 'Ibu' && k === 'hijab' ? '#C03018' : '#C03018', on: s.look === k ? 'true' : 'false', ring: s.look === k ? '0 0 0 2px #C9A227' : '0 0 0 1px rgba(237,233,222,0.1)', pick: () => this.setState({ look: k }) }));
+    const sapaanOpts = ['Bapak', 'Ibu'].map((v) => ({ label: v, on: s.sapaan === v ? 'true' : 'false', bg: s.sapaan === v ? '#C9A227' : 'transparent', fg: s.sapaan === v ? '#14110A' : '#A9A59A', pick: () => this.setState({ sapaan: v, look: lookSets[v][0][0] }) }));
+    const B = [
+      { id: 'ekonom', label: 'Ekonom teknokrat', scene: 'fiskal', desc: 'Dipercaya pasar, kaku di depan kamera.', plus: '+5 Kesehatan fiskal', minus: '−3 Persetujuan' },
+      { id: 'walikota', label: 'Mantan wali kota', scene: 'kunjungan', desc: 'Dekat dengan warga, paham birokrasi.', plus: '+4 Kesejahteraan', minus: '−2 Kepercayaan' },
+      { id: 'pengusaha', label: 'Pengusaha', scene: 'pelabuhan', desc: 'Jaringan investor luas, dicurigai oposisi.', plus: '+0,4% Pertumbuhan', minus: '−4 Kepercayaan' },
+      { id: 'purnawirawan', label: 'Purnawirawan', scene: 'istana', desc: 'Tegas dan disegani, kurang lentur berunding.', plus: '+5 Stabilitas', minus: '−3 Dukungan parlemen' },
+      { id: 'aktivis', label: 'Aktivis buruh', scene: 'demo', desc: 'Dicintai akar rumput, dijauhi elite partai.', plus: '+6 Persetujuan', minus: '−5 Dukungan parlemen' }
+    ];
+    const backgrounds = B.map((b) => ({ ...b, on: s.bg === b.id ? 'true' : 'false', ring: sel(s.bg === b.id), pick: () => this.setState({ bg: b.id }) }));
+    const bg = B.find((b) => b.id === s.bg);
+    const suggest = ['Kabinet Kerja Bersama', 'Kabinet Nusantara Maju', 'Kabinet Gotong Royong Baru', 'Kabinet Fajar'].map((label) => ({ label, pick: () => this.setState({ kabinet: label }) }));
+    const P = [
+      { id: 'inflasi', label: 'Harga kebutuhan terjaga', target: 'Inflasi ≤ 4% di akhir', icon: 'M3 17l6-6 4 4 8-8M14 7h7v7' },
+      { id: 'kerja', label: 'Lapangan kerja terbuka', target: 'Pengangguran ≤ 5%', icon: 'M4 8h16v12H4zM9 8V5h6v3' },
+      { id: 'tumbuh', label: 'Ekonomi tumbuh', target: 'Pertumbuhan rata-rata ≥ 5%', icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2' },
+      { id: 'kas', label: 'Kas negara aman', target: 'Kas ≥ Rp120 T', icon: 'M3 10h18M5 10v8M19 10v8M9 10v8M15 10v8M2 20h20M12 3l9 5H3z' },
+      { id: 'stabil', label: 'Negara stabil', target: 'Stabilitas ≥ 65', icon: 'M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z' },
+      { id: 'bersih', label: 'Pemerintahan bersih', target: 'Kepercayaan ≥ 60', icon: 'M12 3v18M5 7h14M5 7l-3 7h6zM19 7l-3 7h6z' },
+      { id: 'sejahtera', label: 'Rakyat sejahtera', target: 'Kesejahteraan ≥ 60', icon: 'M3 11l9-7 9 7v9H3zM9 20v-6h6v6' },
+      { id: 'disukai', label: 'Tetap dipercaya rakyat', target: 'Persetujuan ≥ 60 di kuartal 20', icon: 'M7 11v9H3v-9zM7 11l4-8a2 2 0 0 1 3 2l-1 5h6a2 2 0 0 1 2 2l-2 7a2 2 0 0 1-2 1H7' },
+      { id: 'koalisi', label: 'Koalisi solid', target: '≥ 60 kursi mendukung', icon: 'M3 18a9 9 0 0 1 18 0M7 18a5 5 0 0 1 10 0' }
+    ];
+    const full = s.janji.length >= 3;
+    const promises = P.map((p) => {
+      const on = s.janji.includes(p.id);
+      return { ...p, on: on ? 'true' : 'false', locked: !on && full, bg: on ? '#1C222C' : '#151A22', ring: sel(on), iconColor: on ? '#C9A227' : '#A9A59A', toggle: () => this.setState({ janji: on ? s.janji.filter((x) => x !== p.id) : [...s.janji, p.id] }) };
+    });
+    const chosen = s.janji.map((id, i) => ({ n: '0' + (i + 1), label: P.find((p) => p.id === id).label }));
+    const missing = [];
+    if (!s.nama.trim()) missing.push('nama presiden');
+    if (!s.kabinet.trim()) missing.push('nama kabinet');
+    if (s.janji.length < 3) missing.push((3 - s.janji.length) + ' janji kampanye');
+    return {
+      nama: s.nama, kabinet: s.kabinet,
+      setNama: (e) => this.setState({ nama: e.target.value }),
+      setKabinet: (e) => this.setState({ kabinet: e.target.value }),
+      sapaanOpts, looks, backgrounds, suggest, promises, chosen, bg,
+      look: { kepala: s.look, dasi: '#C03018' },
+      sapaanLabel: s.sapaan,
+      namaShown: s.nama.trim() || 'Nama presiden',
+      kabinetShown: s.kabinet.trim() || 'Belum diberi nama',
+      count: s.janji.length,
+      noneChosen: s.janji.length === 0,
+      ready: missing.length === 0,
+      notReady: missing.length > 0,
+      missing: missing.length ? 'Masih kurang: ' + missing.join(', ') : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
 import { INDICATOR_DOMAINS, type IndicatorKey } from '../types/indicators.js';
-import { POLICY_CATEGORIES } from '../types/constants.js';
+import { FACTION_ROLES, POLICY_CATEGORIES, type FactionRole } from '../types/constants.js';
 import type { Indicators } from './indicators.js';
 import type { ConditionalModifier, EffectRule, Requirement } from './rules.js';
 import {
+  CONTROL_CHAR_PATTERN,
   colorSchema,
   decimalNumberSchema,
   flagSchema,
@@ -211,6 +212,26 @@ export const policyJsonSchema = z.object({
 
 export type PolicyJson = z.infer<typeof policyJsonSchema>;
 
+/** Nama tokoh fiktif: 3–60 karakter, tanpa karakter kontrol. */
+const personNameSchema = z
+  .string()
+  .trim()
+  .min(3)
+  .max(60)
+  .refine(
+    (value) => !CONTROL_CHAR_PATTERN.test(value),
+    'Nama tokoh tidak boleh berisi karakter kontrol.',
+  );
+
+const factionLeadershipSchema = z
+  .array(z.object({ role: z.enum(FACTION_ROLES), name: personNameSchema }))
+  .max(FACTION_ROLES.length)
+  .default([])
+  .refine(
+    (items) => new Set(items.map((item) => item.role)).size === items.length,
+    'Setiap jabatan pengurus hanya boleh diisi satu orang.',
+  );
+
 export const factionJsonSchema = z.object({
   id: idSchema,
   version: versionSchema,
@@ -228,6 +249,10 @@ export const factionJsonSchema = z.object({
     GOVERNANCE: z.number().int().min(-2).max(2),
   }),
   description: z.string().trim().max(400),
+  /** Pengurus partai fiktif. Hanya tampilan; tidak memengaruhi simulasi. */
+  leadership: factionLeadershipSchema,
+  /** Anggota parlemen fiktif yang ditonjolkan. Hanya tampilan. */
+  members: z.array(personNameSchema).max(12).default([]),
 });
 
 export type FactionJson = z.infer<typeof factionJsonSchema>;
@@ -417,6 +442,8 @@ export interface FactionDefinition {
   readonly initialSupportTenths: number;
   readonly policyPreferences: Readonly<Record<(typeof POLICY_CATEGORIES)[number], number>>;
   readonly description: string;
+  readonly leadership: ReadonlyArray<{ readonly role: FactionRole; readonly name: string }>;
+  readonly members: readonly string[];
 }
 
 export interface MinistryDefinition {

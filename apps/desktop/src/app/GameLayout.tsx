@@ -3,76 +3,104 @@ import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react
 
 import { APP_VERSION } from '@republika/shared';
 
-import { contentHash, definitions } from '@/content/gameContent';
+import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { formatRupiahTriliun } from '@/format/formatters';
 import { gameController } from '@/store/controller';
-import { useGameStore } from '@/store/gameStore';
+import { gameStore, useGameStore } from '@/store/gameStore';
+import { ApTokens } from '@/ui/ApTokens';
 import { Badge } from '@/ui/components/badge';
 import { Button } from '@/ui/components/button';
 import { ConfirmDialog } from '@/ui/components/dialog';
 import {
+  IconArrowLeft,
   IconCabinet,
-  IconDashboard,
+  IconDesk,
   IconEvent,
   IconFolder,
   IconHistory,
+  IconNews,
   IconParliament,
   IconPolicy,
   IconSettings,
 } from '@/ui/icons';
 import { cn } from '@/ui/lib/utils';
-import { Seal } from '@/ui/Seal';
+import { QuarterTrack } from '@/ui/QuarterTrack';
+import { RepublicMark } from '@/ui/RepublicMark';
 
 import { ScreenErrorBoundary } from './ScreenErrorBoundary';
 import { campaignQuarter, campaignYear } from './time';
+
+type BadgeKind = 'bills' | 'events';
 
 interface NavItem {
   readonly to: string;
   readonly label: string;
   readonly icon: ComponentType<SVGProps<SVGSVGElement>>;
+  readonly badge?: BadgeKind;
 }
 
 const MAIN_NAV: readonly NavItem[] = [
-  { to: '/game/dashboard', label: copy.nav.dashboard, icon: IconDashboard },
+  { to: '/game/dashboard', label: copy.nav.dashboard, icon: IconDesk },
   { to: '/game/policies', label: copy.nav.policies, icon: IconPolicy },
-  { to: '/game/parliament', label: copy.nav.parliament, icon: IconParliament },
+  { to: '/game/parliament', label: copy.nav.parliament, icon: IconParliament, badge: 'bills' },
   { to: '/game/cabinet', label: copy.nav.cabinet, icon: IconCabinet },
-  { to: '/game/events', label: copy.nav.events, icon: IconEvent },
+  { to: '/game/events', label: copy.nav.events, icon: IconEvent, badge: 'events' },
+  { to: '/game/report', label: copy.nav.report, icon: IconNews },
 ];
 
 const ARCHIVE_NAV: readonly NavItem[] = [
   { to: '/game/history', label: copy.nav.history, icon: IconHistory },
 ];
 
-function NavEntry({ item, pendingEvents }: { item: NavItem; pendingEvents: number }) {
+const UTILITY_NAV: readonly NavItem[] = [
+  { to: '/saves', label: copy.nav.saves, icon: IconFolder },
+  { to: '/settings', label: copy.nav.settings, icon: IconSettings },
+  { to: '/', label: copy.nav.menu, icon: IconArrowLeft },
+];
+
+/** Layar mode fokus: tanpa sidebar, dengan breadcrumb kembali ke Meja kerja. */
+const FOCUS_ROUTES: Readonly<
+  Record<string, { title: string; meta: (year: number, quarter: number) => string }>
+> = {
+  '/game/events': { title: copy.events.title, meta: copy.events.focusMeta },
+  '/game/session': { title: copy.session.breadcrumb, meta: () => copy.session.threshold },
+};
+
+/** Urutan halaman untuk pintasan angka 1–7. */
+export const SHORTCUT_ROUTES = [...MAIN_NAV, ...ARCHIVE_NAV].map((item) => item.to);
+
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  cn(
+    'flex h-9 items-center gap-2.5 rounded-md px-3 text-sm transition-colors duration-150 ease-standard',
+    isActive
+      ? 'bg-raised text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]'
+      : 'text-text-secondary hover:bg-raised hover:text-foreground',
+  );
+
+function NavEntry({ item, counts }: { item: NavItem; counts: Record<BadgeKind, number> }) {
   const Icon = item.icon;
-  const isEvent = item.to === '/game/events';
+  const count = item.badge === undefined ? 0 : counts[item.badge];
   return (
-    <NavLink
-      to={item.to}
-      className={({ isActive }) =>
-        cn(
-          'group relative flex items-center gap-3 border-l-2 py-2.5 pl-4 pr-3 text-sm transition-colors',
-          isActive
-            ? 'border-primary/80 bg-primary/[0.08] text-foreground'
-            : 'border-transparent text-muted-foreground hover:border-border hover:bg-secondary/40 hover:text-foreground',
-        )
-      }
-    >
-      <Icon className="h-[17px] w-[17px] shrink-0 opacity-80" />
-      <span className="flex-1">{item.label}</span>
-      {isEvent && pendingEvents > 0 && (
-        <span className="min-w-5 rounded-full bg-maroon/40 px-1.5 py-0.5 text-center text-[0.6rem] font-semibold text-red-100">
-          {pendingEvents}
+    <NavLink to={item.to} end={item.to === '/'} className={navClass}>
+      <Icon className="h-[18px] w-[18px] shrink-0" />
+      <span className="flex-1 truncate">{item.label}</span>
+      {item.badge === 'events' && count > 0 && (
+        <span
+          className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-semibold text-primary-foreground"
+          aria-label={copy.nav.eventsBadge(count)}
+        >
+          {count}
+        </span>
+      )}
+      {item.badge === 'bills' && count > 0 && (
+        <span className="font-mono text-xs text-muted-foreground">
+          {copy.nav.billsBadge(count)}
         </span>
       )}
     </NavLink>
   );
 }
-
-/** Urutan halaman untuk pintasan angka 1-6. */
-const SHORTCUT_ROUTES = [...MAIN_NAV, ...ARCHIVE_NAV].map((item) => item.to);
 
 function isTypingTarget(target: EventTarget | null): boolean {
   return (
@@ -121,7 +149,9 @@ export function GameLayout() {
     void gameController.endQuarter().then((result) => {
       if (!result.ok) return;
       const finished = gameController.state?.status === 'completed';
-      navigate(finished ? '/game/final' : '/game/report');
+      // Sidang paripurna tampil lebih dulu bila laporan berisi hasil voting.
+      const hasVotes = (gameStore.getState().lastReport?.votes.length ?? 0) > 0;
+      navigate(hasVotes ? '/game/session' : finished ? '/game/final' : '/game/report');
     });
   }, [navigate]);
 
@@ -130,180 +160,171 @@ export function GameLayout() {
   const year = campaignYear(state.turn, definitions.scenario.startYear);
   const quarter = campaignQuarter(state.turn);
   const unanswered = state.pendingEvents.filter((event) => event.resolvedChoiceId === null).length;
+  const bills = state.pendingCommands.filter(
+    (command) =>
+      command.type === 'ENACT_POLICY' &&
+      definitions.policies.find((policy) => policy.id === command.policyId)?.needsVote === true,
+  ).length;
+  const counts: Record<BadgeKind, number> = { bills, events: unanswered };
   const completed = state.status === 'completed';
-  const blocked = unanswered > 0 || completed || uiStatus === 'busy';
-  const apSlots = Array.from({ length: state.actionPointsPerTurn }, (_, index) => index);
+  const busy = uiStatus === 'busy';
+  const blocked = unanswered > 0 || completed || busy;
+  const blockedReason =
+    unanswered > 0
+      ? copy.game.endQuarterReasonEvents(unanswered)
+      : busy
+        ? copy.game.endQuarterReasonBusy
+        : null;
 
-  return (
-    <div className="min-h-screen">
-      <aside className="fixed inset-y-0 left-0 z-40 flex w-[268px] flex-col border-r border-border/60 bg-background/80">
-        <div className="border-b border-border/50 px-6 py-6">
-          <Link to="/" className="flex items-center gap-3">
-            <Seal label={copy.menu.sealLabel} className="h-11 w-11" />
-            <span>
-              <span className="block font-serif text-xl tracking-[0.14em]">{copy.app.name}</span>
-              <span className="mt-0.5 block text-[0.62rem] uppercase tracking-institutional text-muted-foreground">
-                {copy.game.office}
-              </span>
-            </span>
+  const focus = FOCUS_ROUTES[location.pathname];
+
+  const shell =
+    focus !== undefined ? (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-border bg-sidebar px-6">
+          <Link
+            to="/game/dashboard"
+            className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-foreground"
+          >
+            <IconArrowLeft className="h-[18px] w-[18px]" />
+            {copy.nav.dashboard}
           </Link>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto px-3 py-5">
-          <p className="institutional-label px-4">{copy.nav.sectionMain}</p>
-          <div className="mt-3 space-y-1">
-            {MAIN_NAV.map((item) => (
-              <NavEntry key={item.to} item={item} pendingEvents={unanswered} />
-            ))}
-          </div>
-
-          <p className="institutional-label mt-8 px-4">{copy.nav.sectionArchive}</p>
-          <div className="mt-3 space-y-1">
-            {ARCHIVE_NAV.map((item) => (
-              <NavEntry key={item.to} item={item} pendingEvents={unanswered} />
-            ))}
-          </div>
-        </nav>
-
-        <div className="border-t border-border/50 px-4 py-5">
-          <div className="space-y-2">
-            <Link
-              to="/saves"
-              className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <IconFolder className="h-3.5 w-3.5" />
-              {copy.saves.nav}
-            </Link>
-            <Link
-              to="/settings"
-              className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <IconSettings className="h-3.5 w-3.5" />
-              {copy.nav.settings}
-            </Link>
-            <Link
-              to="/"
-              className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <span aria-hidden="true">←</span>
-              {copy.game.menu}
-            </Link>
-          </div>
-          <div className="mt-4 flex items-center justify-between gap-2 px-2">
-            {uiStatus === 'saveFailed' ? (
-              <Badge variant="destructive">{copy.game.saveFailed}</Badge>
-            ) : (
-              <Badge variant="outline">{copy.app.offline}</Badge>
-            )}
-            <span className="text-[0.62rem] uppercase tracking-[0.16em] text-muted-foreground">
-              {copy.app.version(APP_VERSION)}
-            </span>
-          </div>
-          <p className="mt-3 px-2 text-[0.65rem] leading-relaxed text-muted-foreground/70">
-            {copy.app.stageNote} · {copy.game.shortcutHint}
-          </p>
-        </div>
-      </aside>
-
-      <div className="pl-[268px]">
-        <header className="sticky top-0 z-30 border-b border-border/60 bg-background/88 backdrop-blur-md">
-          <div className="flex items-center gap-6 px-8 py-4">
-            <div className="min-w-0">
-              <p className="institutional-label">{copy.game.president}</p>
-              <div className="mt-1 flex items-baseline gap-3">
-                <p className="truncate font-serif text-lg leading-none">{state.presidentName}</p>
-                <span className="truncate text-xs text-muted-foreground">
-                  {state.cabinetName ?? copy.game.noCabinet}
-                </span>
-              </div>
-            </div>
-
-            <div className="vertical-rule hidden h-10 xl:block" />
-
-            <div className="hidden xl:block">
-              <p className="institutional-label">{copy.common.turn}</p>
-              <p className="mt-1 text-sm">
-                {copy.game.turnLabel(year, quarter)}
-                <span className="ml-2 text-xs text-muted-foreground">
-                  {copy.game.turnProgress(state.turn, state.maxTurns)}
-                </span>
-              </p>
-            </div>
-
-            <div className="ml-auto flex items-center gap-5">
-              <div>
-                <p className="institutional-label">{copy.game.apLabel}</p>
-                <div className="mt-1.5 flex items-center gap-1.5" aria-label={copy.game.apLabel}>
-                  {apSlots.map((slot) => (
-                    <span
-                      key={slot}
-                      className={cn(
-                        'block h-2 w-6 border',
-                        slot < state.actionPointsRemaining
-                          ? 'border-primary/70 bg-primary/70'
-                          : 'border-border bg-transparent',
-                      )}
-                    />
-                  ))}
-                  <span className="ml-1 text-xs text-muted-foreground">
-                    {state.actionPointsRemaining}/{state.actionPointsPerTurn}
-                  </span>
-                </div>
-              </div>
-
-              <div className="min-w-[112px] border-l border-border/50 pl-5">
-                <p className="institutional-label">{copy.game.treasuryLabel}</p>
-                <p className="numeric mt-1 text-sm font-medium">
-                  {formatRupiahTriliun(state.treasuryBillion)}
-                </p>
-              </div>
-
-              {completed ? (
-                <Button size="sm" variant="outline" onClick={() => navigate('/game/final')}>
-                  {copy.game.campaignCompleted}
-                </Button>
-              ) : (
-                <div className="flex flex-col items-end">
-                  <Button
-                    size="sm"
-                    variant={blocked ? 'outline' : 'default'}
-                    disabled={blocked}
-                    title={unanswered > 0 ? copy.game.endQuarterBlocked : copy.game.endQuarterHint}
-                    onClick={() => setConfirmOpen(true)}
-                  >
-                    {copy.game.endQuarter}
-                  </Button>
-                  {unanswered > 0 && (
-                    <Link
-                      to="/game/events"
-                      className="mt-1 max-w-[220px] text-right text-[0.62rem] leading-snug text-red-200/80 hover:text-red-100"
-                    >
-                      {copy.game.endQuarterBlocked}
-                    </Link>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          <span aria-hidden="true" className="text-muted-foreground">
+            /
+          </span>
+          <h1 className="font-sans text-sm font-normal tracking-normal">{focus.title}</h1>
+          <span className="ml-auto text-[13px] text-muted-foreground">
+            {focus.meta(year, quarter)}
+          </span>
         </header>
-
-        <main className="px-8 pb-16 pt-8">
-          <div className="mx-auto max-w-[1180px] 2xl:max-w-[1480px]">
+        <main className="flex-1 px-8 py-10">
+          <div className="mx-auto max-w-[1360px]">
             <ScreenErrorBoundary resetKey={location.pathname}>
               <Outlet />
             </ScreenErrorBoundary>
           </div>
         </main>
-
-        <footer className="border-t border-border/40 px-8 py-5">
-          <div className="mx-auto flex max-w-[1180px] flex-wrap 2xl:max-w-[1480px] items-center justify-between gap-3 text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground/60">
-            <span>{copy.menu.footerNote}</span>
-            <span>
-              {copy.settings.contentHash} · {contentHash.slice(0, 12)}
-            </span>
-          </div>
-        </footer>
       </div>
+    ) : (
+      <div className="flex min-h-screen flex-col">
+        <header className="sticky top-0 z-30 flex min-h-16 items-center gap-6 border-b border-border bg-sidebar px-6">
+          <Link to="/game/dashboard" className="flex w-[200px] shrink-0 items-center gap-2.5">
+            <RepublicMark />
+            <span className="font-serif text-[17px] font-medium">{copy.menu.wordmark}</span>
+          </Link>
+
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-xs text-muted-foreground">{copy.game.president}</span>
+            <span className="truncate text-sm font-medium">{state.presidentName}</span>
+          </div>
+
+          <div className="flex w-[300px] min-w-[220px] shrink flex-col gap-1.5">
+            <span className="flex justify-between text-xs text-muted-foreground">
+              <span>{copy.game.turnLabel(year, quarter)}</span>
+              <span className="font-mono">
+                {state.turn} / {state.maxTurns}
+              </span>
+            </span>
+            <QuarterTrack
+              current={state.turn}
+              total={state.maxTurns}
+              label={copy.game.quarterTrack(state.turn, state.maxTurns)}
+              className="w-full [&>span]:flex-1"
+            />
+          </div>
+
+          <div className="ml-auto flex items-center gap-6">
+            <div className="flex items-center gap-2" title={copy.game.apLabel}>
+              <ApTokens
+                remaining={state.actionPointsRemaining}
+                total={state.actionPointsPerTurn}
+                label={copy.game.apTokens(state.actionPointsRemaining, state.actionPointsPerTurn)}
+              />
+              <span className="text-[13px] text-text-secondary">
+                {copy.game.apShort(state.actionPointsRemaining)}
+              </span>
+            </div>
+
+            <div className="flex flex-col gap-0.5">
+              <span className="text-xs text-muted-foreground">{copy.game.treasuryLabel}</span>
+              <span className="numeric text-sm font-medium">
+                {formatRupiahTriliun(state.treasuryBillion)}
+              </span>
+            </div>
+
+            {completed ? (
+              <Button size="sm" variant="outline" onClick={() => navigate('/game/final')}>
+                {copy.game.campaignCompleted}
+              </Button>
+            ) : (
+              <div className="flex flex-col items-end gap-1">
+                <Button
+                  size="sm"
+                  disabled={blocked}
+                  aria-describedby={blockedReason === null ? undefined : 'end-quarter-reason'}
+                  title={blockedReason ?? copy.game.endQuarterHint}
+                  onClick={() => setConfirmOpen(true)}
+                >
+                  {copy.game.endQuarter}
+                </Button>
+                {blockedReason !== null && (
+                  <Link
+                    id="end-quarter-reason"
+                    to="/game/events"
+                    className="text-xs text-text-secondary underline-offset-2 hover:text-foreground hover:underline"
+                  >
+                    {blockedReason}
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </header>
+
+        <div className="flex flex-1">
+          <nav
+            aria-label={copy.nav.label}
+            className="sticky top-16 flex h-[calc(100vh-4rem)] w-[232px] shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-sidebar px-4 py-6"
+          >
+            <span className="px-3 pb-2 text-xs text-muted-foreground">{copy.nav.sectionMain}</span>
+            {MAIN_NAV.map((item) => (
+              <NavEntry key={item.to} item={item} counts={counts} />
+            ))}
+            <span className="px-3 pb-2 pt-6 text-xs text-muted-foreground">
+              {copy.nav.sectionArchive}
+            </span>
+            {ARCHIVE_NAV.map((item) => (
+              <NavEntry key={item.to} item={item} counts={counts} />
+            ))}
+            <div className="mt-auto flex flex-col gap-0.5 pt-6">
+              {UTILITY_NAV.map((item) => (
+                <NavEntry key={item.to} item={item} counts={counts} />
+              ))}
+              <div className="mt-4 flex items-center justify-between gap-2 px-3">
+                {uiStatus === 'saveFailed' ? (
+                  <Badge variant="destructive">{copy.game.saveFailed}</Badge>
+                ) : (
+                  <span className="text-xs text-muted-foreground">{copy.app.offline}</span>
+                )}
+                <span className="font-mono text-xs text-muted-foreground">{APP_VERSION}</span>
+              </div>
+            </div>
+          </nav>
+
+          <main className="min-w-0 flex-1 px-8 pb-16 pt-8">
+            <div className="mx-auto max-w-[1280px]">
+              <ScreenErrorBoundary resetKey={location.pathname}>
+                <Outlet />
+              </ScreenErrorBoundary>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+
+  return (
+    <>
+      {shell}
 
       <ConfirmDialog
         open={helpOpen}
@@ -316,7 +337,7 @@ export function GameLayout() {
           {copy.shortcuts.items.map(([key, description]) => (
             <div key={key} className="contents">
               <dt>
-                <kbd className="border border-border bg-secondary/60 px-1.5 py-0.5 font-mono text-xs text-foreground">
+                <kbd className="rounded-sm border border-border bg-raised px-1.5 py-0.5 font-mono text-xs text-foreground">
                   {key}
                 </kbd>
               </dt>
@@ -341,9 +362,10 @@ export function GameLayout() {
         <div
           key={toast.id}
           role={toast.tone === 'error' ? 'alert' : 'status'}
+          aria-live={toast.tone === 'error' ? 'assertive' : 'polite'}
           className={cn(
-            'fixed bottom-6 right-6 z-50 max-w-sm border bg-card/95 p-4 shadow-document backdrop-blur',
-            toast.tone === 'error' ? 'border-maroon/70' : 'border-primary/40',
+            'fixed bottom-6 right-6 z-50 w-80 rounded-lg border bg-raised p-4 shadow-document',
+            toast.tone === 'error' ? 'border-negative/60' : 'border-primary/40',
           )}
         >
           <p className="text-sm leading-relaxed text-foreground">{toast.message}</p>
@@ -354,6 +376,6 @@ export function GameLayout() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

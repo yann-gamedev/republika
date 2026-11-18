@@ -102,7 +102,7 @@ export function Hemicycle({ groups, ariaLabel, centerValue, centerLabel }: Hemic
         x={CENTER_X}
         y={CENTER_Y - 18}
         textAnchor="middle"
-        className="fill-muted-foreground text-[8px] uppercase"
+        className="fill-muted-foreground text-[8px]"
         letterSpacing="0.16em"
       >
         {centerLabel}

@@ -1,8 +1,8 @@
 {
   "id": "EVT-HIST-006",
-  "version": 1,
+  "version": 2,
   "title": "Tawaran Dukungan Jelang Putaran Kedua",
-  "body": "Survei menjelang pemungutan suara kedua menunjukkan persaingan ketat. Sebuah partai yang tersingkir menawarkan dukungan kepada Presiden petahana jika program transfer layanan kabupaten dimasukkan ke agenda bersama.",
+  "body": "Survei menjelang pemungutan suara kedua menunjukkan persaingan ketat. Partai Simpul Daerah, yang calonnya tersingkir di putaran pertama, menawarkan dukungan kepada Presiden petahana jika program transfer layanan kabupaten dimasukkan ke agenda bersama.",
   "eligibility": [
     {
       "type": "TURN_AT_LEAST",
@@ -41,7 +41,7 @@
     {
       "id": "B",
       "label": "Pertahankan agenda awal dan cari dukungan langsung",
-      "hint": "Agenda kabinet tetap konsisten, tetapi partai penawar menarik dukungannya.",
+      "hint": "Agenda kabinet tetap konsisten, tetapi Partai Simpul Daerah menarik tawaran dukungannya.",
       "effects": [
         {
           "type": "CHANGE_FACTION_SUPPORT",

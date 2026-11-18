@@ -25,7 +25,29 @@ Anggaran resmi ada di `AGENT.md` §5.17. Dokumen ini berisi cara mengukur dan ha
 | Resolve 1 kuartal       | Log lokal `resolve kuartal N: X ms`; test anggaran di `packages/simulation/test/determinism.test.ts`.                             |
 | Ukuran save             | `pnpm balance` (rata-rata/maksimum), atau lihat file di `Documents/REPUBLIKA/saves/`.                                             |
 
-## Hasil (18 November 2026, Windows 11 x64, mesin pengembangan)
+## Hasil Tahap 6A — UI v2 (18 November 2026, Windows 11 x64, mesin pengembangan)
+
+Build: branch `feat/stage-6a-ui-v2`, `pnpm build:web` dan `pnpm perf:report`. Metrik heap dari `test-results/final-metrics.json` setelah kampanye 20 kuartal di Chromium Playwright.
+
+| Metrik                     | Target    | Batas  | Hasil                                                                    | Status                |
+| -------------------------- | --------- | ------ | ------------------------------------------------------------------------ | --------------------- |
+| Total RAM (app + WebView2) | ≤ 150 MB  | 200 MB | **Belum terukur** — menunggu Task Manager pemilik                        | Perlu diukur pemilik  |
+| JS heap setelah 20 kuartal | ≤ 30 MB   | 50 MB  | **19,3 MB** (1 run, 20 kuartal); 14,3 MB pada 4 kuartal                  | ✓                     |
+| Ukuran installer           | ≤ 10 MB   | 15 MB  | **3,27 MiB** (3.429.695 byte), NSIS 0.1.0-rc.1, dibangun ulang pada 6A.6 | ✓                     |
+| Entry JS                   | —         | —      | 494,8 KiB (gzip 153,2 KiB); Vite memperingatkan ambang 500 kB            | ✓ (lihat catatan)     |
+| Total JS semua chunk       | —         | —      | 638,4 KiB                                                                | ✓                     |
+| CSS                        | —         | —      | 38,9 KiB (gzip 8,2 KiB)                                                  | ✓                     |
+| Font                       | —         | —      | 129,6 KiB (4 berkas woff2)                                               | ✓                     |
+| Ilustrasi                  | ≤ 100 KB  | —      | 26 SVG, 260,2 KiB mentah / 67,4 KiB gzip; tiap berkas ≤ 13,4 KiB         | ✓ (gzip) / × (mentah) |
+| Cold start sampai menu     | ≤ 1,5 dtk | 3 dtk  | Belum diukur ulang setelah 6A                                            | Perlu diukur pemilik  |
+| Resolve 1 kuartal          | ≤ 20 ms   | 50 ms  | Tidak berubah (engine tidak disentuh 6A)                                 | ✓ (dari Tahap 5)      |
+| Ukuran save 20 kuartal     | ≤ 300 KB  | 1 MB   | Tidak berubah (format save tidak berubah)                                | ✓ (dari Tahap 5)      |
+
+**Catatan bundle.** Vite memberi peringatan `chunk > 500 kB` untuk entry (494,8 KiB). Itu ambang peringatan Vite, bukan pelanggaran anggaran §5.17. Memecah entry akan menambah request dan tidak berguna untuk aplikasi offline satu halaman; peringatan dibiarkan selama belum ada bagian yang benar-benar perlu dipisah.
+
+**Catatan ilustrasi.** Target "total aset baru ≤ 100 KB" pada `prompts/TAHAP-6-ui-v2.md` tidak terpenuhi bila dihitung mentah (260,2 KiB). Ukuran terkirim 67,4 KiB karena SVG dikompres saat transfer, tiap berkas < 14 KiB, dan gambar dimuat lazy per layar lewat `ArtImage`; tidak ada byte ilustrasi yang masuk chunk JS. Bila target mentah wajib, langkah berikutnya adalah minifikasi SVG (mis. `svgo`) sebagai devDependency.
+
+## Hasil Tahap 5 (18 November 2026, Windows 11 x64, mesin pengembangan)
 
 | Metrik                     | Target    | Batas  | Hasil                                              | Status               |
 | -------------------------- | --------- | ------ | -------------------------------------------------- | -------------------- |
@@ -54,6 +76,6 @@ Angka yang sah adalah kolom _Memory (active private working set)_ di Task Manage
 - Rust release profile: `opt-level = "s"`, `lto`, `codegen-units = 1`, `strip`, `panic = "abort"`.
 - Plugin Tauri minimal: opener dan dialog hanya dipanggil dari command Rust dengan path tetap; tidak ada izin plugin untuk JavaScript.
 
-## Isi bundle (ringkas dari `pnpm perf:report`)
+## Isi bundle (ringkas dari `pnpm perf:report`, Tahap 6A)
 
-Entry JS 477,8 kB (gzip 147,2 kB). Penyumbang terbesar sebelum minify: `react-dom` (638 KiB), kode UI (273 KiB), `zod` (136 KiB), `@tauri-apps/api` (113 KiB, dimuat lazy), `tailwind-merge` (100 KiB). Engine (`@republika/simulation`), konten (`game-data`), dan `shared` bersama-sama ±128 KiB.
+Entry JS 494,8 KiB (gzip 153,2 KiB). Penyumbang terbesar sebelum minify: `react-dom` (638 KiB), kode UI (`@republika/desktop` src, 338 KiB), `zod` (136 KiB), `@tauri-apps/api` (126 KiB, dimuat lazy), `tailwind-merge` (100 KiB). Engine (`@republika/simulation` 54 KiB), konten (`game-data` 61 KiB), dan `shared` 35 KiB bersama-sama ±150 KiB. Ilustrasi 26 SVG (260 KiB mentah / 67 KiB gzip) berada di berkas terpisah dan dimuat lazy.

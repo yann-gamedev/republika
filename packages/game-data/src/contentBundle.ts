@@ -12,12 +12,12 @@ import historicalEvent09 from '../content/events/EVT-HIST-009.json';
 import historicalEvent10 from '../content/events/EVT-HIST-010.json';
 import eventPlaceholderOne from '../content/events/EVT-PLACEHOLDER-001.json';
 import eventPlaceholderTwo from '../content/events/EVT-PLACEHOLDER-002.json';
-import factionPlaceholderOne from '../content/factions/FAC-PLACEHOLDER-01.json';
-import factionPlaceholderTwo from '../content/factions/FAC-PLACEHOLDER-02.json';
-import factionPlaceholderThree from '../content/factions/FAC-PLACEHOLDER-03.json';
-import factionPlaceholderFour from '../content/factions/FAC-PLACEHOLDER-04.json';
-import factionPlaceholderFive from '../content/factions/FAC-PLACEHOLDER-05.json';
-import factionPlaceholderSix from '../content/factions/FAC-PLACEHOLDER-06.json';
+import factionCakrawala from '../content/factions/FAC-CAKRAWALA.json';
+import factionMadani from '../content/factions/FAC-MADANI.json';
+import factionPanjiMerdeka from '../content/factions/FAC-PANJI-MERDEKA.json';
+import factionSimpulDaerah from '../content/factions/FAC-SIMPUL-DAERAH.json';
+import factionSuaraJelata from '../content/factions/FAC-SUARA-JELATA.json';
+import factionTunasLestari from '../content/factions/FAC-TUNAS-LESTARI.json';
 import ministriesJson from '../content/ministries.json';
 import policyEnergy from '../content/policies/POL-ENERGY-PLACEHOLDER-001.json';
 import policyFiscal from '../content/policies/POL-FISCAL-PLACEHOLDER-001.json';
@@ -34,12 +34,12 @@ export const rawContentBundle: RawContentBundle = {
   scenario: scenarioJson,
   baseline: baselineJson,
   factions: [
-    factionPlaceholderOne,
-    factionPlaceholderTwo,
-    factionPlaceholderThree,
-    factionPlaceholderFour,
-    factionPlaceholderFive,
-    factionPlaceholderSix,
+    factionCakrawala,
+    factionSuaraJelata,
+    factionTunasLestari,
+    factionMadani,
+    factionPanjiMerdeka,
+    factionSimpulDaerah,
   ],
   ministries: ministriesJson,
   policies: [policyFiscal, policySocial, policyEnergy, policyGovernance],
