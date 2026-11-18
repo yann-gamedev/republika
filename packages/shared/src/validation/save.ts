@@ -70,15 +70,24 @@ export const saveSlotIdSchema = z.union([
 
 export type SaveSlotId = z.infer<typeof saveSlotIdSchema>;
 
+/** Ringkasan satu slot untuk layar Simpan & Muat. Field opsional bila save rusak. */
 export const saveSlotInfoSchema = z.object({
   slot: saveSlotIdSchema,
-  label: z.string().min(1).max(80),
-  savedAt: isoDateTimeSchema,
-  turn: z.number().int().min(1).max(100),
-  presidentName: z.string().min(2).max(40),
-  rulesetVersion: versionSchema,
   hasBackup: z.boolean(),
   isCorrupt: z.boolean(),
+  label: z.string().min(1).max(80).optional(),
+  savedAt: isoDateTimeSchema.optional(),
+  appVersion: appVersionSchema.optional(),
+  turn: z.number().int().min(1).max(100).optional(),
+  maxTurns: z.number().int().min(1).max(100).optional(),
+  completed: z.boolean().optional(),
+  presidentName: z.string().min(2).max(40).optional(),
+  cabinetName: z.string().max(40).optional(),
+  rulesetVersion: versionSchema.optional(),
+  /** Persetujuan, kesehatan fiskal, kepercayaan (persepuluhan). */
+  summary: z
+    .object({ approval: z.number().int(), fiscalHealth: z.number().int(), trust: z.number().int() })
+    .optional(),
 });
 
 export type SaveSlotInfo = z.infer<typeof saveSlotInfoSchema>;

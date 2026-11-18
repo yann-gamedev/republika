@@ -22,6 +22,14 @@ class TauriFilePort implements FilePort {
   async writeTextAtomic(relativePath: string, contents: string): Promise<void> {
     await invoke('save_atomic', { path: relativePath, contents });
   }
+
+  async rename(fromRelative: string, toRelative: string): Promise<void> {
+    await invoke('rename_file', { from: fromRelative, to: toRelative });
+  }
+
+  async listSaveFiles(): Promise<string[]> {
+    return invoke<string[]>('list_saves');
+  }
 }
 
 export class TauriFileStorage extends FileBackedStorage {

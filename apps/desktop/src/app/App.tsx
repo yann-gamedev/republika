@@ -17,6 +17,7 @@ const HistoryPage = lazy(() => import('@/features/history/HistoryPage'));
 const ReportPage = lazy(() => import('@/features/report/ReportPage'));
 const FinalReportPage = lazy(() => import('@/features/final/FinalReportPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
+const SavesPage = lazy(() => import('@/features/saves/SavesPage'));
 const NotFoundPage = lazy(() => import('@/features/not-found/NotFoundPage'));
 
 export function App() {
@@ -39,6 +40,7 @@ export function App() {
             <Route path="/" element={<MenuPage />} />
             <Route path="/inauguration" element={<InaugurationPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/saves" element={<SavesPage />} />
 
             <Route path="/game" element={<GameLayout />}>
               <Route index element={<Navigate to="dashboard" replace />} />

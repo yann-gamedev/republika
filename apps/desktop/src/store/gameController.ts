@@ -5,6 +5,8 @@ import {
   type GameState,
   type SaveFile,
   type SaveHistory,
+  type SaveSlotId,
+  type SaveSlotInfo,
   type TurnReport,
 } from '@republika/shared';
 import {
@@ -33,6 +35,8 @@ export interface GameControllerDeps {
 export type ControllerResult =
   | { readonly ok: true }
   | { readonly ok: false; readonly code?: CommandErrorCode; readonly message: string };
+
+export type ManualSlot = Exclude<SaveSlotId, 'autosave'>;
 
 export type ContinueResult =
   | { readonly status: 'loaded' }
@@ -173,6 +177,79 @@ export class GameController {
     return result.save.history;
   }
 
+  /** Ada keputusan kuartal ini yang belum tersimpan (autosave terjadi di akhir kuartal). */
+  hasUnsavedChanges(): boolean {
+    return (this.state?.commandIdsThisTurn.length ?? 0) > 0;
+  }
+
+  async listSlots(): Promise<readonly SaveSlotInfo[]> {
+    try {
+      return await this.deps.storage.listSlots();
+    } catch {
+      return [];
+    }
+  }
+
+  /** Simpan kampanye berjalan ke slot manual (menimpa isi slot). */
+  async saveToSlot(slot: ManualSlot, label?: string): Promise<ControllerResult> {
+    const current = this.state;
+    if (current === null) return this.fail(copy.controller.noCampaign);
+    try {
+      const history = await this.loadHistory();
+      await this.deps.storage.writeSave(slot, this.buildSave(current, history, label));
+      this.toast('success', copy.saves.savedTo(copy.saves.slotName(slot)));
+      return { ok: true };
+    } catch {
+      return this.fail(copy.saves.saveFailed);
+    }
+  }
+
+  /**
+   * Muat slot dan lanjutkan dari titik itu. Isinya langsung disalin ke
+   * autosave agar riwayat dan "Lanjutkan" mengikuti titik yang dimuat;
+   * autosave sebelumnya menjadi `autosave.bak.json`. Slot lain tidak berubah.
+   */
+  async loadSlot(slot: SaveSlotId): Promise<ContinueResult> {
+    const result = await this.safeRead(() => this.deps.storage.readSave(slot));
+    if (result.status === 'missing') return { status: 'missing' };
+    if (result.status === 'corrupt') return { status: 'corrupt', hasBackup: false };
+    const loaded = this.loadFromSave(result.save);
+    if (!loaded.ok) return { status: 'incompatible', message: loaded.message };
+    if (slot !== 'autosave') {
+      try {
+        await this.deps.storage.writeSave('autosave', { ...result.save, savedAt: this.deps.now() });
+      } catch {
+        this.deps.store.setState({ uiStatus: 'saveFailed' });
+      }
+    }
+    this.toast('success', copy.saves.loadedFrom(copy.saves.slotName(slot)));
+    return { status: 'loaded' };
+  }
+
+  async renameSlot(slot: ManualSlot, label: string): Promise<ControllerResult> {
+    const trimmed = label.trim();
+    if (trimmed.length === 0 || trimmed.length > 80) return this.fail(copy.saves.labelInvalid);
+    const result = await this.safeRead(() => this.deps.storage.readSave(slot));
+    if (result.status !== 'ok') return this.fail(copy.saves.slotUnreadable);
+    try {
+      await this.deps.storage.writeSave(slot, { ...result.save, label: trimmed });
+      return { ok: true };
+    } catch {
+      return this.fail(copy.saves.saveFailed);
+    }
+  }
+
+  /** "Hapus" memindahkan file ke `saves/trash/`, bukan menghapus permanen. */
+  async deleteSlot(slot: ManualSlot): Promise<ControllerResult> {
+    try {
+      await this.deps.storage.moveToTrash(slot, this.deps.now());
+      this.toast('success', copy.saves.deleted(copy.saves.slotName(slot)));
+      return { ok: true };
+    } catch {
+      return this.fail(copy.saves.deleteFailed);
+    }
+  }
+
   /** Umpan balik singkat untuk aksi yang berhasil. */
   notify(message: string, tone: Toast['tone'] = 'success'): void {
     this.toast(tone, message);
@@ -204,17 +281,21 @@ export class GameController {
     }
   }
 
-  private async autosave(state: GameState, history: SaveHistory): Promise<boolean> {
-    const save: SaveFile = {
+  private buildSave(state: GameState, history: SaveHistory, label?: string): SaveFile {
+    return {
       saveFormatVersion: SAVE_FORMAT_VERSION,
       appVersion: APP_VERSION,
       rulesetVersion: state.rulesetVersion,
       contentHash: this.deps.contentHash,
       savedAt: this.deps.now(),
-      label: copy.controller.saveLabel(state.presidentName, state.turn),
+      label: label ?? copy.controller.saveLabel(state.presidentName, state.cabinetName, state.turn),
       state,
       history,
     };
+  }
+
+  private async autosave(state: GameState, history: SaveHistory): Promise<boolean> {
+    const save = this.buildSave(state, history);
     try {
       await this.deps.storage.writeSave('autosave', save);
       this.deps.store.setState({ uiStatus: 'idle' });

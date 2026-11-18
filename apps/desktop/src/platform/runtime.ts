@@ -26,3 +26,21 @@ export async function quitApplication(): Promise<void> {
   }
   window.close();
 }
+
+/** Membuka Documents/REPUBLIKA/saves di Explorer. `false` bila tidak di desktop. */
+export async function openSavesFolder(): Promise<boolean> {
+  if (!isTauriRuntime()) return false;
+  const { invoke } = await import('@tauri-apps/api/core');
+  await invoke('open_saves_folder');
+  return true;
+}
+
+/**
+ * Pemain memilih file save lama; salinannya ditaruh di `saves/imported/`.
+ * Mengembalikan path relatif salinan, atau `null` bila batal/bukan desktop.
+ */
+export async function importSaveFile(): Promise<string | null> {
+  if (!isTauriRuntime()) return null;
+  const { invoke } = await import('@tauri-apps/api/core');
+  return invoke<string | null>('import_save_file');
+}

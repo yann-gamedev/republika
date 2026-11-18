@@ -56,7 +56,7 @@ export const copy = {
     useBackup: 'Pakai cadangan',
     loadGame: 'Muat',
     loadDescription: 'Pulihkan kampanye dari slot penyimpanan.',
-    loadUnavailable: 'Slot save tersedia pada Tahap 3.',
+    loadUnavailable: 'Buka layar Simpan & Muat.',
     settings: 'Pengaturan',
     settingsDescription: 'Skala antarmuka, layar penuh, dan informasi konten.',
     quit: 'Keluar',
@@ -460,6 +460,47 @@ export const copy = {
     open: 'Buka Laporan Akhir',
     bannerTitle: 'Masa jabatan telah berakhir',
   },
+  saves: {
+    kicker: 'Arsip Kampanye',
+    title: 'Simpan & Muat',
+    subtitle:
+      'Autosave terjadi setiap akhir kuartal. Lima slot manual menyimpan titik kampanye pilihan Anda; memuat slot tidak mengubah slot lain.',
+    nav: 'Simpan & Muat',
+    slotName: (slot: string) =>
+      slot === 'autosave' ? 'Autosave' : `Slot ${slot.replace('slot-', '')}`,
+    empty: 'Kosong',
+    corrupt: 'Save rusak — tidak bisa dibaca',
+    savedAt: (date: string) => `Disimpan ${date}`,
+    version: (version: string) => `Versi ${version}`,
+    quarter: (turn: number, maxTurns: number) => `Kuartal ${turn} dari ${maxTurns}`,
+    completed: 'Masa jabatan selesai',
+    save: 'Simpan di sini',
+    load: 'Muat',
+    rename: 'Ganti nama',
+    renameSave: 'Simpan nama',
+    delete: 'Hapus',
+    labelField: (slot: string) => `Nama untuk ${slot}`,
+    openFolder: 'Buka folder save',
+    openFolderUnavailable: 'Folder save hanya bisa dibuka di aplikasi desktop.',
+    noCampaign: 'Mulai atau lanjutkan kampanye untuk menyimpan ke slot.',
+    confirmOverwriteTitle: 'Timpa slot ini?',
+    confirmOverwriteBody: (slot: string) =>
+      `${slot} sudah berisi save. Isinya akan diganti dengan kampanye saat ini.`,
+    confirmLoadTitle: 'Muat tanpa menyimpan?',
+    confirmLoadBody:
+      'Keputusan kuartal ini (antrean kebijakan, lobi, jawaban peristiwa) belum tersimpan dan akan hilang.',
+    confirmDeleteTitle: 'Hapus save ini?',
+    confirmDeleteBody: (slot: string) =>
+      `${slot} dipindahkan ke folder saves/trash/. Anda masih bisa memulihkannya secara manual.`,
+    savedTo: (slot: string) => `Kampanye disimpan ke ${slot}.`,
+    loadedFrom: (slot: string) => `Kampanye dimuat dari ${slot}.`,
+    deleted: (slot: string) => `${slot} dipindahkan ke trash.`,
+    saveFailed: 'Save gagal ditulis. Periksa ruang disk dan izin folder Documents.',
+    deleteFailed: 'Save gagal dipindahkan ke trash.',
+    labelInvalid: 'Nama save wajib diisi, maksimal 80 karakter.',
+    slotUnreadable: 'Slot ini tidak bisa dibaca.',
+    back: 'Kembali',
+  },
   settings: {
     kicker: 'Pengaturan',
     title: 'Pengaturan',
@@ -575,8 +616,8 @@ export const copy = {
     unexpected: 'Terjadi kesalahan tak terduga. Keputusan tidak diterapkan.',
     autosaveFailed:
       'Autosave gagal. Permainan tetap berjalan, tetapi kemajuan terakhir belum tersimpan.',
-    saveLabel: (presidentName: string, turn: number) =>
-      `Presiden ${presidentName} — Kuartal ${turn}`,
+    saveLabel: (presidentName: string, cabinetName: string | undefined, turn: number) =>
+      `Presiden ${presidentName}${cabinetName === undefined ? '' : ` — ${cabinetName}`} — Kuartal ${turn}`,
     rulesetMismatch: (saveVersion: number, appVersion: number) =>
       `Save memakai aturan v${saveVersion}, aplikasi memakai v${appVersion}. Migrasi save tersedia pada versi berikutnya.`,
     inaugurated: (presidentName: string) => `Presiden ${presidentName} resmi dilantik.`,

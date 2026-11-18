@@ -23,6 +23,8 @@ export interface SaveStorage {
   readBackup(slot: SaveSlotId): Promise<SaveReadResult>;
   /** Menulis atomik. Untuk autosave, versi valid sebelumnya disalin ke `.bak` dulu. */
   writeSave(slot: SaveSlotId, save: SaveFile): Promise<void>;
+  /** Memindahkan slot ke `saves/trash/` (bukan hapus permanen). */
+  moveToTrash(slot: SaveSlotId, stamp: string): Promise<void>;
 
   readSettings(): Promise<Settings | null>;
   writeSettings(settings: Settings): Promise<void>;
@@ -39,4 +41,8 @@ export interface FilePort {
   readText(relativePath: string): Promise<string | null>;
   /** Tulis ke `*.tmp`, flush, lalu rename — file lama utuh bila gagal di tengah. */
   writeTextAtomic(relativePath: string, contents: string): Promise<void>;
+  /** Pindah/ganti nama file di dalam folder data. */
+  rename(fromRelative: string, toRelative: string): Promise<void>;
+  /** Nama file `.json` langsung di dalam `saves/`. */
+  listSaveFiles(): Promise<string[]>;
 }

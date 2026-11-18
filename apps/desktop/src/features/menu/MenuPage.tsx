@@ -230,8 +230,7 @@ export default function MenuPage() {
                 icon={IconFolder}
                 label={copy.menu.loadGame}
                 description={copy.menu.loadDescription}
-                disabled
-                footnote={copy.menu.loadUnavailable}
+                to="/saves"
               />
               <ActionCard
                 icon={IconSettings}

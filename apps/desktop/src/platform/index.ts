@@ -7,7 +7,13 @@ export { createCampaignSeed, createCommandId, nowIso } from './entropy';
 export { FileBackedStorage, parseSaveText, serializeSave } from './FileBackedStorage';
 export { MemoryFilePort, MemoryStorage } from './MemoryStorage';
 export { TauriFileStorage } from './TauriFileStorage';
-export { isTauriRuntime, quitApplication, setApplicationFullscreen } from './runtime';
+export {
+  importSaveFile,
+  isTauriRuntime,
+  openSavesFolder,
+  quitApplication,
+  setApplicationFullscreen,
+} from './runtime';
 export type { FilePort, SaveReadResult, SaveStorage, SaveStorageKind } from './SaveStorage';
 
 export function createSaveStorage(): SaveStorage {

@@ -84,31 +84,41 @@ export class FileBackedStorage implements SaveStorage {
       const hasBackup =
         slot === 'autosave' && (await this.port.readText(backupPath(slot))) !== null;
       const result = parseSaveText(text);
-      if (result.status === 'ok') {
-        infos.push({
-          slot,
-          label: result.save.label,
-          savedAt: result.save.savedAt,
-          turn: result.save.state.turn,
-          presidentName: result.save.state.presidentName,
-          rulesetVersion: result.save.rulesetVersion,
-          hasBackup,
-          isCorrupt: false,
-        });
-      } else {
-        infos.push({
-          slot,
-          label: slot,
-          savedAt: '1970-01-01T00:00:00.000Z',
-          turn: 1,
-          presidentName: '??',
-          rulesetVersion: 1,
-          hasBackup,
-          isCorrupt: true,
-        });
+      if (result.status !== 'ok') {
+        infos.push({ slot, hasBackup, isCorrupt: true });
+        continue;
       }
+      const { save } = result;
+      infos.push({
+        slot,
+        hasBackup,
+        isCorrupt: false,
+        label: save.label,
+        savedAt: save.savedAt,
+        appVersion: save.appVersion,
+        turn: save.state.turn,
+        maxTurns: save.state.maxTurns,
+        completed: save.state.status === 'completed',
+        presidentName: save.state.presidentName,
+        ...(save.state.cabinetName !== undefined ? { cabinetName: save.state.cabinetName } : {}),
+        rulesetVersion: save.rulesetVersion,
+        summary: {
+          approval: save.state.indicators.approval,
+          fiscalHealth: save.state.indicators.fiscalHealth,
+          trust: save.state.indicators.trust,
+        },
+      });
     }
     return infos;
+  }
+
+  /**
+   * "Hapus" slot: file dipindah ke `saves/trash/<slot>-<stamp>.json`, tidak
+   * dihapus permanen. `stamp` berasal dari lapisan platform (waktu).
+   */
+  async moveToTrash(slot: SaveSlotId, stamp: string): Promise<void> {
+    const safeStamp = stamp.replace(/[^0-9A-Za-z-]/gu, '-');
+    await this.port.rename(savePath(slot), `${SAVES_DIR}/trash/${slot}-${safeStamp}.json`);
   }
 
   async readSave(slot: SaveSlotId): Promise<SaveReadResult> {

@@ -15,6 +15,7 @@ import {
   IconCabinet,
   IconDashboard,
   IconEvent,
+  IconFolder,
   IconHistory,
   IconParliament,
   IconPolicy,
@@ -164,6 +165,13 @@ export function GameLayout() {
 
         <div className="border-t border-border/50 px-4 py-5">
           <div className="space-y-2">
+            <Link
+              to="/saves"
+              className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <IconFolder className="h-3.5 w-3.5" />
+              {copy.saves.nav}
+            </Link>
             <Link
               to="/settings"
               className="flex items-center gap-2 px-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
