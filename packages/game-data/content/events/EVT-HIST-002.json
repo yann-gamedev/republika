@@ -1,8 +1,8 @@
 {
   "id": "EVT-HIST-002",
-  "version": 1,
+  "version": 2,
   "title": "Kebuntuan Majelis Konstitusi",
-  "body": "Majelis gagal menyepakati rancangan konstitusi setelah beberapa putaran. Pimpinan partai kecil bersedia kembali berunding jika daerah mendapat jaminan keterwakilan. Sebagian anggota kabinet mendesak Presiden menetapkan kembali piagam sementara.",
+  "body": "Majelis gagal menyepakati rancangan konstitusi setelah beberapa putaran. Ketua Umum Partai Simpul Daerah, Andi Tenri Ajeng, bersedia kembali berunding jika daerah mendapat jaminan keterwakilan. Sebagian anggota kabinet mendesak Presiden menetapkan kembali piagam sementara.",
   "eligibility": [
     {
       "type": "TURN_AT_LEAST",
@@ -41,7 +41,7 @@
     },
     {
       "id": "B",
-      "label": "Perpanjang perundingan dengan partai daerah",
+      "label": "Perpanjang perundingan dengan Partai Simpul Daerah",
       "hint": "Kesepakatan lebih luas memerlukan waktu, sementara jaminan keterwakilan memperkuat dukungan daerah.",
       "effects": [
         {

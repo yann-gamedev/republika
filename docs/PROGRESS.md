@@ -1,5 +1,17 @@
 # Progres REPUBLIKA
 
+## Konten — partai final dan sinkronisasi event (ruleset 2)
+
+Tanggal: 18 November 2026. Branch `feat/content-factions`. Diminta langsung oleh pemilik.
+
+- 6 fraksi: nama, singkatan, deskripsi, dan ID final. Kursi, dukungan, preferensi, dan tag tidak berubah, sehingga balancing tetap sama.
+- Pengurus (Ketua Umum, Sekjen, Bendahara Umum, Ketua Fraksi) dan 4 anggota per partai. Semua nama fiktif. Tampil di layar Parlemen dan tidak memengaruhi simulasi.
+- `rulesetVersion` 1 → 2 dengan `packages/game-data/migrations/ruleset-2.json`.
+- `EVT-HIST-001/002/005/006/008` dan `copy.contentReasons` menyebut partai pemegang tag ideologi yang terkena efek.
+- Verifikasi: `pnpm content:check` valid (16 peringatan, sebelumnya 22), lint dan typecheck lolos, 271 test lolos, `pnpm test:e2e` 9/9 lolos.
+
+Langkah manual untuk pemilik: buka layar Parlemen dan periksa nama partai serta daftar pengurus. Lalu muat save rc.1 lama dan pastikan muncul "dilanjutkan dengan aturan v2" dengan dukungan partai yang tidak berubah.
+
 ## Tahap 5 — Save slot, migrasi, optimasi, balancing, dan rilis
 
 Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-5-release`.

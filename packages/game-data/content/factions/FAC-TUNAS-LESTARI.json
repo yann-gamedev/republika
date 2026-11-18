@@ -1,0 +1,25 @@
+{
+  "id": "FAC-TUNAS-LESTARI",
+  "version": 3,
+  "name": "Partai Tunas Lestari",
+  "shortName": "PTL",
+  "seats": 17,
+  "color": "#3F6B55",
+  "ideologyTags": ["progresif-lingkungan"],
+  "baseSupport": 48,
+  "initialSupport": 48,
+  "policyPreferences": { "FISCAL": 0, "SOCIAL": 1, "ENERGY": 2, "GOVERNANCE": 0 },
+  "description": "Partai progresif yang mendorong transisi energi, perlindungan hutan, dan perluasan layanan publik. Didukung pemilih muda perkotaan.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Laras Anindita" },
+    { "role": "SECRETARY_GENERAL", "name": "Yosias Rumbiak" },
+    { "role": "TREASURER", "name": "Cindy Halim" },
+    { "role": "CAUCUS_LEADER", "name": "Teuku Rizal Maulana" }
+  ],
+  "members": [
+    "Gilang Pramudya",
+    "Ni Luh Ayu Saraswati",
+    "Dimas Haryoko",
+    "Febriana Pakpahan"
+  ]
+}

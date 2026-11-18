@@ -45,6 +45,8 @@ function faction(
     initialSupportTenths: supportTenths,
     policyPreferences: { FISCAL: fiscalPref, SOCIAL: 0, ENERGY: 0, GOVERNANCE: 0 },
     description: '',
+    leadership: [],
+    members: [],
   };
 }
 

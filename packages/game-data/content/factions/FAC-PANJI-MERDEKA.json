@@ -1,0 +1,25 @@
+{
+  "id": "FAC-PANJI-MERDEKA",
+  "version": 3,
+  "name": "Partai Panji Merdeka",
+  "shortName": "PPM",
+  "seats": 15,
+  "color": "#3B6EA5",
+  "ideologyTags": ["nasionalis"],
+  "baseSupport": 54,
+  "initialSupport": 54,
+  "policyPreferences": { "FISCAL": 0, "SOCIAL": 1, "ENERGY": 1, "GOVERNANCE": 1 },
+  "description": "Partai nasionalis yang memperjuangkan kemandirian ekonomi, pelindungan industri domestik, dan sikap tegas dalam hubungan luar negeri.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Bagus Satrio Wicaksono" },
+    { "role": "SECRETARY_GENERAL", "name": "Dewi Kartika Sari" },
+    { "role": "TREASURER", "name": "Gunawan Setiabudi" },
+    { "role": "CAUCUS_LEADER", "name": "Robertus Situmorang" }
+  ],
+  "members": [
+    "Andi Mappasessu",
+    "Agustina Wenas",
+    "Heru Cahyono",
+    "Yulius Fernandez"
+  ]
+}

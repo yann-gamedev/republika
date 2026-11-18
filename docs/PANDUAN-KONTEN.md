@@ -213,9 +213,18 @@ Arti modifier di atas: kalau inflasi sudah ≥ 6% di awal kuartal, penurunan app
   "baseSupport": 55,
   "initialSupport": 55,
   "policyPreferences": { "FISCAL": 2, "SOCIAL": -1, "ENERGY": 1, "GOVERNANCE": 0 },
-  "description": "Fraksi teknokrat yang mengutamakan disiplin anggaran."
+  "description": "Fraksi teknokrat yang mengutamakan disiplin anggaran.",
+  "leadership": [
+    { "role": "CHAIR", "name": "Ratna Kusumawardhani" },
+    { "role": "SECRETARY_GENERAL", "name": "Hendrawan Lukito" },
+    { "role": "TREASURER", "name": "Theresia Manopo" },
+    { "role": "CAUCUS_LEADER", "name": "Arief Prasetyadi" }
+  ],
+  "members": ["Nadia Rahmasari", "Yohanes Tamba", "Kadek Ariawan"]
 }
 ```
+
+`leadership` dan `members` opsional dan **hanya tampilan** (layar Parlemen), tidak memengaruhi simulasi. Jabatan yang tersedia: `CHAIR` (Ketua Umum), `SECRETARY_GENERAL` (Sekretaris Jenderal), `TREASURER` (Bendahara Umum), `CAUCUS_LEADER` (Ketua Fraksi), masing-masing maksimal satu orang. `members` maksimal 12 nama. Nama 3–60 karakter, fiktif, dan tidak boleh sama dengan nama politisi nyata. `content:check` memberi peringatan `DUPLICATE_PERSON_NAME` bila satu nama dipakai dua kali.
 
 Preferensi −2..+2 menggeser skor voting ±10 per poin. Ingat rumusnya: fraksi setuju jika `support + preference×10 + lobi ≥ 50`. **Total kursi semua fraksi harus 100.**
 

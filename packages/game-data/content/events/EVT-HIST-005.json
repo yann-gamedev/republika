@@ -1,6 +1,6 @@
 {
   "id": "EVT-HIST-005",
-  "version": 1,
+  "version": 2,
   "title": "Desakan Membentuk Kabinet Transisi",
   "body": "Koalisi goyah setelah gelombang demonstrasi. Kelompok mahasiswa dan partai oposisi menuntut jadwal reformasi pemilu, sementara para pelaku usaha meminta tim ekonomi tetap bekerja selama transisi.",
   "eligibility": [
@@ -21,7 +21,7 @@
     {
       "id": "A",
       "label": "Bentuk kesepakatan lintas partai untuk reformasi",
-      "hint": "Komitmen reformasi memulihkan kepercayaan, tetapi negosiasi kabinet memperlambat koordinasi ekonomi.",
+      "hint": "Komitmen reformasi memulihkan kepercayaan, tetapi Partai Cakrawala Maju khawatir negosiasi kabinet memperlambat koordinasi ekonomi.",
       "effects": [
         {
           "type": "MODIFY_INDICATOR",

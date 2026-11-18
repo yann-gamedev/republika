@@ -44,7 +44,11 @@ export default function ParliamentPage() {
     return item === undefined ? null : item.afterTenths - item.beforeTenths;
   };
 
-  const factions = definitions.factions.map((faction) => {
+  // Tampilan diurutkan dari kursi terbanyak; urutan engine tetap per ID.
+  const factionsBySeats = [...definitions.factions].sort(
+    (left, right) => right.seats - left.seats || left.id.localeCompare(right.id),
+  );
+  const factions = factionsBySeats.map((faction) => {
     const factionState = state.factions.find((item) => item.factionId === faction.id);
     return {
       faction,
@@ -106,7 +110,7 @@ export default function ParliamentPage() {
               ariaLabel={copy.parliament.hemicycleAria}
               centerValue={formatInteger(totalSeats)}
               centerLabel={copy.common.seats}
-              groups={definitions.factions.map((faction) => ({
+              groups={factionsBySeats.map((faction) => ({
                 id: faction.id,
                 label: faction.name,
                 seats: faction.seats,
@@ -234,6 +238,7 @@ export default function ParliamentPage() {
               factionId: faction.id,
             });
             const inCoalition = supportTenths >= COALITION_SUPPORT;
+            const chair = faction.leadership.find((item) => item.role === 'CHAIR');
             return (
               <article
                 key={faction.id}
@@ -264,9 +269,52 @@ export default function ParliamentPage() {
                         </li>
                       ))}
                     </ul>
+                    {chair !== undefined && (
+                      <p className="mt-2 text-xs text-foreground/85">
+                        {copy.parliament.chairLine(chair.name)}
+                      </p>
+                    )}
                     <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                       {faction.description}
                     </p>
+                    {(faction.leadership.length > 0 || faction.members.length > 0) && (
+                      <details className="group mt-2 text-xs">
+                        <summary className="cursor-pointer select-none text-[0.65rem] uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+                          {copy.parliament.rosterToggle}
+                        </summary>
+                        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                          {faction.leadership.length > 0 && (
+                            <div>
+                              <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+                                {copy.parliament.rosterLeadership}
+                              </p>
+                              <dl className="mt-1 space-y-0.5">
+                                {faction.leadership.map((item) => (
+                                  <div key={item.role} className="flex gap-1.5">
+                                    <dt className="text-muted-foreground">
+                                      {copy.parliament.roles[item.role]}:
+                                    </dt>
+                                    <dd>{item.name}</dd>
+                                  </div>
+                                ))}
+                              </dl>
+                            </div>
+                          )}
+                          {faction.members.length > 0 && (
+                            <div>
+                              <p className="text-[0.56rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+                                {copy.parliament.rosterMembers}
+                              </p>
+                              <ul className="mt-1 space-y-0.5">
+                                {faction.members.map((name) => (
+                                  <li key={name}>{name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      </details>
+                    )}
                   </div>
                   <Badge variant={inCoalition ? 'success' : 'outline'}>
                     {inCoalition ? copy.parliament.coalition : copy.parliament.opposition}

@@ -85,3 +85,13 @@ Keputusan aturan yang tidak dirinci `AGENT.md` §5. Semua dipilih sebagai opsi p
 | Lisensi                          | MIT (keputusan pemilik sejak Tahap 1).                                                                                                                                                    |
 | `--runs` balance                 | Total kampanye, dibagi rata ke strategi terpilih.                                                                                                                                         |
 | Versi                            | `package.json` root adalah satu-satunya sumber; disinkronkan oleh `pnpm version:set`.                                                                                                     |
+
+## Konten — partai final (ruleset 2)
+
+| Keputusan                 | Isi                                                                                                                                                                                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ID fraksi final           | `FAC-PLACEHOLDER-01..06` → `FAC-CAKRAWALA`, `FAC-SUARA-JELATA`, `FAC-TUNAS-LESTARI`, `FAC-MADANI`, `FAC-PANJI-MERDEKA`, `FAC-SIMPUL-DAERAH`. `rulesetVersion` 1 → 2 dengan `migrations/ruleset-2.json`, dukungan fraksi di save lama tetap terbawa. |
+| Angka fraksi tidak diubah | Kursi, dukungan, preferensi, dan tag ideologi sama seperti ruleset 1. Hanya nama, singkatan, deskripsi, dan daftar tokoh yang berubah.                                                                                                              |
+| Pengurus dan anggota      | Field opsional `leadership` (4 jabatan baku) dan `members`. Hanya tampilan; tidak masuk state atau save, dan tidak dibaca engine.                                                                                                                   |
+| Urutan tampilan Parlemen  | Diurutkan dari kursi terbanyak. Urutan engine tetap per ID.                                                                                                                                                                                         |
+| Nama partai di teks event | Event yang memakai efek tag ideologi (`nasionalis`, `regionalis`, `teknokrat`) menyebut partai yang saat ini memegang tag itu. Jika tag dipindah ke partai lain, teks event juga harus disesuaikan.                                                 |

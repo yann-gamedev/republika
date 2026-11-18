@@ -7,6 +7,10 @@ export const GAME_STATE_VERSION = 1;
 export const POLICY_CATEGORIES = ['FISCAL', 'SOCIAL', 'ENERGY', 'GOVERNANCE'] as const;
 export type PolicyCategory = (typeof POLICY_CATEGORIES)[number];
 
+/** Jabatan pengurus partai yang ditampilkan di layar Parlemen (tanpa efek simulasi). */
+export const FACTION_ROLES = ['CHAIR', 'SECRETARY_GENERAL', 'TREASURER', 'CAUCUS_LEADER'] as const;
+export type FactionRole = (typeof FACTION_ROLES)[number];
+
 export const UI_SCALES = [90, 100, 110, 125] as const;
 export type UiScale = (typeof UI_SCALES)[number];
 
