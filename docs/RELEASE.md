@@ -72,3 +72,20 @@ Jalankan setiap kali salah satu hal berikut terjadi sebelum rilis. Tujuannya: sa
 1. Instal versi rilis sebelumnya, mainkan 2–3 kuartal, simpan ke slot.
 2. Instal versi baru di atasnya. Saat app dibuka, dialog "Perbarui save ke versi ini?" harus muncul.
 3. Pastikan file asli ada di `Documents/REPUBLIKA/saves/backup-v{versiLama}/` dan kampanye bisa dilanjutkan.
+
+## Prosedur rilis GitHub
+
+1. Pastikan `main` hijau di CI dan checklist di atas sudah dijalankan bila format save atau ID konten berubah.
+2. Setel versi dari satu sumber: `pnpm version:set 0.1.0-rc.1`. Ini memperbarui `package.json`, `apps/desktop/package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`, dan `APP_VERSION`. Test `tests/version.test.ts` gagal bila ada yang tertinggal.
+3. Tulis bagian `## [0.1.0-rc.1] - <tanggal>` di `CHANGELOG.md`. Isinya dipakai sebagai catatan rilis.
+4. Commit, lalu buat tag beranotasi dan push: `git tag -a v0.1.0-rc.1 -m "REPUBLIKA 0.1.0-rc.1"` → `git push origin v0.1.0-rc.1`. **Membuat tag rilis wajib dikonfirmasi pemilik proyek.**
+5. Workflow `release.yml` (windows-latest) memeriksa tag = versi `package.json`, menjalankan lint/typecheck/test/content:check/cargo test, membangun installer NSIS per-user, lalu membuat **draft** GitHub Release berisi `.exe`, `.exe.sha256`, dan catatan dari `CHANGELOG.md`. Versi dengan tanda `-` (mis. `-rc.1`) ditandai _pre-release_.
+6. Unduh installer dari draft, uji di Windows bersih (lihat di bawah), lalu publikasikan draft secara manual.
+
+### Uji instalasi bersih (manual)
+
+- Laptop/VM Windows 10/11 tanpa Node, Rust, atau alat pengembangan.
+- Instal dari installer draft; SmartScreen → _More info → Run anyway_.
+- Matikan Wi-Fi, buka game, mainkan beberapa kuartal: harus berjalan normal.
+- `Documents\REPUBLIKA\saves\autosave.json` tercipta.
+- Uninstall lewat _Settings → Apps_: folder `Documents\REPUBLIKA` tetap ada.
