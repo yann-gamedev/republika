@@ -4,7 +4,7 @@
 
 Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-6a-ui-v2`, dibuat dari `feat/content-factions`.
 
-**Status: 6A.1–6A.6 selesai dan terverifikasi lokal. Gate playtest menunggu pemilik. 6B belum dimulai** karena Bagian 0 (K1–K7) belum dijawab; 6A memakai **Default**.
+**Status: 6A.1–6A.6 selesai dan terverifikasi lokal. Gate playtest menunggu pemilik. 6B belum dimulai**, tetapi Bagian 0 sudah dijawab lengkap (K1–K7): latar Indonesia nyata dengan tokoh fiktif, sumpah Pasal 9, font tambahan disetujui, kabinet opsional, grafik 5 titik, angka 6B disetujui dengan reshuffle per kuartal, konten 6B berupa fixture `PLACEHOLDER-*`.
 
 | Bagian                              | Hasil                                                                                                                                                                                                                                                                | Commit     |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -38,13 +38,13 @@ Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-6a-ui-v2`, dibuat 
 
 ### Gate akhir 6A — menunggu pemilik
 
-Isi `docs/PLAYTEST-UI-V2.md` setelah 2 kampanye di build desktop: kejelasan Meja kerja, rasa stempel/voting/Warta, teks terpotong di 1280×720 atau skala 125%, dan RAM dari Task Manager. 6B tidak boleh dimulai sebelum gate ini lolos dan K1/K6/K7 dijawab.
+Isi `docs/PLAYTEST-UI-V2.md` setelah 2 kampanye di build desktop: kejelasan Meja kerja, rasa stempel/voting/Warta, teks terpotong di 1280×720 atau skala 125%, dan RAM dari Task Manager. 6B tidak boleh dimulai sebelum gate ini lolos; Bagian 0 sudah selesai.
 
 ### Tindakan pemilik
 
 1. Mainkan 2 kampanye di installer, isi `docs/PLAYTEST-UI-V2.md`.
 2. Ukur RAM (app + semua `msedgewebview2.exe` milik REPUBLIKA) dengan jendela di depan, lalu isi tabel di `docs/PERFORMANCE.md`.
-3. Jawab K1–K7 di `prompts/TAHAP-6-ui-v2.md` bila 6B akan dilanjutkan.
+3. Bagian 0 (K1–K7) sudah dijawab pada 18 November 2026; tidak ada tindakan lagi di sini.
 
 ## Konten — partai final dan sinkronisasi event (ruleset 2)
 

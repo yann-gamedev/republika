@@ -25,7 +25,7 @@ Isi kolom **Jawaban** sebelum agent mulai. Kalau kosong, agent memakai **Default
 | K4 | Nama kabinet wajib? (`AGENT.md` §5.2: opsional, maks. 40 karakter) | **Tetap opsional**, mengikuti §5.2. Wireframe yang mewajibkan diabaikan. | **Tetap opsional.** Boleh kosong, maks. 40 karakter, dengan tombol saran nama. Tidak ada perubahan kode. |
 | K5 | Grafik "Arah negara" di Meja kerja butuh history 5 kuartal. §5.17 hanya memuat history di Riwayat/Laporan. | Muat history secara lazy saat Meja kerja dibuka, ukur JS heap setelah 20 kuartal, catat di `docs/PERFORMANCE.md`. Bila heap > 30 MB, ganti grafik dengan delta kuartal lalu saja. | **Pertahankan yang sekarang.** History dimuat lazy dan diringkas ≤ 5 titik; heap 19,3 MB setelah 20 kuartal (target ≤ 30 MB), jadi grafik tetap dipakai. |
 | K6 | Aturan angka 6B (reshuffle, latar belakang, janji, provinsi). | Pakai usulan di Lampiran C, tandai `// DECISION:`, catat di `docs/DECISIONS.md`, lalu uji dengan `pnpm balance`. | **Setujui usulan, satu perubahan:** reshuffle maksimal **1 kali per kuartal** (bukan per tahun). Field state `reshuffleUsedTurn`. Angka lain tetap; diuji `pnpm balance` dan boleh turun bila dominan. |
-| K7 | Konten 6B (nama provinsi, calon menteri, latar belakang, janji, tokoh pimpinan) ditulis siapa? | Pemilik, di `packages/game-data/content/`. Agent hanya membuat fixture `PLACEHOLDER-*` (`AGENT.md` §6). | |
+| K7 | Konten 6B (nama provinsi, calon menteri, latar belakang, janji, tokoh pimpinan) ditulis siapa? | Pemilik, di `packages/game-data/content/`. Agent hanya membuat fixture `PLACEHOLDER-*` (`AGENT.md` §6). | **Fixture `PLACEHOLDER-*`.** Agent membuat konten mekanis secukupnya untuk 6B; versi final tetap ditulis pemilik. Nama provinsi sudah nyata karena K1. |
 
 ---
 
