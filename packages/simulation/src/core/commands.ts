@@ -2,6 +2,7 @@ import type { GameCommand, GameDefinitions, GameState, PendingCommand } from '@r
 
 import { indexDefinitions, type DefinitionIndex } from './definitions.js';
 import { commandError, type CommandError, type CommandErrorCode } from './errors.js';
+import { RESHUFFLE_AP_COST, reshuffleError } from '../politics/reshuffle.js';
 import { evaluateAll } from './requirements.js';
 
 /** Biaya AP lobi fraksi (AGENT §5.4). */
@@ -131,6 +132,22 @@ export function applyCommand(
         pendingEvents: state.pendingEvents.map((item) =>
           item.eventId === command.eventId ? { ...item, resolvedChoiceId: command.choiceId } : item,
         ),
+      });
+    }
+
+    case 'RESHUFFLE': {
+      const error = reshuffleError(state, defs, command.roleId, command.candidateId);
+      if (error !== null) return fail(state, error);
+      const pending: PendingCommand = {
+        type: 'RESHUFFLE',
+        commandId: command.commandId,
+        roleId: command.roleId,
+        candidateId: command.candidateId,
+        apCost: RESHUFFLE_AP_COST,
+      };
+      return accept(state, command.commandId, {
+        actionPointsRemaining: state.actionPointsRemaining - RESHUFFLE_AP_COST,
+        pendingCommands: [...state.pendingCommands, pending],
       });
     }
 

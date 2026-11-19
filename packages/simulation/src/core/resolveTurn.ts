@@ -12,6 +12,7 @@ import {
   tickDelayedEffects,
 } from '../policies/lifecycle.js';
 import { updateMinistryEffectiveness } from '../politics/ministries.js';
+import { applyReshuffles } from '../politics/reshuffle.js';
 import { applyLobbies, resolveVotes } from '../politics/voting.js';
 import { accumulateIndicatorStats, evaluateArchetype } from '../report/archetype.js';
 import { buildReport } from '../report/buildReport.js';
@@ -39,7 +40,7 @@ export type ResolveTurnResult =
 
 /**
  * Orkestrator akhir kuartal dengan urutan persis AGENT §5.10:
- *  1 validasi · 2 respons event · 3 lobi · 4 voting · 5 biaya awal ·
+ *  1 validasi · 2 respons event · 2b reshuffle · 3 lobi · 4 voting · 5 biaya awal ·
  *  6 efek IMMEDIATE · 7 tick kebijakan/cooldown/tertunda · 8 baseline ·
  *  9 effectiveness kementerian · 10 normalize · 11 event berikutnya ·
  *  12 laporan, turn += 1, status.
@@ -63,6 +64,8 @@ export function resolveTurn(
 
   // 2. Respons event.
   const resolvedEvents = applyEventResponses(work, context);
+  // 2b. Reshuffle (Tahap 6B.3): sebelum lobi agar berlaku pada voting kuartal ini.
+  applyReshuffles(work, pending, defs, ledger);
   // 3. Lobi.
   const lobbyBonuses = applyLobbies(work, pending, defs, ledger);
   // 4. Voting (urut policyId).

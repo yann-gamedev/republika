@@ -33,11 +33,20 @@ function renameAll(state: GameState, renamed: Readonly<Record<string, string>>):
       ...policy,
       policyId: rename(policy.policyId),
     })),
-    pendingCommands: state.pendingCommands.map((command) =>
-      command.type === 'ENACT_POLICY'
-        ? { ...command, policyId: rename(command.policyId) }
-        : { ...command, factionId: rename(command.factionId) },
-    ),
+    pendingCommands: state.pendingCommands.map((command) => {
+      switch (command.type) {
+        case 'ENACT_POLICY':
+          return { ...command, policyId: rename(command.policyId) };
+        case 'LOBBY_FACTION':
+          return { ...command, factionId: rename(command.factionId) };
+        case 'RESHUFFLE':
+          return {
+            ...command,
+            roleId: rename(command.roleId),
+            candidateId: rename(command.candidateId),
+          };
+      }
+    }),
     pendingEvents: state.pendingEvents.map((event) => ({
       ...event,
       eventId: rename(event.eventId),
@@ -121,7 +130,12 @@ export function migrateRuleset(
     pendingCommands: state.pendingCommands.filter((command) =>
       command.type === 'ENACT_POLICY'
         ? policyIds.has(command.policyId)
-        : factionIds.has(command.factionId),
+        : command.type === 'LOBBY_FACTION'
+          ? factionIds.has(command.factionId)
+          : defs.candidates.some(
+              (candidate) =>
+                candidate.id === command.candidateId && candidate.roleId === command.roleId,
+            ),
     ),
     pendingEvents: state.pendingEvents.filter((event) => eventIds.has(event.eventId)),
     lobbyThisTurn: state.lobbyThisTurn.filter((id) => factionIds.has(id)),

@@ -15,6 +15,11 @@ export const COMMAND_ERROR_CODES = [
   'UNKNOWN_CHOICE',
   'UNKNOWN_PENDING_COMMAND',
   'EVENT_RESPONSE_REQUIRED',
+  'UNKNOWN_ROLE',
+  'ROLE_LOCKED',
+  'UNKNOWN_CANDIDATE',
+  'ALREADY_HOLDER',
+  'RESHUFFLE_LIMIT',
 ] as const;
 
 export type CommandErrorCode = (typeof COMMAND_ERROR_CODES)[number];
@@ -36,6 +41,11 @@ export const COMMAND_ERROR_MESSAGES: Readonly<Record<CommandErrorCode, string>> 
   UNKNOWN_CHOICE: 'Pilihan respons tidak tersedia untuk peristiwa ini.',
   UNKNOWN_PENDING_COMMAND: 'Tidak ada pengajuan dengan ID tersebut untuk dibatalkan.',
   EVENT_RESPONSE_REQUIRED: 'Tanggapi semua peristiwa yang menunggu sebelum mengakhiri kuartal.',
+  UNKNOWN_ROLE: 'Jabatan tidak ditemukan.',
+  ROLE_LOCKED: 'Jabatan ini tidak bisa diganti.',
+  UNKNOWN_CANDIDATE: 'Calon tidak tersedia untuk jabatan ini.',
+  ALREADY_HOLDER: 'Calon ini sudah memegang jabatan tersebut.',
+  RESHUFFLE_LIMIT: 'Reshuffle hanya boleh sekali per kuartal.',
 };
 
 export interface CommandError {

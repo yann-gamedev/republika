@@ -28,6 +28,12 @@ export const gameCommandSchema = z.discriminatedUnion('type', [
   }),
   z.object({
     ...base,
+    type: z.literal('RESHUFFLE'),
+    roleId: idSchema,
+    candidateId: idSchema,
+  }),
+  z.object({
+    ...base,
     type: z.literal('END_QUARTER'),
   }),
 ]);

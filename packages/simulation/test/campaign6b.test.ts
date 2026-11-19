@@ -179,3 +179,163 @@ describe('balance latar belakang', () => {
     expect(total).toBeCloseTo(4, 6);
   });
 });
+
+describe('reshuffle (Tahap 6B.3)', () => {
+  const start = () =>
+    createInitialState(content.scenario, content, { presidentName: 'Laras Pertiwi', seed: 'rs' });
+  const alternate = (roleId: string, state = start()) => {
+    const holder = state.cabinet[roleId]?.holderId ?? state.leaders[roleId]?.holderId;
+    const candidate = content.candidates.find(
+      (item) => item.roleId === roleId && item.id !== holder,
+    );
+    if (candidate === undefined) throw new Error(`tanpa calon ${roleId}`);
+    return candidate;
+  };
+  const ministryId = content.ministries[0]?.id ?? '';
+
+  it('1 AP, maksimal sekali per kuartal, bisa dibatalkan, dan wapres terkunci', () => {
+    const state = start();
+    const candidate = alternate(ministryId, state);
+    const first = applyCommand(
+      state,
+      { type: 'RESHUFFLE', commandId: 'rs-1', roleId: ministryId, candidateId: candidate.id },
+      content,
+    );
+    expect(first.error).toBeUndefined();
+    expect(first.state.actionPointsRemaining).toBe(state.actionPointsRemaining - 1);
+    const leaderId = content.leaders.find((item) => item.replaceable)?.id ?? '';
+    const second = applyCommand(
+      first.state,
+      {
+        type: 'RESHUFFLE',
+        commandId: 'rs-2',
+        roleId: leaderId,
+        candidateId: alternate(leaderId).id,
+      },
+      content,
+    );
+    expect(second.error?.code).toBe('RESHUFFLE_LIMIT');
+    const duplicate = applyCommand(
+      first.state,
+      { type: 'RESHUFFLE', commandId: 'rs-1', roleId: ministryId, candidateId: candidate.id },
+      content,
+    );
+    expect(duplicate.error?.code).toBe('DUPLICATE_COMMAND');
+    const cancelled = applyCommand(
+      first.state,
+      { type: 'CANCEL_PENDING', commandId: 'c-1', pendingCommandId: 'rs-1' },
+      content,
+    );
+    expect(cancelled.state.actionPointsRemaining).toBe(state.actionPointsRemaining);
+    expect(cancelled.state.pendingCommands).toEqual([]);
+
+    const wapres = content.leaders.find((item) => !item.replaceable);
+    if (wapres === undefined) throw new Error('butuh jabatan terkunci');
+    const locked = applyCommand(
+      state,
+      { type: 'RESHUFFLE', commandId: 'rs-3', roleId: wapres.id, candidateId: 'CND-X' },
+      content,
+    );
+    expect(locked.error?.code).toBe('ROLE_LOCKED');
+    const holderAgain = applyCommand(
+      state,
+      {
+        type: 'RESHUFFLE',
+        commandId: 'rs-4',
+        roleId: ministryId,
+        candidateId: state.cabinet[ministryId]?.holderId ?? '',
+      },
+      content,
+    );
+    expect(holderAgain.error?.code).toBe('ALREADY_HOLDER');
+    const wrongRole = applyCommand(
+      state,
+      {
+        type: 'RESHUFFLE',
+        commandId: 'rs-5',
+        roleId: ministryId,
+        candidateId: alternate(leaderId).id,
+      },
+      content,
+    );
+    expect(wrongRole.error?.code).toBe('UNKNOWN_CANDIDATE');
+  });
+
+  it('langkah 2b: efektivitas, dukungan partai sebelum voting, dan ledger RESHUFFLE', () => {
+    const state = start();
+    const candidate = content.candidates.find(
+      (item) =>
+        item.roleId === ministryId &&
+        !item.initial &&
+        item.factionId !== null &&
+        item.supportGainTenths > 0,
+    );
+    if (candidate === undefined || candidate.factionId === null)
+      throw new Error('butuh calon partai');
+    const oldHolder = content.candidates.find(
+      (item) => item.id === state.cabinet[ministryId]?.holderId,
+    );
+    const policy = content.policies.find((item) => item.needsVote);
+    if (policy === undefined) throw new Error('butuh kebijakan ber-voting');
+    let work = applyCommand(
+      state,
+      { type: 'RESHUFFLE', commandId: 'rs', roleId: ministryId, candidateId: candidate.id },
+      content,
+    ).state;
+    work = applyCommand(
+      work,
+      { type: 'ENACT_POLICY', commandId: 'p', policyId: policy.id },
+      content,
+    ).state;
+    const result = resolveTurn(work, { type: 'END_QUARTER', commandId: 'end' }, content);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.state.cabinet[ministryId]?.holderId).toBe(candidate.id);
+    expect(result.state.reshuffleUsedTurn).toBe(1);
+    expect(
+      result.ledger.some((entry) => entry.reasonCode === 'RESHUFFLE' && entry.kind === 'CABINET'),
+    ).toBe(true);
+    const ministry = result.ledger.find(
+      (entry) => entry.kind === 'MINISTRY' && entry.sourceType === 'RESHUFFLE',
+    );
+    expect(ministry?.after).toBe(candidate.baseEffectiveness);
+
+    // Dukungan saat voting sudah memuat tambahan dari reshuffle (dan penalti partai lama).
+    const factionVote = result.report.votes[0]?.factionVotes.find(
+      (item) => item.factionId === candidate.factionId,
+    );
+    const before =
+      state.factions.find((item) => item.factionId === candidate.factionId)?.supportTenths ?? 0;
+    const penalty = oldHolder?.factionId === candidate.factionId ? -60 : 0;
+    expect(factionVote?.supportTenths).toBe(
+      Math.min(1000, before + candidate.supportGainTenths + penalty),
+    );
+    const reshuffleIndex = result.ledger.findIndex((entry) => entry.reasonCode === 'RESHUFFLE');
+    const voteIndex = result.ledger.findIndex((entry) => entry.kind === 'VOTE');
+    expect(reshuffleIndex).toBeLessThan(voteIndex);
+  });
+
+  it('pimpinan: kepercayaan berubah (integritas baru − lama) / 10', () => {
+    const state = start();
+    const leaderId = content.leaders.find((item) => item.replaceable)?.id ?? '';
+    const candidate = alternate(leaderId, state);
+    const old = content.candidates.find((item) => item.id === state.leaders[leaderId]?.holderId);
+    const work = applyCommand(
+      state,
+      { type: 'RESHUFFLE', commandId: 'rs', roleId: leaderId, candidateId: candidate.id },
+      content,
+    ).state;
+    const result = resolveTurn(work, { type: 'END_QUARTER', commandId: 'end' }, content);
+    if (!result.ok) throw new Error(result.error.code);
+    const trust = result.ledger.find((entry) => entry.reasonCode === 'RESHUFFLE_INTEGRITY');
+    expect(trust?.delta).toBe(candidate.integrity - (old?.integrity ?? 0));
+    expect(result.state.leaders[leaderId]?.holderId).toBe(candidate.id);
+    // Kuartal berikutnya kuota pulih.
+    const next = applyCommand(
+      result.state,
+      { type: 'RESHUFFLE', commandId: 'rs-next', roleId: leaderId, candidateId: old?.id ?? '' },
+      content,
+    );
+    expect(next.error).toBeUndefined();
+  });
+});
