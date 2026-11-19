@@ -1,7 +1,7 @@
 export const copy = {
   app: {
     name: 'REPUBLIKA',
-    kicker: 'Republik Fiktif',
+    kicker: 'Republik Indonesia',
     tagline: 'Ruang rapat negara untuk dua puluh kuartal yang menentukan.',
     loading: 'Menyiapkan ruang rapat…',
     offline: 'Offline penuh',
@@ -60,7 +60,7 @@ export const copy = {
     quit: 'Keluar',
     quitUnavailable: 'Aplikasi desktop tidak terdeteksi. Tutup tab ini untuk keluar.',
     footerNote: 'Offline · data tersimpan di perangkat ini',
-    sealLabel: 'Segel Republik Fiktif',
+    sealLabel: 'Segel Kepresidenan Republik Indonesia',
     versionLine: (version: string) => `Versi ${version}`,
   },
   inauguration: {
@@ -103,20 +103,20 @@ export const copy = {
     summaryStart: 'Mulai menjabat',
     previewText: (name: string) => `Laporan untuk Presiden ${name || '…'}`,
     submit: 'Lanjut ke naskah sumpah',
-    // Langkah 2: naskah sumpah/janji (K1/K2: teks final ditulis pemilik).
+    // Langkah 2: naskah sumpah/janji (K2: teks resmi Pasal 9 UUD 1945).
     oathBack: 'Berkas pencalonan',
-    oathAssembly: 'Majelis Rakyat · Sidang pelantikan',
+    oathAssembly: 'Majelis Permusyawaratan Rakyat · Sidang pelantikan',
     oathTitleSumpah: 'Naskah sumpah presiden',
     oathTitleJanji: 'Naskah janji presiden',
     oathIntro: (name: string, turns: number) =>
       `Dengan ini saya, ${name}, yang dilantik sebagai Presiden untuk masa jabatan ${turns} kuartal, menyatakan:`,
     oathText: {
       sumpah:
-        '“Demi Tuhan Yang Maha Esa, saya bersumpah akan memenuhi kewajiban Presiden Republik dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Piagam Republik, menjalankan segala undang-undang dengan selurus-lurusnya, serta berbakti kepada rakyat.”',
+        '“Demi Allah saya bersumpah akan memenuhi kewajiban Presiden Republik Indonesia dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Undang-Undang Dasar dan menjalankan segala undang-undang dan peraturannya dengan selurus-lurusnya serta berbakti kepada Nusa dan Bangsa.”',
       janji:
-        '“Saya berjanji dengan sungguh-sungguh akan memenuhi kewajiban Presiden Republik dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Piagam Republik, menjalankan segala undang-undang dengan selurus-lurusnya, serta berbakti kepada rakyat.”',
+        '“Saya berjanji dengan sungguh-sungguh akan memenuhi kewajiban Presiden Republik Indonesia dengan sebaik-baiknya dan seadil-adilnya, memegang teguh Undang-Undang Dasar dan menjalankan segala undang-undang dan peraturannya dengan selurus-lurusnya serta berbakti kepada Nusa dan Bangsa.”',
     },
-    oathSource: 'Naskah sementara (PLACEHOLDER) · teks final ditulis pemilik konten',
+    oathSource: 'Pasal 9 UUD 1945 · teks resmi',
     oathModeLabel: 'Bentuk pengucapan',
     oathModes: { sumpah: 'Sumpah menurut agama', janji: 'Janji' },
     oathPlace: (year: number) => `Ibu kota republik, ${year}`,

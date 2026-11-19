@@ -8,26 +8,26 @@ Panduan kerja utama untuk agent coding mana pun yang mengerjakan repo ini. Kalau
 
 ## 1. Ringkasan proyek
 
-REPUBLIKA adalah game desktop simulasi politik progresif, single-player, sepenuhnya offline, dan open source. Pemain menjadi presiden negara fiktif yang terinspirasi struktur Indonesia selama 20 kuartal. Tiap kuartal pemain mengelola kebijakan, kabinet, parlemen, dan event. Tidak ada multiplayer, akun, server, atau generative AI.
+REPUBLIKA adalah game desktop simulasi politik progresif, single-player, sepenuhnya offline, dan open source. Pemain menjadi Presiden Indonesia selama 20 kuartal. Tiap kuartal pemain mengelola kebijakan, kabinet, parlemen, dan event. Tidak ada multiplayer, akun, server, atau generative AI.
 
 Core loop: **Assess → Plan → Negotiate → Resolve → Review**.
 
-Target rilis: **Windows 10/11 (x64)** melalui **GitHub Releases**. Build Android direncanakan sebagai *advanced development* (lihat §9). Jangan dikerjakan sekarang, tetapi jangan menutup jalannya.
+Target rilis: **Windows 10/11 (x64)** melalui **GitHub Releases**. Build Android direncanakan sebagai _advanced development_ (lihat §9). Jangan dikerjakan sekarang, tetapi jangan menutup jalannya.
 
 ## 2. Stack (tidak boleh diganti tanpa izin)
 
-| Lapisan | Pilihan |
-|---|---|
-| Desktop shell | **Tauri 2** (WebView2 di Windows) |
-| UI | **Vite + React + TypeScript strict** |
-| Styling | Tailwind CSS + shadcn/ui (hanya komponen yang dipakai) |
-| Chart | **Komponen SVG buatan sendiri** (tanpa library chart) |
-| State UI | Zustand (satu store tipis) |
-| Domain | Package TypeScript murni (`packages/simulation`) |
-| Validation | Zod |
-| Storage | File JSON di `Documents/REPUBLIKA/` lewat command Rust kecil |
-| Testing | Vitest + fast-check + Playwright (pada build Vite di browser) |
-| Monorepo | pnpm workspaces |
+| Lapisan       | Pilihan                                                       |
+| ------------- | ------------------------------------------------------------- |
+| Desktop shell | **Tauri 2** (WebView2 di Windows)                             |
+| UI            | **Vite + React + TypeScript strict**                          |
+| Styling       | Tailwind CSS + shadcn/ui (hanya komponen yang dipakai)        |
+| Chart         | **Komponen SVG buatan sendiri** (tanpa library chart)         |
+| State UI      | Zustand (satu store tipis)                                    |
+| Domain        | Package TypeScript murni (`packages/simulation`)              |
+| Validation    | Zod                                                           |
+| Storage       | File JSON di `Documents/REPUBLIKA/` lewat command Rust kecil  |
+| Testing       | Vitest + fast-check + Playwright (pada build Vite di browser) |
+| Monorepo      | pnpm workspaces                                               |
 
 Dilarang: Next.js, Electron, database (termasuk SQLite), server HTTP lokal, Redux, library animasi berat, library chart (Recharts/Chart.js/ECharts), font atau aset dari CDN, dan network request dalam bentuk apa pun saat runtime.
 
@@ -60,44 +60,54 @@ prompts/                     # prompt tahap (jangan diubah agent)
 ## 5. Keputusan terkunci (addendum v0.3)
 
 ### 5.1 Angka dan satuan
+
 - **Indikator disimpan sebagai integer persepuluhan (fixed-point ×10).** `approval: 523` berarti 52,3.
 - **Kas disimpan sebagai integer miliar rupiah fiktif** di field `treasuryBillion`. 8 T = `8000`.
 - Penulis konten menulis angka dalam satuan tampilan (indikator maksimal 1 desimal, kas dalam triliun maksimal 3 desimal). Loader mengonversi dan **menolak** presisi berlebih.
-- Pembulatan: *round half away from zero* lewat satu fungsi `roundTenths()`, dilakukan setelah tiap efek berpengali.
+- Pembulatan: _round half away from zero_ lewat satu fungsi `roundTenths()`, dilakukan setelah tiap efek berpengali.
 - Clamp di langkah `normalize`, dicatat di ledger dengan `reasonCode: "CLAMPED"`.
 
 ### 5.2 Pelantikan
+
 - Sebelum kuartal 1 ada layar pelantikan: `presidentName` (wajib, 2–40 karakter, di-trim, tanpa karakter kontrol) dan `cabinetName` (opsional, maksimal 40 karakter).
 - Dipakai di header, laporan kuartal ("Laporan untuk Presiden {nama}"), laporan akhir, dan label save. **Tidak memengaruhi simulasi.**
 
 ### 5.3 Command dan Action Points
+
 - 2 AP per kuartal (dari `scenario.json`).
 - Command: `ENACT_POLICY`, `LOBBY_FACTION`, `RESPOND_EVENT`, `CANCEL_PENDING`, `END_QUARTER`, masing-masing dengan `commandId`.
 - `ENACT_POLICY` dan `LOBBY_FACTION` masuk `pendingCommands` dan langsung memesan AP. `CANCEL_PENDING` mengembalikannya. `RESPOND_EVENT` biayanya 0 AP.
 
 ### 5.4 Lobi Fraksi
+
 `LOBBY_FACTION {factionId}`: 1 AP + kas (default 2 T), +15 support sementara **hanya untuk voting kuartal ini**, maksimal 1 lobi per fraksi per kuartal.
 
 ### 5.5 Voting
+
 - Skor fraksi = `support + preference[category] × 10 + lobbyBonus`. Fraksi setuju sebagai blok jika skor ≥ 50. Kebijakan lolos jika kursi setuju ≥ 51/100.
 - **Voting gagal:** AP tetap terpakai, `trust −2,0`, cooldown 1 kuartal, biaya kas tidak dipotong, dicatat di ledger (`VOTE_FAILED`).
 
 ### 5.6 Kementerian
+
 - 4 kementerian (Keuangan, Sosial, Energi, Dalam Negeri). Effectiveness 40..90. Naik +1 per kebijakan sedomain yang aktif, dan bisa berubah lewat event.
 - Pengali efek indikator sedomain: `0.8 + 0.4 × (eff − 40) / 50`. Tidak berlaku untuk biaya kas.
 
 ### 5.7 Event
+
 - Dipilih di akhir kuartal N (PRNG seeded), lalu menjadi `pendingEvents` di kuartal N+1. Jumlah maksimal per kuartal dari `scenario.json` (default 1).
 - **`END_QUARTER` ditolak (`EVENT_RESPONSE_REQUIRED`) selama ada event pending.**
 - Setiap event wajib punya minimal satu opsi `"neutral": true`.
 
 ### 5.8 Proyeksi kebijakan
+
 Arah + rentang `[expected × 0,75, expected × 1,25]`. Biaya kas ditampilkan pasti. `projectPolicy()` murni dan tanpa RNG.
 
 ### 5.9 Baseline dynamics
+
 Parameter di `content/baseline.json`: inflasi kembali 25% menuju 3,0%; pengangguran `Δ = −0,15 × (growth − 2,5)`; approval kembali 10% ke 50; growth kembali 20% ke 4,0; kas `+ pendapatan − belanja − biaya kebijakan aktif`; kas < 0 → `fiscalHealth −3,0`/kuartal. Semua angka placeholder.
 
 ### 5.10 Urutan resolusi end-quarter
+
 1. Validasi command dan AP
 2. Respons event
 3. Lobi
@@ -112,9 +122,11 @@ Parameter di `content/baseline.json`: inflasi kembali 25% menuju 3,0%; penganggu
 12. Laporan, `turn += 1`, status `completed`, arketipe
 
 ### 5.11 Akhir kampanye
+
 Tidak ada kondisi kalah. Laporan akhir berisi grafik 8 indikator, kronologi, keputusan paling berdampak, dan **arketipe** dari `content/archetypes.json` (prioritas, yang pertama cocok dipakai, fallback "Pemerintahan Seimbang"). Arketipe tanpa label baik/buruk.
 
 ### 5.12 Save system
+
 - Lokasi: **`Documents/REPUBLIKA/saves/`** (path diambil dari Tauri `documentDir`). Pengaturan di `Documents/REPUBLIKA/settings.json`, log di `Documents/REPUBLIKA/logs/`.
 - File: `autosave.json` (+ `autosave.bak.json`, versi sebelumnya) dan `slot-1.json` … `slot-5.json`.
 - Isi save: `{ saveFormatVersion, appVersion, rulesetVersion, contentHash, savedAt, label, state, history }`. `history` berisi laporan dan ledger per kuartal untuk Riwayat dan Laporan Akhir.
@@ -124,6 +136,7 @@ Tidak ada kondisi kalah. Laporan akhir berisi grafik 8 indikator, kronologi, kep
 - Save **boleh diedit pemain** (tanpa anti-cheat). Loader tetap memvalidasi dengan Zod. File tidak valid ditolak dengan pesan jelas, bukan crash.
 
 ### 5.13 Versi aplikasi dan migrasi save
+
 - Update dilakukan **manual**: pemain mengunduh installer baru dari GitHub Releases. Tidak ada auto-update atau pengecekan versi online.
 - `saveFormatVersion` dimigrasi lewat rantai migrator murni `vN → vN+1` di `packages/simulation/src/save/migrations/`. Setiap migrator wajib punya test dengan contoh file save versi lama di `fixtures/saves/`.
 - `rulesetVersion` berbeda: campaign **dilanjutkan dengan aturan baru**. ID konten yang dihapus atau diganti dipetakan lewat `packages/game-data/migrations/ruleset-<N>.json`. Kebijakan aktif yang tidak lagi ada dihentikan dengan entri ledger `RULESET_MIGRATED`. Save ditandai "dilanjutkan dengan aturan v{N}".
@@ -133,31 +146,36 @@ Tidak ada kondisi kalah. Laporan akhir berisi grafik 8 indikator, kronologi, kep
   3. Sebelum migrasi, file asli **dicadangkan** ke `saves/backup-v{versiLama}/`. Migrasi tidak pernah menimpa file asli tanpa cadangan.
 
 ### 5.14 Bahasa
+
 Seluruh teks UI dalam Bahasa Indonesia di `apps/desktop/src/copy/id.ts`. Identifier kode, nama file, dan commit message dalam bahasa Inggris. Format angka memakai `Intl.NumberFormat('id-ID')`.
 
 ### 5.15 Gaya visual dan layar
+
 - Gabungan dashboard korporat dan nuansa "ruang rapat negara": navy/arang, aksen emas kusam dan merah marun secukupnya, judul serif, data sans-serif, kartu bergaris tipis seperti map dokumen.
 - **Font dibundel lokal** (lisensi OFL). Tidak boleh ada aset eksternal.
 - Desktop-only: ukuran jendela minimum **1280×720**, layout sidebar, dukungan fullscreen/windowed, dan pengaturan skala UI (90/100/110/125%).
 - Tidak memakai lambang negara asli, foto tokoh nyata, atau logo partai.
 
-### 5.16 Konten fiktif
-Semua nama fraksi, tokoh, institusi, dan kebijakan fiktif. Tidak ada nama partai, politisi, atau lembaga nyata.
+### 5.16 Konten: latar nyata, tokoh fiktif
+
+Negara, lembaga (MPR, kementerian, dan lembaga negara lain), serta 38 provinsi memakai nama nyata Indonesia. Nama orang fiktif, termasuk tokoh yang muncul di event dan random event. Partai dan fraksi tetap fiktif agar tidak ada klaim atau konflik dengan partai nyata; nama tokohnya juga fiktif. Tidak ada foto tokoh nyata, lambang negara asli, atau logo partai nyata (§5.15). Kebijakan dan angka simulation tetap fiktif.
 
 ### 5.17 Anggaran performa (wajib dipantau)
+
 Target ini diukur di Windows 11 di layar dashboard setelah 20 kuartal:
 
-| Metrik | Target | Batas maksimal |
-|---|---|---|
-| Total RAM semua proses app (termasuk WebView2) | ≤ 150 MB | 200 MB |
-| JS heap | ≤ 30 MB | 50 MB |
-| Ukuran installer | ≤ 10 MB | 15 MB |
-| Cold start sampai menu utama | ≤ 1,5 dtk | 3 dtk |
-| Resolve 1 kuartal | ≤ 20 ms | 50 ms |
-| Ukuran file save (20 kuartal) | ≤ 300 KB | 1 MB |
+| Metrik                                         | Target    | Batas maksimal |
+| ---------------------------------------------- | --------- | -------------- |
+| Total RAM semua proses app (termasuk WebView2) | ≤ 150 MB  | 200 MB         |
+| JS heap                                        | ≤ 30 MB   | 50 MB          |
+| Ukuran installer                               | ≤ 10 MB   | 15 MB          |
+| Cold start sampai menu utama                   | ≤ 1,5 dtk | 3 dtk          |
+| Resolve 1 kuartal                              | ≤ 20 ms   | 50 ms          |
+| Ukuran file save (20 kuartal)                  | ≤ 300 KB  | 1 MB           |
 
 Cara mencapainya:
-- Route di-*lazy load*, chart memakai SVG sendiri, dan hanya komponen shadcn yang dipakai yang ikut dibundel.
+
+- Route di-_lazy load_, chart memakai SVG sendiri, dan hanya komponen shadcn yang dipakai yang ikut dibundel.
 - Tidak ada polling atau interval yang berjalan saat idle. Animasi hanya transisi CSS ringan, dan `prefers-reduced-motion` dihormati.
 - State UI tidak menduplikasi `GameState`. History hanya dimuat saat halaman Riwayat atau Laporan dibuka.
 - Rust release profile: `opt-level = "s"`, `lto = true`, `codegen-units = 1`, `strip = true`, `panic = "abort"`.
@@ -166,6 +184,7 @@ Cara mencapainya:
 - Setiap PR yang menambah dependensi runtime wajib menyebut ukurannya di commit message.
 
 ### 5.18 Offline dan privasi
+
 App tidak melakukan koneksi jaringan apa pun. CSP Tauri melarang `connect-src` ke remote. Tidak ada telemetri. Log hanya lokal, berukuran maksimal 1 MB dengan rotasi 3 file, dan tanpa data pribadi selain nama presiden yang sudah ada di save.
 
 ## 6. Cara kerja agent

@@ -70,13 +70,15 @@ function Memo({
         data-testid={`event-${event.id}`}
         className="relative min-w-0 max-w-[760px] flex-[1_1_600px] overflow-hidden rounded-lg bg-paper text-ink shadow-document"
       >
-        <ArtImage
-          load={eventArt(event.id)}
-          alt={copy.art.event(event.title)}
-          className="h-[240px] w-full"
-        />
+        <div className="flex justify-center px-10 pt-8">
+          <ArtImage
+            load={eventArt(event.id)}
+            alt={copy.art.event(event.title)}
+            className="aspect-[19/16] w-full max-w-[420px] border border-ink/10"
+          />
+        </div>
 
-        <div className="flex flex-col gap-4 px-10 pb-10 pt-8">
+        <div className="relative flex flex-col gap-4 px-10 pb-10 pt-8">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
               <span
@@ -88,9 +90,23 @@ function Memo({
                 {copy.events.memoMeta(presidentName)}
               </span>
             </div>
-            <span className="font-mono text-xs text-ink-muted">
-              {copy.events.memoNumber(pending.arrivedTurn, year)}
-            </span>
+            <div className="relative flex flex-col items-end">
+              <span className="font-mono text-xs text-ink-muted">
+                {copy.events.memoNumber(pending.arrivedTurn, year)}
+              </span>
+              <div className="pointer-events-none absolute right-0 top-6">
+                <Stamp
+                  label={copy.events.stamp}
+                  visible={signed}
+                  className="bg-paper/60 text-[22px]"
+                />
+                {signed && (
+                  <span className="mt-1 block -rotate-[8deg] text-center font-mono text-[11px] text-stamp">
+                    {copy.events.stampMeta(year, quarter)}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
           <h2 id={titleId} className="font-serif text-[34px] font-medium leading-tight">
             {event.title}
@@ -196,15 +212,6 @@ function Memo({
               </>
             )}
           </div>
-        </div>
-
-        <div className="pointer-events-none absolute right-12 top-[268px]">
-          <Stamp label={copy.events.stamp} visible={signed} className="bg-paper/60 text-[22px]" />
-          {signed && (
-            <span className="mt-1 block -rotate-[8deg] text-center font-mono text-[11px] text-stamp">
-              {copy.events.stampMeta(year, quarter)}
-            </span>
-          )}
         </div>
       </article>
 

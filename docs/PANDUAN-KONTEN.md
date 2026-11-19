@@ -16,7 +16,7 @@ Panduan ini untuk Anda sebagai penulis konten (fraksi, kebijakan, event, arketip
 
 ## Aturan umum (berlaku di semua tahap)
 
-1. **Fiktif total.** Dilarang memakai nama partai, politisi, kementerian, atau lembaga nyata. Inspirasi boleh, salinan jangan.
+1. **Latar nyata, tokoh fiktif.** Negara, lembaga (MPR, kementerian, dan lembaga negara lain), serta 38 provinsi memakai nama nyata Indonesia. Nama orang—termasuk tokoh di event dan random event—fiktif dan tidak boleh sama dengan politisi nyata. Partai dan fraksi tetap fiktif. Kebijakan, angka, dan peristiwanya fiktif.
 2. **ID stabil, jangan pernah diganti** setelah dipakai, karena save game bergantung padanya. Format: `POL-<KATEGORI>-<NNN>`, `FAC-<NAMA>`, `EVT-<TEMA>-<NNN>`, `ARC-<NAMA>`.
 3. **Satuan:** indikator ditulis dalam satuan tampilan dengan **maksimal 1 desimal** (`0.4`, `-2`, `1.5`). Kas ditulis dalam **triliun** dengan maksimal 3 desimal (`8`, `0.75`).
 4. **Selalu ada trade-off sebagai pedoman desain.** Validator Tahap 1 belum mendeteksi kebijakan terlalu dominan atau melakukan balancing.
@@ -352,7 +352,7 @@ Format panduan sudah diselaraskan dengan schema Tahap 1. Konten repo tetap place
 
 **Brainstorm awal (opsional, tapi sangat membantu):**
 
-- Nama negara fiktif? Atau cukup "Republik"?
+- ~~Nama negara fiktif?~~ Sudah diputuskan (K1): Indonesia nyata, tokoh fiktif.
 - 6 fraksi: apa spektrum ideologinya? Saran: pro-pasar, populis, religius-konservatif, nasionalis, progresif-lingkungan, regionalis/daerah.
 - Nada umum: serius-realistis, satir ringan, atau campuran?
 
