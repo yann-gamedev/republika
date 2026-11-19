@@ -1,5 +1,5 @@
 {
-  "rulesetVersion": 2,
+  "rulesetVersion": 3,
   "maxTurns": 20,
   "actionPointsPerTurn": 2,
   "maxEventsPerQuarter": 1,

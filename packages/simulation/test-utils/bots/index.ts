@@ -22,7 +22,14 @@ type CommandInput = PlayerCommand extends unknown
     : never
   : never;
 
-export const STRATEGIES = ['random', 'greedy-approval', 'austerity', 'welfare', 'no-op'] as const;
+export const STRATEGIES = [
+  'random',
+  'greedy-approval',
+  'austerity',
+  'welfare',
+  'no-op',
+  'visit',
+] as const;
 export type Strategy = (typeof STRATEGIES)[number];
 
 /** Bobot tujuan bot: nilai positif = ingin indikator naik. Kas dalam per triliun. */
@@ -31,7 +38,7 @@ interface Objective {
   readonly treasuryPerTrillion: number;
 }
 
-const OBJECTIVES: Record<Exclude<Strategy, 'random' | 'no-op'>, Objective> = {
+const OBJECTIVES: Record<Exclude<Strategy, 'random' | 'no-op' | 'visit'>, Objective> = {
   'greedy-approval': { indicators: { approval: 1 }, treasuryPerTrillion: 0 },
   austerity: { indicators: { fiscalHealth: 1 }, treasuryPerTrillion: 0.05 },
   welfare: {
@@ -84,7 +91,7 @@ function chooseEvent(
 ): EventChoice | undefined {
   if (strategy === 'no-op') return neutralChoice(choices);
   if (strategy === 'random') return choices[rng.nextInt(0, choices.length - 1)];
-  const objective = OBJECTIVES[strategy];
+  const objective = OBJECTIVES[strategy === 'visit' ? 'greedy-approval' : strategy];
   return [...choices].sort((a, b) => {
     const score = (choice: EventChoice) =>
       choice.effects.reduce((sum, effect) => sum + effectScore(objective, effect), 0);
@@ -124,6 +131,22 @@ export function playQuarter(
   }
 
   if (strategy === 'no-op') return state;
+
+  // Tahap 6B.4 "kunjungan terus": seluruh AP untuk kunjungan ke provinsi paling
+  // tidak puas, ditambah dengar aspirasi gratis.
+  if (strategy === 'visit') {
+    const ranked = Object.entries(state.provinces).sort(
+      ([idA, a], [idB, b]) => a.satisfactionTenths - b.satisfactionTenths || compareIds(idA, idB),
+    );
+    const lowest = ranked[0]?.[0];
+    if (lowest !== undefined)
+      tryCommand({ type: 'PROVINCE_ACTION', provinceId: lowest, action: 'HEAR' });
+    for (const [provinceId] of ranked) {
+      if (state.actionPointsRemaining === 0) break;
+      tryCommand({ type: 'PROVINCE_ACTION', provinceId, action: 'VISIT' });
+    }
+    return state;
+  }
 
   const policies = [...defs.policies].sort((a, b) => compareIds(a.id, b.id));
   if (strategy === 'random') {

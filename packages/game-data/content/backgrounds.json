@@ -1,0 +1,100 @@
+[
+  {
+    "id": "BG-PLACEHOLDER-EKONOM",
+    "version": 1,
+    "name": "Ekonom kampus (placeholder)",
+    "description": "Disegani pasar, dianggap jauh dari rakyat kecil.",
+    "scene": "policy-fiscal",
+    "startModifiers": [
+      {
+        "target": "fiscalHealth",
+        "delta": 4
+      },
+      {
+        "target": "trust",
+        "delta": -2
+      },
+      {
+        "target": "approval",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "id": "BG-PLACEHOLDER-AKTIVIS",
+    "version": 1,
+    "name": "Aktivis masyarakat sipil (placeholder)",
+    "description": "Dipercaya publik, belum punya jaringan di birokrasi.",
+    "scene": "protest",
+    "startModifiers": [
+      {
+        "target": "trust",
+        "delta": 4
+      },
+      {
+        "target": "stability",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "id": "BG-PLACEHOLDER-PURNAWIRAWAN",
+    "version": 1,
+    "name": "Purnawirawan (placeholder)",
+    "description": "Dianggap tegas menjaga ketertiban, diragukan soal keterbukaan.",
+    "scene": "cabinet-briefing",
+    "startModifiers": [
+      {
+        "target": "stability",
+        "delta": 3
+      },
+      {
+        "target": "trust",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "id": "BG-PLACEHOLDER-WALIKOTA",
+    "version": 1,
+    "name": "Mantan wali kota (placeholder)",
+    "description": "Dikenal dekat dengan warga, anggaran daerahnya sering defisit.",
+    "scene": "map-visit",
+    "startModifiers": [
+      {
+        "target": "welfare",
+        "delta": 3
+      },
+      {
+        "target": "fiscalHealth",
+        "delta": -2.5
+      },
+      {
+        "target": "approval",
+        "delta": 2
+      }
+    ]
+  },
+  {
+    "id": "BG-PLACEHOLDER-PENGUSAHA",
+    "version": 1,
+    "name": "Pengusaha (placeholder)",
+    "description": "Membawa jaringan investor, dicurigai konflik kepentingan.",
+    "scene": "port",
+    "startModifiers": [
+      {
+        "target": "growthPct",
+        "delta": 0.3
+      },
+      {
+        "target": "fiscalHealth",
+        "delta": 3
+      },
+      {
+        "target": "trust",
+        "delta": -1
+      }
+    ],
+    "treasuryTrillion": 5
+  }
+]

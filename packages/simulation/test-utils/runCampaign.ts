@@ -24,6 +24,8 @@ export function runCampaign(options: {
   readonly seed: string;
   readonly strategy: Strategy;
   readonly turns?: number;
+  /** Tahap 6B: latar belakang presiden (default tanpa latar belakang). */
+  readonly backgroundId?: string;
 }): CampaignRun {
   const defs: GameDefinitions =
     options.turns === undefined
@@ -32,6 +34,7 @@ export function runCampaign(options: {
   const initial = createInitialState(defs.scenario, defs, {
     presidentName: 'Presiden Simulasi',
     seed: options.seed,
+    ...(options.backgroundId === undefined ? {} : { backgroundId: options.backgroundId }),
   });
   // Stream RNG bot terpisah dari stream event engine.
   const botRng = createRng(`${options.seed}:bot:${options.strategy}`);

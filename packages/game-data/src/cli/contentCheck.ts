@@ -57,6 +57,12 @@ function main(): void {
     console.log(`  Kebijakan: ${definitions.policies.length}`);
     console.log(`  Event: ${definitions.events.length}`);
     console.log(`  Arketipe: ${definitions.archetypes.length}`);
+    console.log(`  Latar belakang: ${definitions.backgrounds.length}`);
+    console.log(`  Janji kampanye: ${definitions.promises.length}`);
+    console.log(`  Provinsi: ${definitions.provinces.length}`);
+    console.log(
+      `  Jabatan: ${definitions.ministries.length} menteri + ${definitions.leaders.length} pimpinan, ${definitions.candidates.length} calon`,
+    );
     console.log(`contentHash: ${result.contentHash}`);
     console.log(
       `Konten valid. ${result.warnings.length > 0 ? `${result.warnings.length} peringatan untuk ditinjau.` : 'Tidak ada peringatan.'}`,

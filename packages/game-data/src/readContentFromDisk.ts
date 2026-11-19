@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 import type { RawContentBundle, ValidationIssue } from '@republika/shared';
@@ -67,9 +67,34 @@ export function readContentFromDisk(contentDirectory: string): DiskContentResult
   const factions = readDirectory(join('factions'), 'factions/');
   const policies = readDirectory(join('policies'), 'policies/');
   const events = readDirectory(join('events'), 'events/');
+  // Tahap 6B: berkas opsional; tidak ada = koleksi kosong.
+  const readOptional = (relativePath: string): unknown => {
+    const filePath = join(contentDirectory, relativePath);
+    if (!existsSync(filePath)) return undefined;
+    fileCount += 1;
+    return readJson(filePath, relativePath, issues);
+  };
+  const backgrounds = readOptional('backgrounds.json');
+  const promises = readOptional('promises.json');
+  const provinces = readOptional('provinces.json');
+  const leaders = readOptional('leaders.json');
+  const candidates = readOptional('cabinet-candidates.json');
 
   return {
-    raw: { scenario, baseline, ministries, archetypes, factions, policies, events },
+    raw: {
+      scenario,
+      baseline,
+      ministries,
+      archetypes,
+      factions,
+      policies,
+      events,
+      backgrounds,
+      promises,
+      provinces,
+      leaders,
+      candidates,
+    },
     issues,
     fileCount,
   };

@@ -22,6 +22,7 @@ import {
   convertPolicy,
   convertScenario,
 } from './convert.js';
+import { parseCampaignContent, validateCampaignContent } from './campaignContent.js';
 import { validateContent } from './crossValidate.js';
 import { qualityWarnings } from './quality.js';
 import { computeContentHash } from './hash.js';
@@ -81,7 +82,10 @@ export function parseRawContent(raw: RawContentBundle): ParseContentResult {
     parseAt(eventJsonSchema, event, `events[${index}]`, issues),
   );
 
+  const campaign = parseCampaignContent(raw, issues);
+
   if (
+    campaign === undefined ||
     scenario === undefined ||
     baseline === undefined ||
     ministries === undefined ||
@@ -125,10 +129,11 @@ export function parseRawContent(raw: RawContentBundle): ParseContentResult {
     policies: parsedPolicies.map(convertPolicy).sort(byId),
     events: parsedEvents.map(convertEvent).sort(byId),
     archetypes: convertedArchetypes,
+    ...campaign,
   };
 
   const crossValidation = validateContent(definitions);
-  issues.push(...crossValidation.issues);
+  issues.push(...crossValidation.issues, ...validateCampaignContent(definitions));
 
   const contentHash = issues.length === 0 ? computeContentHash(definitions) : null;
 

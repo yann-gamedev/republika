@@ -344,6 +344,105 @@ Kontrak: evaluasi dari prioritas tertinggi dan pakai yang pertama cocok. Statist
 
 ---
 
+## Konten Tahap 6B (opsional, semua berkas boleh tidak ada)
+
+Berkas di bawah ini dibaca bila ada. Bila tidak ada, koleksinya dianggap kosong dan fitur terkait tidak tampil. Setelah mengganti atau menghapus ID, naikkan `rulesetVersion` dan tambahkan peta di `packages/game-data/migrations/` (lihat §5.13 `AGENT.md`).
+
+### Latar belakang — `backgrounds.json`
+
+```json
+[
+  {
+    "id": "BG-EKONOM",
+    "version": 1,
+    "name": "Ekonom kampus",
+    "description": "Disegani pasar, dianggap jauh dari rakyat kecil.",
+    "scene": "policy-fiscal",
+    "startModifiers": [
+      { "target": "fiscalHealth", "delta": 4 },
+      { "target": "trust", "delta": -2 }
+    ],
+    "treasuryTrillion": 0
+  }
+]
+```
+
+- `startModifiers`: maksimal 6, delta −20..20 (1 desimal), diterapkan sekali saat pelantikan. `scene` adalah kunci ilustrasi di `apps/desktop/src/assets/images/scenes/`.
+- `BG-NONE` dicadangkan untuk save lama.
+- Uji dengan `pnpm balance`: tidak boleh ada latar belakang yang menang di lebih dari 40% pertandingan (bendera `BACKGROUND_DOMINANT`). Kepercayaan cenderung menguat dan stabilitas memudar sampai akhir kampanye, jadi bandingkan efek _akhir_, bukan angka modifier.
+
+### Janji kampanye — `promises.json`
+
+```json
+[
+  {
+    "id": "PRM-INFLASI",
+    "version": 1,
+    "name": "Inflasi terkendali",
+    "description": "…",
+    "check": { "stat": "final.inflationPct", "op": "<=", "value": 4.0 }
+  }
+]
+```
+
+- Minimal 3 janji. `check` memakai statistik yang sama dengan arketipe.
+
+### Provinsi — `provinces.json`
+
+```json
+[
+  {
+    "id": "PRV-ACEH",
+    "version": 1,
+    "name": "Aceh",
+    "region": "Sumatra",
+    "issue": "Dana otonomi khusus dan pemulihan pascakonflik",
+    "col": 1,
+    "row": 1,
+    "baseSatisfaction": 54,
+    "offset": -4
+  }
+]
+```
+
+- `col` 1–17 dan `row` 1–7 adalah posisi tile di peta. Satu petak hanya untuk satu provinsi.
+- `offset` −30..30 adalah selisih kepuasan provinsi terhadap persetujuan nasional, sebagai titik tuju drift.
+- Nama provinsi nyata (K1). Nama tokoh tetap fiktif.
+
+### Jabatan pimpinan — `leaders.json` dan calon — `cabinet-candidates.json`
+
+```json
+[{ "id": "LDR-WAPRES", "version": 1, "title": "Wakil Presiden", "replaceable": false }]
+```
+
+```json
+[
+  {
+    "id": "CND-001",
+    "version": 1,
+    "roleId": "MIN-FISCAL",
+    "name": "Ratih Kusumaningrum",
+    "factionId": "FAC-CAKRAWALA",
+    "initial": true,
+    "baseEffectiveness": 65,
+    "integrity": 72,
+    "supportGain": 0,
+    "bio": "…",
+    "appearance": {
+      "head": "hijab",
+      "skin": "#A87860",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": true
+    }
+  }
+]
+```
+
+- `roleId` adalah ID kementerian (`MIN-*`) atau jabatan pimpinan (`LDR-*`). Setiap jabatan wajib punya **tepat satu** calon `initial: true` sebagai pejabat saat pelantikan.
+- Calon menteri wajib punya `baseEffectiveness` (40–90). `factionId: null` berarti nonpartai.
+- `appearance.head`: `peci`, `rambut`, `panjang`, `uban`, `baret`, `botak`, atau `hijab`.
+
 ## Tugas konten per tahap
 
 ### Tahap 1 — Belum menulis apa pun

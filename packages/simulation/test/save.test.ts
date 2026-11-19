@@ -36,7 +36,25 @@ describe('migrasi format save', () => {
     expect(result.save.playTimeSeconds).toBe(0);
     // Ledger v1 utuh setelah migrasi (id dan after dihitung ulang dengan benar).
     expect(result.save.history.reports).toEqual(saveV1.history.reports);
-    expect(hashState(result.save.state)).toBe(hashState(saveV1.state));
+    // State v1 utuh; v3 hanya menambah field Tahap 6B dengan nilai bawaan.
+    const {
+      president,
+      promiseIds,
+      cabinet,
+      leaders,
+      reshuffleUsedTurn,
+      provinces,
+      ...legacyState
+    } = result.save.state;
+    expect(hashState(legacyState)).toBe(hashState(saveV1.state));
+    expect(president.backgroundId).toBe('BG-NONE');
+    expect({ promiseIds, cabinet, leaders, reshuffleUsedTurn, provinces }).toEqual({
+      promiseIds: [],
+      cabinet: {},
+      leaders: {},
+      reshuffleUsedTurn: 0,
+      provinces: {},
+    });
 
     const next = continueOneQuarter(result.save);
     expect(next.ok).toBe(true);
@@ -184,7 +202,7 @@ describe('migrasi ruleset konten rilis (v1 → v2: ID fraksi final)', () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.migrated).toBe(true);
-    expect(result.save.state.rulesetVersion).toBe(2);
+    expect(result.save.state.rulesetVersion).toBe(content.scenario.rulesetVersion);
     for (const [index, oldId] of oldIds.entries()) {
       const newId = map.renamed[oldId];
       expect(result.save.state.factions).toContainEqual({

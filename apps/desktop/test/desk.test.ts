@@ -36,7 +36,7 @@ describe('Meja kerja', () => {
     expect(latestEventId(report(1, 500, ['EVT-A', 'EVT-B']))).toBe('EVT-B');
   });
 
-  it('pintasan 1–7 mengikuti urutan sidebar', () => {
+  it('pintasan 1–8 mengikuti urutan sidebar', () => {
     expect(SHORTCUT_ROUTES).toEqual([
       '/game/dashboard',
       '/game/policies',
@@ -44,6 +44,7 @@ describe('Meja kerja', () => {
       '/game/cabinet',
       '/game/events',
       '/game/report',
+      '/game/map',
       '/game/history',
     ]);
   });

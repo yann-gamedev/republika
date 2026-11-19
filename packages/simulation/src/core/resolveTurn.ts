@@ -12,6 +12,12 @@ import {
   tickDelayedEffects,
 } from '../policies/lifecycle.js';
 import { updateMinistryEffectiveness } from '../politics/ministries.js';
+import {
+  applyProvinceActions,
+  applyProvinceDrift,
+  normalizeProvinces,
+} from '../politics/provinces.js';
+import { applyReshuffles } from '../politics/reshuffle.js';
 import { applyLobbies, resolveVotes } from '../politics/voting.js';
 import { accumulateIndicatorStats, evaluateArchetype } from '../report/archetype.js';
 import { buildReport } from '../report/buildReport.js';
@@ -39,7 +45,7 @@ export type ResolveTurnResult =
 
 /**
  * Orkestrator akhir kuartal dengan urutan persis AGENT §5.10:
- *  1 validasi · 2 respons event · 3 lobi · 4 voting · 5 biaya awal ·
+ *  1 validasi · 2 respons event · 2b reshuffle · 2c aksi daerah · 3 lobi · 4 voting · 5 biaya awal ·
  *  6 efek IMMEDIATE · 7 tick kebijakan/cooldown/tertunda · 8 baseline ·
  *  9 effectiveness kementerian · 10 normalize · 11 event berikutnya ·
  *  12 laporan, turn += 1, status.
@@ -63,6 +69,10 @@ export function resolveTurn(
 
   // 2. Respons event.
   const resolvedEvents = applyEventResponses(work, context);
+  // 2b. Reshuffle (Tahap 6B.3): sebelum lobi agar berlaku pada voting kuartal ini.
+  applyReshuffles(work, pending, defs, ledger);
+  // 2c. Aksi daerah (Tahap 6B.4).
+  applyProvinceActions(work, pending, defs, ledger);
   // 3. Lobi.
   const lobbyBonuses = applyLobbies(work, pending, defs, ledger);
   // 4. Voting (urut policyId).
@@ -78,10 +88,12 @@ export function resolveTurn(
   tickDelayedEffects(work, context);
   // 8. Baseline.
   applyBaseline(work, defs.baseline, ticked, index, ledger);
+  applyProvinceDrift(work, defs, ledger);
   // 9. Effectiveness kementerian.
   updateMinistryEffectiveness(work, ticked, index, ledger);
   // 10. Normalize + clamp.
   normalizeState(work, ledger);
+  normalizeProvinces(work, ledger);
   // 11. Event untuk kuartal berikutnya (tidak ada setelah kuartal terakhir).
   const isFinal = state.turn >= state.maxTurns;
   const nextEventIds = isFinal
@@ -109,6 +121,7 @@ export function resolveTurn(
   work.lobbyThisTurn = [];
   work.commandIdsThisTurn = [];
   work.actionPointsRemaining = work.actionPointsPerTurn;
+  for (const province of Object.values(work.provinces)) province.actionsThisTurn = [];
   work.pendingEvents = [
     ...work.pendingEvents,
     ...nextEventIds.map((eventId) => ({

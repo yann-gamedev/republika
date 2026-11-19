@@ -1,0 +1,90 @@
+[
+  {
+    "id": "PRM-PLACEHOLDER-INFLASI",
+    "version": 1,
+    "name": "Inflasi terkendali",
+    "description": "Inflasi akhir masa jabatan paling tinggi 4,0%.",
+    "check": {
+      "stat": "final.inflationPct",
+      "op": "<=",
+      "value": 4
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-KERJA",
+    "version": 1,
+    "name": "Lapangan kerja",
+    "description": "Pengangguran akhir masa jabatan paling tinggi 5,0%.",
+    "check": {
+      "stat": "final.unemploymentPct",
+      "op": "<=",
+      "value": 5
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-FISKAL",
+    "version": 1,
+    "name": "Anggaran sehat",
+    "description": "Kesehatan fiskal akhir paling rendah 60.",
+    "check": {
+      "stat": "final.fiscalHealth",
+      "op": ">=",
+      "value": 60
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-SEJAHTERA",
+    "version": 1,
+    "name": "Rakyat sejahtera",
+    "description": "Kesejahteraan akhir paling rendah 55.",
+    "check": {
+      "stat": "final.welfare",
+      "op": ">=",
+      "value": 55
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-BERSIH",
+    "version": 1,
+    "name": "Pemerintahan bersih",
+    "description": "Kepercayaan publik akhir paling rendah 55.",
+    "check": {
+      "stat": "final.trust",
+      "op": ">=",
+      "value": 55
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-DIDUKUNG",
+    "version": 1,
+    "name": "Didukung rakyat",
+    "description": "Rata-rata persetujuan selama menjabat paling rendah 55.",
+    "check": {
+      "stat": "avg.approval",
+      "op": ">=",
+      "value": 55
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-STABIL",
+    "version": 1,
+    "name": "Negara stabil",
+    "description": "Stabilitas tidak pernah turun di bawah 45.",
+    "check": {
+      "stat": "min.stability",
+      "op": ">=",
+      "value": 45
+    }
+  },
+  {
+    "id": "PRM-PLACEHOLDER-TUMBUH",
+    "version": 1,
+    "name": "Ekonomi tumbuh",
+    "description": "Pertumbuhan akhir paling rendah 5,0%.",
+    "check": {
+      "stat": "final.growthPct",
+      "op": ">=",
+      "value": 5
+    }
+  }
+]

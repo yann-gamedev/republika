@@ -2,6 +2,8 @@ import type { GameCommand, GameDefinitions, GameState, PendingCommand } from '@r
 
 import { indexDefinitions, type DefinitionIndex } from './definitions.js';
 import { commandError, type CommandError, type CommandErrorCode } from './errors.js';
+import { provinceActionError, provinceApCost, withProvinceAction } from '../politics/provinces.js';
+import { RESHUFFLE_AP_COST, reshuffleError } from '../politics/reshuffle.js';
 import { evaluateAll } from './requirements.js';
 
 /** Biaya AP lobi fraksi (AGENT §5.4). */
@@ -134,6 +136,40 @@ export function applyCommand(
       });
     }
 
+    case 'RESHUFFLE': {
+      const error = reshuffleError(state, defs, command.roleId, command.candidateId);
+      if (error !== null) return fail(state, error);
+      const pending: PendingCommand = {
+        type: 'RESHUFFLE',
+        commandId: command.commandId,
+        roleId: command.roleId,
+        candidateId: command.candidateId,
+        apCost: RESHUFFLE_AP_COST,
+      };
+      return accept(state, command.commandId, {
+        actionPointsRemaining: state.actionPointsRemaining - RESHUFFLE_AP_COST,
+        pendingCommands: [...state.pendingCommands, pending],
+      });
+    }
+
+    case 'PROVINCE_ACTION': {
+      const error = provinceActionError(state, command.provinceId, command.action);
+      if (error !== null) return fail(state, error);
+      const apCost = provinceApCost(command.action);
+      const pending: PendingCommand = {
+        type: 'PROVINCE_ACTION',
+        commandId: command.commandId,
+        provinceId: command.provinceId,
+        action: command.action,
+        apCost,
+      };
+      return accept(state, command.commandId, {
+        actionPointsRemaining: state.actionPointsRemaining - apCost,
+        pendingCommands: [...state.pendingCommands, pending],
+        provinces: withProvinceAction(state, command.provinceId, command.action, true),
+      });
+    }
+
     case 'CANCEL_PENDING': {
       const target = state.pendingCommands.find(
         (pending) => pending.commandId === command.pendingCommandId,
@@ -147,6 +183,9 @@ export function applyCommand(
         pendingCommands: state.pendingCommands.filter(
           (pending) => pending.commandId !== command.pendingCommandId,
         ),
+        ...(target.type === 'PROVINCE_ACTION'
+          ? { provinces: withProvinceAction(state, target.provinceId, target.action, false) }
+          : {}),
       });
     }
 

@@ -7,6 +7,8 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:1421',
     viewport: { width: 1440, height: 900 },
     trace: 'retain-on-failure',
+    // GC paksa sebelum mengukur JS heap (final.spec) agar angka tidak ikut sampah.
+    launchOptions: { args: ['--js-flags=--expose-gc'] },
   },
   webServer: {
     command: 'pnpm --filter @republika/desktop preview --host 127.0.0.1 --port 1421 --strictPort',

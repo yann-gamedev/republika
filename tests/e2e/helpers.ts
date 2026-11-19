@@ -64,3 +64,14 @@ export async function signOath(page: Page): Promise<void> {
   await expect(page.getByTestId('stamp')).toHaveAttribute('data-visible', 'true');
   await page.getByRole('button', { name: copy.inauguration.ceremonyEnter }).click();
 }
+
+/** Berkas pencalonan 6B.2: pilih latar belakang pertama dan tiga janji pertama. */
+export async function completeDossier(page: Page): Promise<void> {
+  await page
+    .getByRole('radiogroup', { name: copy.inauguration.stepBackground })
+    .getByRole('radio')
+    .first()
+    .click();
+  const promises = page.getByRole('checkbox');
+  for (let index = 0; index < 3; index += 1) await promises.nth(index).click();
+}

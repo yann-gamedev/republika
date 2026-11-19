@@ -2,6 +2,7 @@ export * from './types/archetypeStats.js';
 export * from './types/constants.js';
 export * from './types/fixedPoint.js';
 export * from './types/indicators.js';
+export * from './validation/campaign.js';
 export * from './validation/commands.js';
 export * from './validation/common.js';
 export * from './validation/content.js';

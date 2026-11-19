@@ -2,6 +2,7 @@ import { SAVE_FORMAT_VERSION, saveFileSchema, type SaveFile } from '@republika/s
 
 import { expandFromDisk, isObject } from './compact.js';
 import { migrateV1ToV2 } from './migrations/v1ToV2.js';
+import { migrateV2ToV3 } from './migrations/v2ToV3.js';
 
 type Migrator = (raw: Record<string, unknown>) => Record<string, unknown>;
 
@@ -12,6 +13,7 @@ type Migrator = (raw: Record<string, unknown>) => Record<string, unknown>;
  */
 export const SAVE_MIGRATORS: Readonly<Record<number, Migrator>> = {
   1: migrateV1ToV2,
+  2: migrateV2ToV3,
 };
 
 export type MigrateSaveError =

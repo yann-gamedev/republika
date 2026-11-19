@@ -1,9 +1,18 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { HONORIFICS, type Honorific, type PortraitHead } from '@republika/shared';
+import {
+  HONORIFICS,
+  INDICATOR_DOMAINS,
+  PROMISE_COUNT,
+  type BackgroundDefinition,
+  type Honorific,
+  type PortraitHead,
+} from '@republika/shared';
 
-import { sceneArt } from '@/content/art';
+import { isFavourable } from '@/app/useGame';
+import { SCENE_KEYS, sceneArt, type SceneKey } from '@/content/art';
+import { formatSignedIndicator, formatSignedRupiahTriliun } from '@/format/formatters';
 import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { gameController } from '@/store/controller';
@@ -27,6 +36,29 @@ export const LOOKS_BY_HONORIFIC: Readonly<Record<Honorific, readonly PortraitHea
   Bapak: ['peci', 'rambut', 'uban'],
   Ibu: ['hijab', 'panjang', 'uban'],
 };
+
+function isSceneKey(value: string): value is SceneKey {
+  return (SCENE_KEYS as readonly string[]).includes(value);
+}
+
+/** Chip modifier latar belakang: indikator ±, lalu kas. */
+function modifierChips(background: BackgroundDefinition) {
+  const chips = background.startModifiers.map((modifier) => ({
+    key: modifier.target as string,
+    text: `${INDICATOR_DOMAINS[modifier.target].shortLabel} ${formatSignedIndicator(modifier.deltaTenths)}`,
+    good: isFavourable(modifier.target, modifier.deltaTenths),
+  }));
+  if (background.treasuryBillion !== 0) {
+    chips.push({
+      key: 'treasury',
+      text: copy.inauguration.treasuryModifier(
+        formatSignedRupiahTriliun(background.treasuryBillion),
+      ),
+      good: background.treasuryBillion > 0,
+    });
+  }
+  return chips;
+}
 
 const PORTRAIT_COLORS = { skin: '#C09078', suit: '#181830', accent: '#C03018', bg: '#D8D8C0' };
 
@@ -59,6 +91,22 @@ export default function InaugurationPage() {
   const [mode, setMode] = useState<OathMode>('sumpah');
   const [signing, setSigning] = useState(false);
   const [sworn, setSworn] = useState(false);
+  const [backgroundId, setBackgroundId] = useState<string | null>(null);
+  const [promiseIds, setPromiseIds] = useState<readonly string[]>([]);
+  const [choiceError, setChoiceError] = useState<string | null>(null);
+  const background = definitions.backgrounds.find((item) => item.id === backgroundId);
+  const needsPromises = definitions.promises.length >= PROMISE_COUNT;
+
+  const togglePromise = (id: string) => {
+    setChoiceError(null);
+    setPromiseIds((current) =>
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : current.length < PROMISE_COUNT
+          ? [...current, id]
+          : current,
+    );
+  };
 
   const name = presidentName.trim();
   const cabinet = cabinetName.trim();
@@ -70,6 +118,14 @@ export default function InaugurationPage() {
       setErrors(nextErrors);
       return;
     }
+    if (definitions.backgrounds.length > 0 && backgroundId === null) {
+      setChoiceError(copy.inauguration.errorBackground);
+      return;
+    }
+    if (needsPromises && promiseIds.length !== PROMISE_COUNT) {
+      setChoiceError(copy.inauguration.errorPromises);
+      return;
+    }
     updateSettings({ presidentLook: { honorific, head } });
     setStep('oath');
   };
@@ -78,7 +134,14 @@ export default function InaugurationPage() {
     if (signing || sworn) return;
     setSigning(true);
     void gameController
-      .startCampaign({ presidentName: name, cabinetName: cabinet })
+      .startCampaign({
+        presidentName: name,
+        cabinetName: cabinet,
+        honorific,
+        head,
+        ...(backgroundId === null ? {} : { backgroundId }),
+        promiseIds,
+      })
       .then((result) => {
         setSigning(false);
         if (result.ok) {
@@ -331,9 +394,70 @@ export default function InaugurationPage() {
                 </div>
               </fieldset>
 
+              {definitions.backgrounds.length > 0 && (
+                <fieldset className="flex flex-col gap-3">
+                  <legend className="mb-4 flex items-baseline gap-2.5 text-[17px] font-medium">
+                    <span className="font-mono text-[13px] text-primary">02</span>
+                    <span id="background-label">{copy.inauguration.stepBackground}</span>
+                  </legend>
+                  <div
+                    role="radiogroup"
+                    aria-labelledby="background-label"
+                    className="grid grid-cols-2 gap-3 2xl:grid-cols-3"
+                  >
+                    {definitions.backgrounds.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={backgroundId === item.id}
+                        onClick={() => {
+                          setBackgroundId(item.id);
+                          setChoiceError(null);
+                        }}
+                        className={cn(
+                          'flex flex-col overflow-hidden rounded-[12px] bg-card text-left transition-shadow duration-150',
+                          backgroundId === item.id
+                            ? 'shadow-[inset_0_0_0_2px_hsl(var(--primary))]'
+                            : 'shadow-[inset_0_0_0_1px_hsl(var(--border))]',
+                        )}
+                      >
+                        <ArtImage
+                          load={sceneArt(isSceneKey(item.scene) ? item.scene : 'dashboard-desk')}
+                          alt=""
+                          className="h-[88px] w-full"
+                        />
+                        <span className="flex flex-col gap-1.5 p-3">
+                          <span className="text-sm font-medium">{item.name}</span>
+                          <span className="text-xs leading-snug text-text-secondary">
+                            {item.description}
+                          </span>
+                          <span className="flex flex-wrap gap-1">
+                            {modifierChips(item).map((chip) => (
+                              <span
+                                key={chip.key}
+                                className={cn(
+                                  'rounded-[4px] bg-raised px-1.5 py-0.5 font-mono text-xs',
+                                  chip.good ? 'text-positive' : 'text-negative',
+                                )}
+                              >
+                                {chip.text}
+                              </span>
+                            ))}
+                          </span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {copy.inauguration.backgroundNote}
+                  </span>
+                </fieldset>
+              )}
+
               <fieldset className="flex flex-col gap-3">
                 <legend className="mb-4 flex items-baseline gap-2.5 text-[17px] font-medium">
-                  <span className="font-mono text-[13px] text-primary">02</span>
+                  <span className="font-mono text-[13px] text-primary">03</span>
                   {copy.inauguration.stepCabinet}
                 </legend>
                 <Label htmlFor="cabinet-name" className="sr-only">
@@ -380,6 +504,52 @@ export default function InaugurationPage() {
                 </div>
               </fieldset>
 
+              {needsPromises && (
+                <fieldset className="flex flex-col gap-3">
+                  <legend className="mb-4 flex items-baseline gap-2.5 text-[17px] font-medium">
+                    <span className="font-mono text-[13px] text-primary">04</span>
+                    {copy.inauguration.stepPromises}
+                  </legend>
+                  <span className="text-xs text-text-secondary">
+                    {copy.inauguration.promisesHint(promiseIds.length)}
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {definitions.promises.map((item) => {
+                      const checked = promiseIds.includes(item.id);
+                      const full = !checked && promiseIds.length >= PROMISE_COUNT;
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          role="checkbox"
+                          aria-checked={checked}
+                          disabled={full}
+                          onClick={() => togglePromise(item.id)}
+                          className={cn(
+                            'flex flex-col gap-1 rounded-[10px] bg-card p-3 text-left transition-shadow duration-150 disabled:opacity-50',
+                            checked
+                              ? 'shadow-[inset_0_0_0_2px_hsl(var(--primary))]'
+                              : 'shadow-[inset_0_0_0_1px_hsl(var(--border))]',
+                          )}
+                        >
+                          <span className="text-sm font-medium">{item.name}</span>
+                          <span className="text-xs text-text-secondary">{item.description}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {copy.inauguration.promisesNote}
+                  </span>
+                </fieldset>
+              )}
+
+              {choiceError !== null && (
+                <p role="alert" className="text-sm text-negative">
+                  {choiceError}
+                </p>
+              )}
+
               <Button type="submit" size="lg" className="self-start">
                 {copy.inauguration.submit}
               </Button>
@@ -406,6 +576,27 @@ export default function InaugurationPage() {
                   <dt className="text-ink-muted">{copy.inauguration.summaryCabinet}</dt>
                   <dd className="font-medium">{cabinet || copy.inauguration.summaryNoCabinet}</dd>
                 </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-ink-muted">{copy.inauguration.summaryBackground}</dt>
+                  <dd className="text-right font-medium">
+                    {background?.name ?? copy.inauguration.summaryNone}
+                  </dd>
+                </div>
+                {needsPromises && (
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-ink-muted">{copy.inauguration.summaryPromises}</dt>
+                    <dd className="text-right">
+                      {promiseIds.length === 0
+                        ? copy.inauguration.summaryNone
+                        : promiseIds
+                            .map(
+                              (id) =>
+                                definitions.promises.find((item) => item.id === id)?.name ?? id,
+                            )
+                            .join(', ')}
+                    </dd>
+                  </div>
+                )}
                 <div className="flex justify-between gap-4">
                   <dt className="text-ink-muted">{copy.inauguration.summaryStart}</dt>
                   <dd>{`${startYear} · K1`}</dd>

@@ -11,7 +11,15 @@ import { predictVote } from '@republika/simulation';
 
 import { displayIndicator, isFavourable, useGameState } from '@/app/useGame';
 import { eventArt, sceneArt } from '@/content/art';
-import { definitions, eventTitle, factionName, policyName } from '@/content/gameContent';
+import {
+  candidateName,
+  definitions,
+  eventTitle,
+  factionName,
+  policyName,
+  provinceName,
+  roleTitle,
+} from '@/content/gameContent';
 import { copy } from '@/copy/id';
 import { formatSignedIndicator } from '@/format/formatters';
 import { gameController } from '@/store/controller';
@@ -179,17 +187,31 @@ export default function DashboardPage() {
             })}
 
             {state.pendingCommands.map((command) => {
-              if (command.type === 'LOBBY_FACTION') {
+              if (command.type !== 'ENACT_POLICY') {
                 return (
                   <div
                     key={command.commandId}
                     className="flex min-h-[120px] flex-col gap-2 rounded-sm border border-border bg-raised p-5"
                   >
                     <span className="text-xs font-medium text-text-secondary">
-                      {copy.dashboard.lobbyKicker}
+                      {command.type === 'LOBBY_FACTION'
+                        ? copy.dashboard.lobbyKicker
+                        : command.type === 'RESHUFFLE'
+                          ? copy.dashboard.reshuffleKicker
+                          : copy.dashboard.provinceKicker}
                     </span>
                     <span className="font-serif text-lg leading-tight">
-                      {copy.dashboard.queueLobby(factionName(command.factionId))}
+                      {command.type === 'LOBBY_FACTION'
+                        ? copy.dashboard.queueLobby(factionName(command.factionId))
+                        : command.type === 'RESHUFFLE'
+                          ? copy.dashboard.queueReshuffle(
+                              roleTitle(command.roleId),
+                              candidateName(command.candidateId),
+                            )
+                          : copy.dashboard.queueProvince(
+                              copy.map.actions[command.action],
+                              provinceName(command.provinceId),
+                            )}
                     </span>
                     <Button
                       size="sm"

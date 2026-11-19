@@ -30,15 +30,16 @@ Hasil **deterministik**: seed + strategi + konten yang sama menghasilkan laporan
 
 ## Bendera otomatis
 
-| Bendera                                    | Kapan                                                            |
-| ------------------------------------------ | ---------------------------------------------------------------- |
-| `SOFTLOCK`                                 | Ada kampanye yang macet                                          |
-| `SAVE_TOO_LARGE`                           | Save maksimum > 1 MB                                             |
-| `STUCK_AT_BOUND`                           | Indikator di batas domain > 30% kuartal                          |
-| `EVENT_NEVER_SEEN`                         | Event tidak pernah muncul di semua kampanye                      |
-| `VOTE_ALWAYS_PASSES` / `VOTE_ALWAYS_FAILS` | Kebijakan dengan ≥ 20 voting selalu lolos/gagal                  |
-| `GREEDY_FAVOURITE`                         | Bot greedy memilih kebijakan yang sama di > 80% kampanye         |
-| `ARCHETYPE_DOMINANT`                       | Satu arketipe > 80% kampanye sebuah strategi                     |
-| `DOMINANT_STRATEGY`                        | Median sebuah strategi lebih baik/setara di ≥ 6 dari 8 indikator |
+| Bendera                                    | Kapan                                                                                                        |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `SOFTLOCK`                                 | Ada kampanye yang macet                                                                                      |
+| `SAVE_TOO_LARGE`                           | Save maksimum > 1 MB                                                                                         |
+| `STUCK_AT_BOUND`                           | Indikator di batas domain > 30% kuartal                                                                      |
+| `EVENT_NEVER_SEEN`                         | Event tidak pernah muncul di semua kampanye                                                                  |
+| `VOTE_ALWAYS_PASSES` / `VOTE_ALWAYS_FAILS` | Kebijakan dengan ≥ 20 voting selalu lolos/gagal                                                              |
+| `GREEDY_FAVOURITE`                         | Bot greedy memilih kebijakan yang sama di > 80% kampanye                                                     |
+| `ARCHETYPE_DOMINANT`                       | Satu arketipe > 80% kampanye sebuah strategi                                                                 |
+| `DOMINANT_STRATEGY`                        | Median sebuah strategi lebih baik/setara di ≥ 6 dari 8 indikator                                             |
+| `BACKGROUND_DOMINANT`                      | Satu latar belakang presiden menang di > 40% pertandingan (seed × strategi, seri dalam 1,0 poin dibagi rata) |
 
 Agent tidak mengubah angka konten. Rekomendasi ada di laporan; penulis konten menyesuaikan `content/` lalu menaikkan `rulesetVersion`.

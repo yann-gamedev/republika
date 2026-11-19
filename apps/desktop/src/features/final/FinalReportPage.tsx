@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { INDICATOR_DOMAINS, INDICATOR_KEYS, type TurnReport } from '@republika/shared';
-import { chronology, topDecisions } from '@republika/simulation';
+import { chronology, evaluatePromises, topDecisions } from '@republika/simulation';
 
 import { PageHeader } from '@/app/PageHeader';
 import { displayIndicator, useGameState } from '@/app/useGame';
@@ -55,6 +55,7 @@ export default function FinalReportPage() {
   }
 
   const archetype = definitions.archetypes.find((item) => item.id === state.archetypeId);
+  const promises = evaluatePromises(state, definitions.promises);
   const first = reports?.[0];
   const last = reports?.at(-1);
   const startYear = first?.year ?? definitions.scenario.startYear;
@@ -88,6 +89,45 @@ export default function FinalReportPage() {
           </CardContent>
         )}
       </Card>
+
+      {promises.length > 0 && (
+        <Card className="mt-6" data-testid="final-promises">
+          <CardHeader>
+            <p className="institutional-label">{copy.final.promisesKicker}</p>
+            <CardTitle className="mt-2">
+              {copy.final.promisesTitle(
+                promises.filter((item) => item.kept).length,
+                promises.length,
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="flex flex-col gap-2">
+              {promises.map((item) => {
+                const promise = definitions.promises.find((entry) => entry.id === item.promiseId);
+                return (
+                  <li
+                    key={item.promiseId}
+                    className="flex items-start justify-between gap-4 text-sm"
+                  >
+                    <span className="flex flex-col gap-0.5">
+                      <span>{promise?.name ?? item.promiseId}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {promise?.description ?? ''}
+                      </span>
+                    </span>
+                    <span
+                      className={item.kept ? 'shrink-0 text-positive' : 'shrink-0 text-negative'}
+                    >
+                      {item.kept ? copy.final.promiseKept : copy.final.promiseBroken}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
 
       {reports === null ? (
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4" aria-busy="true">

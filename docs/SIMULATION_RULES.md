@@ -55,14 +55,16 @@ Saat pemain menekan **Akhiri Kuartal**, engine menjalankan 12 langkah ini dengan
 
 1. **Validasi** — tolak bila ada event belum ditanggapi.
 2. **Tanggapan event** — efek opsi yang dipilih diterapkan.
+   - **2b. Reshuffle** (Tahap 6B) — pejabat pengganti dilantik sebelum lobi dan voting, jadi perubahan dukungan partai langsung berlaku pada voting kuartal ini (§15.3).
+   - **2c. Aksi daerah** (Tahap 6B) — kunjungan, bantuan, dengar aspirasi, dan utusan diterapkan urut ID provinsi lalu jenis aksi (§15.4).
 3. **Lobi** — kas dipotong biaya lobi; fraksi yang dilobi mendapat bonus voting.
 4. **Voting** — kebijakan yang diajukan diproses urut ID (lihat §5).
 5. **Biaya awal** — `fiscalCostTrillion` kebijakan yang lolos dipotong dari kas.
 6. **Efek langsung** — efek `IMMEDIATE` kebijakan yang lolos diterapkan; efek `DELAYED` dijadwalkan.
 7. **Tick** — cooldown berkurang, kebijakan aktif menjalankan efek `PER_TURN` dan durasinya berkurang, efek tertunda yang jatuh tempo diterapkan.
-8. **Dinamika dasar (baseline)** — lihat §8.
+8. **Dinamika dasar (baseline)** — lihat §8. Setelah itu kepuasan tiap provinsi bergerak menuju persetujuan nasional (§15.4).
 9. **Efektivitas kementerian** — lihat §7.
-10. **Normalize** — semua nilai dipotong ke batas.
+10. **Normalize** — semua nilai dipotong ke batas, termasuk kepuasan provinsi 0–100; flag gejolak provinsi dipasang/dilepas (§15.4).
 11. **Pilih event berikutnya** — event untuk kuartal depan diundi (lihat §9). Tidak ada undian setelah kuartal terakhir.
 12. **Laporan** — laporan kuartal dibuat, kuartal maju. Di kuartal terakhir kampanye ditandai selesai.
 
@@ -219,3 +221,40 @@ Keadaan awal: Kementerian Energi efektivitas 55 → pengali 0,92. Inflasi 3,4 (<
 ## 14. Determinisme
 
 Keadaan + aksi + seed + konten yang sama selalu menghasilkan hasil yang sama persis. Test menyimpan sidik jari (hash) hasil 4 kuartal skrip tetap di `packages/simulation/test/__fixtures__/slice-4q.json`. Mengubah satu angka di fixture konten membuat test itu gagal; itu tanda fixture bekerja. Fixture hanya diperbarui bila aturan sengaja diubah, dan `rulesetVersion` dinaikkan.
+
+## 15. Tahap 6B: latar belakang, janji, reshuffle, dan provinsi
+
+Angka di bagian ini disetujui pemilik (K6) sebagai angka awal dan boleh diturunkan bila `pnpm balance` menunjukkan dominasi. Konten di `content/` masih placeholder (K7).
+
+### 15.1 Latar belakang presiden
+
+- Dipilih sekali saat pelantikan dari `backgrounds.json`. Setiap `startModifiers` ditambahkan ke indikator awal (lalu dipotong ke batas domain), dan `treasuryTrillion` ke kas awal.
+- Diterapkan **tepat sekali** di `createCampaign`, dengan ledger `BACKGROUND_APPLIED` (ID `T01-B000`, …) yang disimpan di history save. Kuartal berikutnya tidak menerapkannya lagi.
+- Save lama mendapat `BG-NONE` (tanpa modifier).
+
+### 15.2 Janji kampanye
+
+- Pemain memilih **tepat 3** janji dari `promises.json` saat pelantikan. Save lama punya daftar kosong, sehingga janji tidak dinilai.
+- Dinilai **di laporan akhir** pada state akhir dengan statistik yang sama seperti arketipe (`final.*`, `avg.*`, `min.*`, `max.*`, `count.*`, `total.*`), lalu ditampilkan sebagai "Janji ditepati X/3". Arketipe tidak dipengaruhi janji.
+
+### 15.3 Reshuffle
+
+- Command `RESHUFFLE {roleId, candidateId}`: **1 AP**, diantrekan, bisa dibatalkan, maksimal **1 kali per kuartal** (K6, field `reshuffleUsedTurn`). Wakil presiden (`replaceable: false`) tidak bisa diganti.
+- Diproses di langkah 2b:
+  - **Menteri:** efektivitas kementerian = `baseEffectiveness` calon (dipotong 40–90); dukungan partai calon `+supportGain`; dukungan partai menteri lama −6,0.
+  - **Pimpinan non-kementerian** (Mensesneg, KSP, Jaksa Agung): kepercayaan += (integritas baru − integritas lama) / 10.
+- Ledger: `RESHUFFLE` (jenis `CABINET`), `RESHUFFLE_APPOINTED`, `RESHUFFLE_DISMISSED`, `RESHUFFLE_INTEGRITY`.
+
+### 15.4 Peta daerah
+
+- Setiap provinsi punya kepuasan 0–100. Nilai awal `baseSatisfaction`; tiap kuartal (setelah baseline) bergerak **25%** menuju `persetujuan nasional + offset`. Drift dicatat sebagai satu entri ringkas `PROVINCE_DRIFT` per kuartal.
+- Command `PROVINCE_ACTION {provinceId, action}`, satu aksi per jenis per provinsi per kuartal, diterapkan di langkah 2c:
+
+| Aksi                    | Biaya                                                 | Efek                                           |
+| ----------------------- | ----------------------------------------------------- | ---------------------------------------------- |
+| `VISIT` kunjungan kerja | 1 AP                                                  | kepuasan lokal +6,0, persetujuan nasional +0,3 |
+| `AID` bantuan daerah    | kas −3 T                                              | kepuasan lokal +4,0                            |
+| `HEAR` dengar aspirasi  | gratis, 1× per kuartal di seluruh negeri              | flag `ASPIRATION_<id>` untuk event daerah      |
+| `ENVOY` kirim utusan    | efektivitas kementerian tata kelola (Dalam Negeri) −2 | kepuasan lokal +3,0                            |
+
+- Di bawah 25,0 provinsi **bergejolak**: flag `UNREST_<id>` dipasang di langkah 10 dan dilepas saat pulih. Event daerah bisa memakai flag ini lewat syarat `FLAG_SET`. Konten event daerah belum ada.

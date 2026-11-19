@@ -29,7 +29,7 @@ Engine/resolusi, `GameController`, save file atomik, backup dan migrasi, persist
 
 ## Tahap 5.4 — RAM belum terukur andal
 
-Pengukuran otomatis RAM di mesin pengembangan tidak konsisten (Windows memangkas working set jendela yang tidak di depan). Detail ada di `docs/PERFORMANCE.md`. **Pemilik perlu mengukur dengan Task Manager** (kolom *Memory (active private working set)*, jendela di depan) di menu dan setelah 20 kuartal.
+Pengukuran otomatis RAM di mesin pengembangan tidak konsisten (Windows memangkas working set jendela yang tidak di depan). Detail ada di `docs/PERFORMANCE.md`. **Pemilik perlu mengukur dengan Task Manager** (kolom _Memory (active private working set)_, jendela di depan) di menu dan setelah 20 kuartal.
 
 Jika total melewati 200 MB, opsi (perlu keputusan, bukan hack):
 
@@ -37,3 +37,11 @@ Jika total melewati 200 MB, opsi (perlu keputusan, bukan hack):
 2. Kurangi kerja renderer: matikan `backdrop-blur` (header/dialog) dan bayangan besar yang memicu komposit GPU; ukur ulang.
 3. Batasi jumlah layar yang tetap ter-mount (sudah lazy; cek di React DevTools Profiler).
 4. `--disable-gpu` **tidak** disarankan: di mesin uji justru menaikkan memori.
+
+## Tahap 6B — catatan untuk pemilik
+
+1. **Event daerah belum ada.** Flag `ASPIRATION_<id>` dan `UNREST_<id>` sudah dipasang engine, tetapi belum ada event yang membacanya, dan bobot event daerah belum dinaikkan saat gejolak. Usulan: tulis event daerah dengan syarat `FLAG_SET`, lalu putuskan apakah gejolak menaikkan bobot otomatis.
+2. **Nama kementerian masih placeholder.** K1 mengizinkan nama lembaga nyata ("Kementerian Keuangan"); `ministries.json` belum diganti karena itu konten final pemilik.
+3. **Statistik "Loyalitas" di wireframe profil** belum ada di model; profil menampilkan efektivitas dan integritas.
+4. **Warta belum memberitakan reshuffle dan aksi daerah** sebagai berita utama; keduanya hanya muncul di ledger, Meja kerja, dan rekam jejak.
+5. **Gate playtest 6A belum lengkap** (kampanye ke-2, skala 125%, RAM Task Manager). 6B dikerjakan atas permintaan pemilik; gate yang sama sebaiknya diulang untuk 6B.

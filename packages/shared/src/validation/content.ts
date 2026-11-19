@@ -3,6 +3,13 @@ import { z } from 'zod';
 import { INDICATOR_DOMAINS, type IndicatorKey } from '../types/indicators.js';
 import { FACTION_ROLES, POLICY_CATEGORIES, type FactionRole } from '../types/constants.js';
 import type { Indicators } from './indicators.js';
+import type {
+  BackgroundDefinition,
+  CandidateDefinition,
+  LeaderDefinition,
+  PromiseDefinition,
+  ProvinceDefinition,
+} from './campaign.js';
 import type { ConditionalModifier, EffectRule, Requirement } from './rules.js';
 import {
   CONTROL_CHAR_PATTERN,
@@ -482,6 +489,12 @@ export interface GameDefinitions {
   readonly policies: readonly PolicyDefinition[];
   readonly events: readonly EventDefinition[];
   readonly archetypes: readonly ArchetypeDefinition[];
+  /** Tahap 6B — koleksi boleh kosong. */
+  readonly backgrounds: readonly BackgroundDefinition[];
+  readonly promises: readonly PromiseDefinition[];
+  readonly provinces: readonly ProvinceDefinition[];
+  readonly leaders: readonly LeaderDefinition[];
+  readonly candidates: readonly CandidateDefinition[];
 }
 
 export interface RawContentBundle {
@@ -492,6 +505,12 @@ export interface RawContentBundle {
   readonly policies: readonly unknown[];
   readonly events: readonly unknown[];
   readonly archetypes: unknown;
+  /** Tahap 6B (opsional; tidak ada = koleksi kosong). */
+  readonly backgrounds?: unknown;
+  readonly promises?: unknown;
+  readonly provinces?: unknown;
+  readonly leaders?: unknown;
+  readonly candidates?: unknown;
 }
 
 export type ValidationSeverity = 'error' | 'warning';

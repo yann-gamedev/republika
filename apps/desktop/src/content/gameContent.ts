@@ -40,6 +40,25 @@ export function ministryName(ministryId: string): string {
   return definitions.ministries.find((ministry) => ministry.id === ministryId)?.name ?? ministryId;
 }
 
+/** Nama jabatan: kementerian atau jabatan pimpinan (Tahap 6B.3). */
+export function roleTitle(roleId: string): string {
+  return (
+    definitions.ministries.find((ministry) => ministry.id === roleId)?.name ??
+    definitions.leaders.find((leader) => leader.id === roleId)?.title ??
+    roleId
+  );
+}
+
+export function provinceName(provinceId: string): string {
+  return definitions.provinces.find((province) => province.id === provinceId)?.name ?? provinceId;
+}
+
+export function candidateName(candidateId: string): string {
+  return (
+    definitions.candidates.find((candidate) => candidate.id === candidateId)?.name ?? candidateId
+  );
+}
+
 export function eventTitle(eventId: string): string {
   return definitions.events.find((event) => event.id === eventId)?.title ?? eventId;
 }

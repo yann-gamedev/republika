@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { signOath } from './helpers';
+import { completeDossier, signOath } from './helpers';
 
 /** Pindah rute tanpa reload, agar state di MemoryStorage (dev:web) tetap ada. */
 async function gotoHash(page: Page, route: string): Promise<void> {
@@ -16,6 +16,7 @@ async function inaugurate(page: Page, name = 'Presiden Uji'): Promise<void> {
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(name);
   await page.getByLabel(copy.inauguration.cabinetLabel).fill('Kabinet Uji');
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
@@ -34,6 +35,7 @@ test('pelantikan, aksi nyata, navigasi, dan pengaturan', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: copy.menu.title, exact: true })).toBeVisible();
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await expect(page.getByRole('alert')).toHaveText(copy.inauguration.errorRequired);
   await inaugurate(page);
@@ -83,9 +85,15 @@ test('semua layar muat pada jendela minimum', async ({ page }) => {
     ).toBe(true);
   }
   await inaugurate(page);
-  const gameRoutes = ['dashboard', 'policies', 'parliament', 'cabinet', 'events', 'history'].map(
-    (name) => `game/${name}`,
-  );
+  const gameRoutes = [
+    'dashboard',
+    'policies',
+    'parliament',
+    'cabinet',
+    'events',
+    'map',
+    'history',
+  ].map((name) => `game/${name}`);
   for (const route of gameRoutes) {
     await gotoHash(page, route);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

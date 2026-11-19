@@ -1,4 +1,5 @@
 import ruleset2 from '../migrations/ruleset-2.json';
+import ruleset3 from '../migrations/ruleset-3.json';
 import { rulesetMigrationMapSchema, type RulesetMigrationMap } from '@republika/shared';
 
 /**
@@ -12,7 +13,8 @@ import { rulesetMigrationMapSchema, type RulesetMigrationMap } from '@republika/
  * Lihat docs/RELEASE.md.
  */
 /** v2: ID fraksi placeholder diganti ID final (nama partai fiktif baru). */
-const RAW_MAPS: readonly unknown[] = [ruleset2];
+/** v3: konten Tahap 6B (latar belakang, janji, provinsi, kabinet); tidak ada ID yang diganti. */
+const RAW_MAPS: readonly unknown[] = [ruleset2, ruleset3];
 
 export const rulesetMigrationMaps: readonly RulesetMigrationMap[] = RAW_MAPS.map((raw) =>
   rulesetMigrationMapSchema.parse(raw),

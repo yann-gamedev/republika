@@ -229,3 +229,11 @@ export function IconArrowRight(props: IconProps) {
     </Svg>
   );
 }
+
+export function IconMap(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14" />
+    </Svg>
+  );
+}

@@ -15,3 +15,4 @@ Contoh isi:
 ```
 
 - `ruleset-2.json`: ID fraksi `FAC-PLACEHOLDER-01..06` diganti ID final (`FAC-CAKRAWALA`, `FAC-SUARA-JELATA`, `FAC-TUNAS-LESTARI`, `FAC-MADANI`, `FAC-PANJI-MERDEKA`, `FAC-SIMPUL-DAERAH`).
+- `ruleset-3.json`: Tahap 6B menambah latar belakang, janji kampanye, 38 provinsi, jabatan pimpinan, dan calon pejabat. Tidak ada ID yang diganti; `migrateRuleset` mengisi kabinet, pimpinan, dan provinsi dari konten.

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ComponentType, type SVGProps } f
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { APP_VERSION } from '@republika/shared';
+import { unrestCount } from '@republika/simulation';
 
 import { definitions } from '@/content/gameContent';
 import { copy } from '@/copy/id';
@@ -19,6 +20,7 @@ import {
   IconEvent,
   IconFolder,
   IconHistory,
+  IconMap,
   IconNews,
   IconParliament,
   IconPolicy,
@@ -31,7 +33,7 @@ import { RepublicMark } from '@/ui/RepublicMark';
 import { ScreenErrorBoundary } from './ScreenErrorBoundary';
 import { campaignQuarter, campaignYear } from './time';
 
-type BadgeKind = 'bills' | 'events';
+type BadgeKind = 'bills' | 'events' | 'unrest';
 
 interface NavItem {
   readonly to: string;
@@ -47,6 +49,7 @@ const MAIN_NAV: readonly NavItem[] = [
   { to: '/game/cabinet', label: copy.nav.cabinet, icon: IconCabinet },
   { to: '/game/events', label: copy.nav.events, icon: IconEvent, badge: 'events' },
   { to: '/game/report', label: copy.nav.report, icon: IconNews },
+  { to: '/game/map', label: copy.nav.map, icon: IconMap, badge: 'unrest' },
 ];
 
 const ARCHIVE_NAV: readonly NavItem[] = [
@@ -92,6 +95,9 @@ function NavEntry({ item, counts }: { item: NavItem; counts: Record<BadgeKind, n
         >
           {count}
         </span>
+      )}
+      {item.badge === 'unrest' && count > 0 && (
+        <span className="font-mono text-xs text-[#F0A08A]">{copy.map.navBadge(count)}</span>
       )}
       {item.badge === 'bills' && count > 0 && (
         <span className="font-mono text-xs text-muted-foreground">
@@ -165,7 +171,11 @@ export function GameLayout() {
       command.type === 'ENACT_POLICY' &&
       definitions.policies.find((policy) => policy.id === command.policyId)?.needsVote === true,
   ).length;
-  const counts: Record<BadgeKind, number> = { bills, events: unanswered };
+  const counts: Record<BadgeKind, number> = {
+    bills,
+    events: unanswered,
+    unrest: unrestCount(state),
+  };
   const completed = state.status === 'completed';
   const busy = uiStatus === 'busy';
   const blocked = unanswered > 0 || completed || busy;

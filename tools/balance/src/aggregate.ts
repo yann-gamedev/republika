@@ -4,7 +4,11 @@ import {
   type GameDefinitions,
   type IndicatorKey,
 } from '@republika/shared';
-import type { CampaignMetrics, Strategy } from '@republika/simulation/test-utils';
+import type {
+  BackgroundShowdown,
+  CampaignMetrics,
+  Strategy,
+} from '@republika/simulation/test-utils';
 
 export const PERCENTILES = [5, 25, 50, 75, 95] as const;
 /** Ambang bendera otomatis. */
@@ -13,6 +17,7 @@ export const THRESHOLDS = {
   dominantIndicators: 6,
   greedyPickShare: 0.8,
   archetypeShare: 0.8,
+  backgroundWinShare: 0.4,
   minVotesForRate: 20,
 } as const;
 
@@ -36,6 +41,7 @@ export interface BalanceSummary {
   readonly stuck: Array<{ indicator: IndicatorKey; share: number }>;
   readonly softlocks: Array<{ strategy: string; seed: string; reason: string }>;
   readonly saveBytes: { average: number; max: number };
+  readonly backgrounds: BackgroundShowdown | null;
   readonly flags: string[];
 }
 
@@ -44,6 +50,7 @@ export function aggregate(
   input: readonly CampaignMetrics[],
   defs: GameDefinitions,
   strategies: readonly Strategy[],
+  backgrounds: BackgroundShowdown | null = null,
 ): BalanceSummary {
   const metrics = [...input].sort(
     (a, b) => a.strategy.localeCompare(b.strategy) || a.seed.localeCompare(b.seed),
@@ -180,8 +187,20 @@ export function aggregate(
     }
   }
 
+  if (backgrounds !== null && backgrounds.contests > 0) {
+    for (const [id, wins] of Object.entries(backgrounds.wins)) {
+      const share = wins / backgrounds.contests;
+      if (share > THRESHOLDS.backgroundWinShare) {
+        flags.push(
+          `BACKGROUND_DOMINANT: ${id} menang di ${(share * 100).toFixed(0)}% pertandingan latar belakang.`,
+        );
+      }
+    }
+  }
+
   return {
     runs: metrics.length,
+    backgrounds,
     strategies,
     percentiles,
     archetypes,
@@ -278,6 +297,23 @@ export function balanceMarkdown(
     lines.push(
       `| ${INDICATOR_DOMAINS[item.indicator].shortLabel} | ${(item.share * 100).toFixed(1)}% |`,
     );
+
+  if (summary.backgrounds !== null) {
+    lines.push(
+      '',
+      '## Latar belakang presiden',
+      '',
+      `${summary.backgrounds.seeds} seed × ${summary.strategies.length} strategi = ${summary.backgrounds.contests} pertandingan. Pemenang tiap pertandingan = skor akhir tertinggi (persetujuan + stabilitas + fiskal + kesejahteraan + kepercayaan); skor dalam 1,0 poin dari yang terbaik dihitung seri dan kemenangannya dibagi rata. Ambang bendera 40%.`,
+      '',
+      '| Latar belakang | Menang | % |',
+      '| --- | ---: | ---: |',
+    );
+    for (const [id, wins] of Object.entries(summary.backgrounds.wins)) {
+      lines.push(
+        `| ${id} | ${wins.toFixed(1)} | ${((wins / Math.max(1, summary.backgrounds.contests)) * 100).toFixed(0)}% |`,
+      );
+    }
+  }
 
   lines.push('', '## Event yang tidak pernah muncul', '');
   lines.push(

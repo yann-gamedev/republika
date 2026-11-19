@@ -35,6 +35,18 @@ export function computeContentHash(definitions: GameDefinitions): string {
     policies: [...definitions.policies].sort(byId),
     events: [...definitions.events].sort(byId),
     archetypes: [...definitions.archetypes].sort(byId),
+    // Koleksi 6B hanya ikut bila berisi, agar hash konten lama tidak berubah.
+    ...(definitions.backgrounds.length > 0
+      ? { backgrounds: [...definitions.backgrounds].sort(byId) }
+      : {}),
+    ...(definitions.promises.length > 0 ? { promises: [...definitions.promises].sort(byId) } : {}),
+    ...(definitions.provinces.length > 0
+      ? { provinces: [...definitions.provinces].sort(byId) }
+      : {}),
+    ...(definitions.leaders.length > 0 ? { leaders: [...definitions.leaders].sort(byId) } : {}),
+    ...(definitions.candidates.length > 0
+      ? { candidates: [...definitions.candidates].sort(byId) }
+      : {}),
   };
   return bytesToHex(sha256(utf8ToBytes(canonicalStringify(canonical))));
 }

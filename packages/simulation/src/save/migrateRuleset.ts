@@ -7,6 +7,7 @@ import type {
 } from '@republika/shared';
 
 import { compareIds, sortById } from '../core/order.js';
+import { syncCampaignContent } from '../politics/campaignState.js';
 import { ledgerId } from './compact.js';
 
 export type MigrateRulesetResult =
@@ -32,11 +33,22 @@ function renameAll(state: GameState, renamed: Readonly<Record<string, string>>):
       ...policy,
       policyId: rename(policy.policyId),
     })),
-    pendingCommands: state.pendingCommands.map((command) =>
-      command.type === 'ENACT_POLICY'
-        ? { ...command, policyId: rename(command.policyId) }
-        : { ...command, factionId: rename(command.factionId) },
-    ),
+    pendingCommands: state.pendingCommands.map((command) => {
+      switch (command.type) {
+        case 'ENACT_POLICY':
+          return { ...command, policyId: rename(command.policyId) };
+        case 'LOBBY_FACTION':
+          return { ...command, factionId: rename(command.factionId) };
+        case 'RESHUFFLE':
+          return {
+            ...command,
+            roleId: rename(command.roleId),
+            candidateId: rename(command.candidateId),
+          };
+        case 'PROVINCE_ACTION':
+          return { ...command, provinceId: rename(command.provinceId) };
+      }
+    }),
     pendingEvents: state.pendingEvents.map((event) => ({
       ...event,
       eventId: rename(event.eventId),
@@ -120,7 +132,14 @@ export function migrateRuleset(
     pendingCommands: state.pendingCommands.filter((command) =>
       command.type === 'ENACT_POLICY'
         ? policyIds.has(command.policyId)
-        : factionIds.has(command.factionId),
+        : command.type === 'LOBBY_FACTION'
+          ? factionIds.has(command.factionId)
+          : command.type === 'RESHUFFLE'
+            ? defs.candidates.some(
+                (candidate) =>
+                  candidate.id === command.candidateId && candidate.roleId === command.roleId,
+              )
+            : defs.provinces.some((province) => province.id === command.provinceId),
     ),
     pendingEvents: state.pendingEvents.filter((event) => eventIds.has(event.eventId)),
     lobbyThisTurn: state.lobbyThisTurn.filter((id) => factionIds.has(id)),
@@ -145,6 +164,8 @@ export function migrateRuleset(
         ministry.initialEffectiveness,
     })),
   };
+  // Tahap 6B: kabinet, pimpinan, dan provinsi diselaraskan dengan konten aktif.
+  state = syncCampaignContent(state, defs);
   return {
     ok: true,
     save: { ...save, rulesetVersion: toRuleset, state, history: { ...save.history, ledger } },
