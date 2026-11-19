@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { signOath } from './helpers';
+import { completeDossier, signOath } from './helpers';
 
 test('simpan ke slot, ganti nama, muat, dan hapus lewat layar Simpan & Muat', async ({ page }) => {
   const errors: string[] = [];
@@ -11,6 +11,7 @@ test('simpan ke slot, ganti nama, muat, dan hapus lewat layar Simpan & Muat', as
   await page.goto('/');
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill('Sari Wening');
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();

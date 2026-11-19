@@ -3,6 +3,8 @@ import {
   SAVE_FORMAT_VERSION,
   type GameDefinitions,
   type GameState,
+  type Honorific,
+  type PortraitHead,
   type RulesetMigrationMap,
   type SaveFile,
   type SaveHistory,
@@ -12,7 +14,7 @@ import {
 } from '@republika/shared';
 import {
   applyCommand,
-  createInitialState,
+  createCampaign,
   migrateRuleset,
   migrateSave,
   resolveTurn,
@@ -129,18 +131,27 @@ export class GameController {
   async startCampaign(input: {
     presidentName: string;
     cabinetName: string;
+    honorific?: Honorific;
+    head?: PortraitHead;
+    backgroundId?: string;
+    promiseIds?: readonly string[];
   }): Promise<ControllerResult> {
     try {
       const { definitions } = this.deps;
-      const state = createInitialState(definitions.scenario, definitions, {
+      // Latar belakang diterapkan sekali di sini; ledgernya masuk history save.
+      const { state, ledger } = createCampaign(definitions.scenario, definitions, {
         presidentName: input.presidentName,
         cabinetName: input.cabinetName,
         seed: this.deps.createSeed(),
+        ...(input.honorific === undefined ? {} : { honorific: input.honorific }),
+        ...(input.head === undefined ? {} : { head: input.head }),
+        ...(input.backgroundId === undefined ? {} : { backgroundId: input.backgroundId }),
+        ...(input.promiseIds === undefined ? {} : { promiseIds: input.promiseIds }),
       });
       this.playTimeBase = 0;
       this.playMark = this.nowMs();
       this.deps.store.setState({ state, lastReport: null, uiStatus: 'busy' });
-      const saved = await this.autosave(state, { reports: [], ledger: [] });
+      const saved = await this.autosave(state, { reports: [], ledger: [...ledger] });
       this.toast(
         saved ? 'success' : 'error',
         saved ? copy.controller.inaugurated(state.presidentName) : copy.controller.autosaveFailed,

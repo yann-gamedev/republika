@@ -4,7 +4,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { answerMemos, endQuarter, shortcut, signOath } from './helpers';
+import { answerMemos, completeDossier, endQuarter, shortcut, signOath } from './helpers';
 
 const PRESIDENT = 'Sari Wening';
 
@@ -23,6 +23,7 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   await page.goto('/');
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();

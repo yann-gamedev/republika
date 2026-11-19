@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { shortcut, signOath, throughSession } from './helpers';
+import { completeDossier, shortcut, signOath, throughSession } from './helpers';
 
 const PRESIDENT = 'Laras Pertiwi';
 
@@ -14,6 +14,7 @@ test('nota dinas → stempel → akhiri kuartal → sidang paripurna → warta',
   await page.goto('/');
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();

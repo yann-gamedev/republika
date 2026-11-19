@@ -1,11 +1,14 @@
 import {
   INDICATOR_DOMAINS,
   isIndicatorKey,
+  type GameState,
   type IndicatorKey,
+  type PromiseDefinition,
   type TurnReport,
 } from '@republika/shared';
 
 import { compareIds } from '../core/order.js';
+import { archetypeStatValue, conditionHolds } from './archetype.js';
 
 export interface ImpactfulDecision {
   readonly sourceType: 'POLICY' | 'EVENT';
@@ -102,4 +105,33 @@ export function chronology(reports: readonly TurnReport[]): ChronologyEntry[] {
     policiesFailed: report.policiesFailed,
     events: report.resolvedEvents,
   }));
+}
+
+export interface PromiseOutcome {
+  readonly promiseId: string;
+  readonly kept: boolean;
+  /** Nilai statistik pada state akhir (satuan tampilan); `null` bila tidak dikenal. */
+  readonly value: number | null;
+}
+
+/**
+ * Menilai janji kampanye pada state akhir (Tahap 6B.2) dengan statistik yang
+ * sama seperti arketipe. Save lama tanpa janji menghasilkan daftar kosong.
+ * Arketipe tidak dipengaruhi janji.
+ */
+export function evaluatePromises(
+  state: GameState,
+  promises: readonly PromiseDefinition[],
+): PromiseOutcome[] {
+  return state.promiseIds.flatMap((promiseId) => {
+    const promise = promises.find((item) => item.id === promiseId);
+    if (promise === undefined) return [];
+    return [
+      {
+        promiseId,
+        kept: conditionHolds(state, promise.check),
+        value: archetypeStatValue(state, promise.check.stat),
+      },
+    ];
+  });
 }

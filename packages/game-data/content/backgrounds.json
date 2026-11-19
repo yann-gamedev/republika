@@ -8,11 +8,15 @@
     "startModifiers": [
       {
         "target": "fiscalHealth",
-        "delta": 5
+        "delta": 4
+      },
+      {
+        "target": "trust",
+        "delta": -2
       },
       {
         "target": "approval",
-        "delta": -3
+        "delta": -2
       }
     ]
   },
@@ -42,11 +46,11 @@
     "startModifiers": [
       {
         "target": "stability",
-        "delta": 5
+        "delta": 3
       },
       {
         "target": "trust",
-        "delta": -3
+        "delta": -2
       }
     ]
   },
@@ -62,12 +66,12 @@
         "delta": 3
       },
       {
-        "target": "approval",
-        "delta": 2
+        "target": "fiscalHealth",
+        "delta": -2.5
       },
       {
-        "target": "fiscalHealth",
-        "delta": -3
+        "target": "approval",
+        "delta": 2
       }
     ]
   },
@@ -83,8 +87,12 @@
         "delta": 0.3
       },
       {
+        "target": "fiscalHealth",
+        "delta": 3
+      },
+      {
         "target": "trust",
-        "delta": -3
+        "delta": -1
       }
     ],
     "treasuryTrillion": 5

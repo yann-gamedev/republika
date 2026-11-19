@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 
 import { copy } from '../../apps/desktop/src/copy/id';
 
-import { answerMemos, endQuarter, shortcut, signOath } from './helpers';
+import { answerMemos, completeDossier, endQuarter, shortcut, signOath } from './helpers';
 
 const PRESIDENT = 'Raka Pradipta';
 /** Build E2E (`vite build --mode e2e`) memakai kampanye 20 kuartal. */
@@ -19,6 +19,7 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
   await page.getByRole('link', { name: new RegExp(copy.menu.newGame) }).click();
   await page.getByLabel(copy.inauguration.presidentLabel).fill(PRESIDENT);
   await page.getByLabel(copy.inauguration.cabinetLabel).fill('Kabinet Fajar');
+  await completeDossier(page);
   await page.getByRole('button', { name: copy.inauguration.submit }).click();
   await signOath(page);
   await expect(page.getByRole('heading', { name: copy.dashboard.title })).toBeVisible();
@@ -47,6 +48,7 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
 
   await expect(page.getByTestId('final-archetype')).toBeVisible();
   await expect(page.getByTestId('final-decisions')).toBeVisible();
+  await expect(page.getByTestId('final-promises')).toContainText(/Janji ditepati [0-3]\/3/);
   await expect(
     page.getByRole('region', { name: copy.final.chartsTitle }).locator('svg[role="img"]'),
   ).toHaveCount(8);

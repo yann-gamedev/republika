@@ -8,6 +8,7 @@ import { readContentFromDisk } from '@republika/game-data/disk';
 import type { GameDefinitions } from '@republika/shared';
 import {
   STRATEGIES,
+  backgroundShowdown,
   campaignMetrics,
   type CampaignMetrics,
   type Strategy,
@@ -94,7 +95,13 @@ async function main(): Promise<void> {
   }
   const seconds = (performance.now() - started) / 1000;
 
-  const summary = aggregate(metrics, defs, strategies);
+  // Tahap 6B.2: latar belakang tidak boleh menang di > 40% pertandingan.
+  const showdownSeeds = Math.max(1, Math.ceil(runs / 50));
+  const showdown =
+    defs.backgrounds.length > 1
+      ? backgroundShowdown(defs, strategies, showdownSeeds, seed, turns)
+      : null;
+  const summary = aggregate(metrics, defs, strategies, showdown);
   const markdown = balanceMarkdown(summary, { seed, turns });
   const out = args.get('out');
   if (out === undefined) {

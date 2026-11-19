@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { applyCommand } from '../src/core/commands.js';
 import { createCampaign, createInitialState } from '../src/core/initialState.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
+import { evaluatePromises } from '../src/report/finalSummary.js';
+import { backgroundShowdown } from '../test-utils/index.js';
 import { saveToDisk } from '../src/save/compact.js';
 import { migrateRuleset } from '../src/save/migrateRuleset.js';
 import { migrateSave } from '../src/save/migrateSave.js';
@@ -138,5 +140,42 @@ describe('profil presiden dan latar belakang', () => {
     expect(() =>
       createInitialState(content.scenario, content, { ...base, backgroundId: 'BG-X' }),
     ).toThrow();
+  });
+});
+
+describe('janji kampanye (Tahap 6B.2)', () => {
+  it('dinilai pada state akhir; save tanpa janji menghasilkan daftar kosong', () => {
+    const three = content.promises.slice(0, 3).map((item) => item.id);
+    const state = createInitialState(content.scenario, content, {
+      presidentName: 'Laras Pertiwi',
+      seed: 'janji',
+      promiseIds: three,
+    });
+    const inflation = content.promises.find((item) => item.check.stat === 'final.inflationPct');
+    if (inflation === undefined) throw new Error('butuh janji inflasi');
+    const withInflation = { ...state, promiseIds: [inflation.id] };
+    const low = evaluatePromises(
+      { ...withInflation, indicators: { ...state.indicators, inflationPct: 30 } },
+      content.promises,
+    );
+    const high = evaluatePromises(
+      { ...withInflation, indicators: { ...state.indicators, inflationPct: 90 } },
+      content.promises,
+    );
+    expect(low).toEqual([{ promiseId: inflation.id, kept: true, value: 3 }]);
+    expect(high[0]?.kept).toBe(false);
+    expect(evaluatePromises(state, content.promises)).toHaveLength(3);
+    expect(evaluatePromises({ ...state, promiseIds: [] }, content.promises)).toEqual([]);
+  });
+});
+
+describe('balance latar belakang', () => {
+  it('showdown deterministik; total kemenangan = jumlah pertandingan', () => {
+    const first = backgroundShowdown(content, ['no-op', 'random'], 2, 'uji', 4);
+    const second = backgroundShowdown(content, ['no-op', 'random'], 2, 'uji', 4);
+    expect(first).toEqual(second);
+    expect(first.contests).toBe(4);
+    const total = Object.values(first.wins).reduce((sum, value) => sum + value, 0);
+    expect(total).toBeCloseTo(4, 6);
   });
 });
