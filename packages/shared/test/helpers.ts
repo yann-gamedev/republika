@@ -35,6 +35,12 @@ export function createGameState(): GameState {
     eventsFired: [],
     flags: [],
     delayedEffects: [],
+    president: { honorific: 'Ibu', head: 'hijab', backgroundId: 'BG-NONE' },
+    promiseIds: [],
+    cabinet: {},
+    leaders: {},
+    reshuffleUsedTurn: 0,
+    provinces: {},
     campaignStats: {
       policiesEnacted: 0,
       policiesByCategory: { FISCAL: 0, SOCIAL: 0, ENERGY: 0, GOVERNANCE: 0 },

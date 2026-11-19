@@ -75,7 +75,7 @@ describe('pengurus dan anggota partai', () => {
 
   it('peta ruleset-2 memetakan semua ID fraksi lama ke fraksi yang ada', () => {
     const { defs } = definitions();
-    expect(defs.scenario.rulesetVersion).toBe(2);
+    expect(defs.scenario.rulesetVersion).toBeGreaterThanOrEqual(2);
     const map = rulesetMigrationMaps.find((item) => item.toRuleset === 2);
     expect(map).toBeDefined();
     const ids = new Set(defs.factions.map((faction) => faction.id));

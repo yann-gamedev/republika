@@ -1,0 +1,410 @@
+[
+  {
+    "id": "CND-PLACEHOLDER-01",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-FISCAL",
+    "name": "Ratih Kusumaningrum",
+    "factionId": "FAC-CAKRAWALA",
+    "initial": true,
+    "integrity": 72,
+    "supportGain": 0,
+    "appearance": {
+      "head": "hijab",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 65
+  },
+  {
+    "id": "CND-PLACEHOLDER-02",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-FISCAL",
+    "name": "Bonifasius Tarigan",
+    "factionId": "FAC-MADANI",
+    "initial": false,
+    "integrity": 64,
+    "supportGain": 6,
+    "appearance": {
+      "head": "rambut",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 74
+  },
+  {
+    "id": "CND-PLACEHOLDER-03",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-FISCAL",
+    "name": "Hasanudin Pratama",
+    "factionId": "FAC-SUARA-JELATA",
+    "initial": false,
+    "integrity": 70,
+    "supportGain": 8,
+    "appearance": {
+      "head": "peci",
+      "skin": "#D0A088",
+      "suit": "#3A3C56",
+      "accent": "#909090",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 58
+  },
+  {
+    "id": "CND-PLACEHOLDER-04",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-SOCIAL",
+    "name": "Yuliana Mamesah",
+    "factionId": "FAC-SUARA-JELATA",
+    "initial": true,
+    "integrity": 66,
+    "supportGain": 0,
+    "appearance": {
+      "head": "panjang",
+      "skin": "#C09078",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 60
+  },
+  {
+    "id": "CND-PLACEHOLDER-05",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-SOCIAL",
+    "name": "Ahmad Fauzi Siregar",
+    "factionId": "FAC-MADANI",
+    "initial": false,
+    "integrity": 74,
+    "supportGain": 6,
+    "appearance": {
+      "head": "peci",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 66
+  },
+  {
+    "id": "CND-PLACEHOLDER-06",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-SOCIAL",
+    "name": "Komang Adi Wiguna",
+    "factionId": "FAC-TUNAS-LESTARI",
+    "initial": false,
+    "integrity": 60,
+    "supportGain": 5,
+    "appearance": {
+      "head": "rambut",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 72
+  },
+  {
+    "id": "CND-PLACEHOLDER-07",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-ENERGY",
+    "name": "Teguh Wirawan",
+    "factionId": "FAC-TUNAS-LESTARI",
+    "initial": true,
+    "integrity": 62,
+    "supportGain": 0,
+    "appearance": {
+      "head": "peci",
+      "skin": "#D0A088",
+      "suit": "#3A3C56",
+      "accent": "#909090",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 55
+  },
+  {
+    "id": "CND-PLACEHOLDER-08",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-ENERGY",
+    "name": "Fransiska Lumban Gaol",
+    "factionId": "FAC-CAKRAWALA",
+    "initial": false,
+    "integrity": 58,
+    "supportGain": 5,
+    "appearance": {
+      "head": "panjang",
+      "skin": "#C09078",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 76
+  },
+  {
+    "id": "CND-PLACEHOLDER-09",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-ENERGY",
+    "name": "Rudi Hartono Saleh",
+    "factionId": "FAC-PANJI-MERDEKA",
+    "initial": false,
+    "integrity": 70,
+    "supportGain": 7,
+    "appearance": {
+      "head": "uban",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 62
+  },
+  {
+    "id": "CND-PLACEHOLDER-10",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-GOVERNANCE",
+    "name": "Darmawan Sasongko",
+    "factionId": "FAC-MADANI",
+    "initial": true,
+    "integrity": 64,
+    "supportGain": 0,
+    "appearance": {
+      "head": "uban",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 60
+  },
+  {
+    "id": "CND-PLACEHOLDER-11",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-GOVERNANCE",
+    "name": "Siti Nurhaliza Lubis",
+    "factionId": "FAC-SIMPUL-DAERAH",
+    "initial": false,
+    "integrity": 70,
+    "supportGain": 7,
+    "appearance": {
+      "head": "hijab",
+      "skin": "#D0A088",
+      "suit": "#3A3C56",
+      "accent": "#909090",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 68
+  },
+  {
+    "id": "CND-PLACEHOLDER-12",
+    "version": 1,
+    "roleId": "MIN-PLACEHOLDER-GOVERNANCE",
+    "name": "Yohanes Kambu",
+    "factionId": "FAC-PANJI-MERDEKA",
+    "initial": false,
+    "integrity": 66,
+    "supportGain": 6,
+    "appearance": {
+      "head": "rambut",
+      "skin": "#C09078",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis.",
+    "baseEffectiveness": 64
+  },
+  {
+    "id": "CND-PLACEHOLDER-13",
+    "version": 1,
+    "roleId": "LDR-WAPRES",
+    "name": "Agustinus Pardede",
+    "factionId": "FAC-PANJI-MERDEKA",
+    "initial": true,
+    "integrity": 68,
+    "supportGain": 0,
+    "appearance": {
+      "head": "uban",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-14",
+    "version": 1,
+    "roleId": "LDR-MENSESNEG",
+    "name": "Wulan Prameswari",
+    "factionId": null,
+    "initial": true,
+    "integrity": 70,
+    "supportGain": 0,
+    "appearance": {
+      "head": "panjang",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-15",
+    "version": 1,
+    "roleId": "LDR-MENSESNEG",
+    "name": "Erlangga Putra Wibisono",
+    "factionId": "FAC-CAKRAWALA",
+    "initial": false,
+    "integrity": 60,
+    "supportGain": 5,
+    "appearance": {
+      "head": "rambut",
+      "skin": "#D0A088",
+      "suit": "#3A3C56",
+      "accent": "#909090",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-16",
+    "version": 1,
+    "roleId": "LDR-MENSESNEG",
+    "name": "Nur Aisyah Rahman",
+    "factionId": "FAC-MADANI",
+    "initial": false,
+    "integrity": 78,
+    "supportGain": 4,
+    "appearance": {
+      "head": "hijab",
+      "skin": "#C09078",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-17",
+    "version": 1,
+    "roleId": "LDR-KSP",
+    "name": "Gregorius Wanggai",
+    "factionId": null,
+    "initial": true,
+    "integrity": 66,
+    "supportGain": 0,
+    "appearance": {
+      "head": "rambut",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-18",
+    "version": 1,
+    "roleId": "LDR-KSP",
+    "name": "Indah Permatasari",
+    "factionId": "FAC-TUNAS-LESTARI",
+    "initial": false,
+    "integrity": 74,
+    "supportGain": 4,
+    "appearance": {
+      "head": "panjang",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-19",
+    "version": 1,
+    "roleId": "LDR-KSP",
+    "name": "Bagaskara Hadinata",
+    "factionId": "FAC-SUARA-JELATA",
+    "initial": false,
+    "integrity": 58,
+    "supportGain": 6,
+    "appearance": {
+      "head": "peci",
+      "skin": "#D0A088",
+      "suit": "#3A3C56",
+      "accent": "#909090",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-20",
+    "version": 1,
+    "roleId": "LDR-JAKSA",
+    "name": "Made Sudarsana",
+    "factionId": null,
+    "initial": true,
+    "integrity": 64,
+    "supportGain": 0,
+    "appearance": {
+      "head": "botak",
+      "skin": "#C09078",
+      "suit": "#181830",
+      "accent": "#C9A227",
+      "glasses": true
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-21",
+    "version": 1,
+    "roleId": "LDR-JAKSA",
+    "name": "Ruth Simanjuntak",
+    "factionId": null,
+    "initial": false,
+    "integrity": 82,
+    "supportGain": 0,
+    "appearance": {
+      "head": "panjang",
+      "skin": "#A87860",
+      "suit": "#181A1F",
+      "accent": "#C03018",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  },
+  {
+    "id": "CND-PLACEHOLDER-22",
+    "version": 1,
+    "roleId": "LDR-JAKSA",
+    "name": "Faisal Akbar Nasution",
+    "factionId": "FAC-PANJI-MERDEKA",
+    "initial": false,
+    "integrity": 56,
+    "supportGain": 6,
+    "appearance": {
+      "head": "peci",
+      "skin": "#B08068",
+      "suit": "#22243A",
+      "accent": "#784848",
+      "glasses": false
+    },
+    "bio": "Biografi placeholder. Ditulis pemilik konten sebelum rilis."
+  }
+]

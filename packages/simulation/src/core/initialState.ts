@@ -1,13 +1,21 @@
 import {
+  BACKGROUND_NONE,
   GAME_STATE_VERSION,
+  PROMISE_COUNT,
   cabinetNameSchema,
   presidentNameSchema,
   type GameDefinitions,
   type GameState,
+  type Honorific,
   type Indicators,
+  type LedgerEntry,
+  type PortraitHead,
   type ScenarioDefinition,
 } from '@republika/shared';
 
+import { officeHoldersFromContent, provincesFromContent } from '../politics/campaignState.js';
+import { Ledger } from './ledger.js';
+import { clampToDomain } from './math.js';
 import { sortById } from './order.js';
 
 function zeroIndicators(): Indicators {
@@ -28,24 +36,98 @@ export interface InaugurationInput {
   readonly cabinetName?: string;
   /** Seed PRNG kampanye; diambil di lapisan platform, bukan di engine. */
   readonly seed: string;
+  /** Tahap 6B. Default: Bapak, peci, tanpa latar belakang, tanpa janji. */
+  readonly honorific?: Honorific;
+  readonly head?: PortraitHead;
+  readonly backgroundId?: string;
+  readonly promiseIds?: readonly string[];
+}
+
+export interface InitialCampaign {
+  readonly state: GameState;
+  /** Entri `BACKGROUND_APPLIED` (turn 1, ID berawalan `B`) untuk history save. */
+  readonly ledger: readonly LedgerEntry[];
+}
+
+function validateChoices(
+  defs: GameDefinitions,
+  backgroundId: string,
+  promiseIds: readonly string[],
+) {
+  if (
+    backgroundId !== BACKGROUND_NONE &&
+    !defs.backgrounds.some((background) => background.id === backgroundId)
+  ) {
+    throw new Error(`Latar belakang ${backgroundId} tidak ada di konten.`);
+  }
+  if (promiseIds.length !== 0 && promiseIds.length !== PROMISE_COUNT) {
+    throw new Error(`Pilih tepat ${PROMISE_COUNT} janji kampanye.`);
+  }
+  if (new Set(promiseIds).size !== promiseIds.length) {
+    throw new Error('Janji kampanye tidak boleh ganda.');
+  }
+  for (const id of promiseIds) {
+    if (!defs.promises.some((promise) => promise.id === id)) {
+      throw new Error(`Janji ${id} tidak ada di konten.`);
+    }
+  }
 }
 
 /**
- * Membuat state kuartal 1 dari skenario dan definisi konten. Nama presiden
- * divalidasi (2–40 karakter, di-trim, tanpa karakter kontrol). Fraksi dan
- * kementerian disimpan terurut ID.
+ * State kuartal 1 dari skenario dan konten, plus modifier latar belakang yang
+ * diterapkan tepat sekali di sini (ledger `BACKGROUND_APPLIED`). Nama presiden
+ * divalidasi (2–40 karakter, di-trim, tanpa karakter kontrol). Fraksi,
+ * kementerian, jabatan, dan provinsi disimpan terurut ID.
  */
-export function createInitialState(
+export function createCampaign(
   scenario: ScenarioDefinition,
   defs: GameDefinitions,
   input: InaugurationInput,
-): GameState {
+): InitialCampaign {
   const presidentName = presidentNameSchema.parse(input.presidentName);
   const cabinetName =
     input.cabinetName === undefined ? '' : cabinetNameSchema.parse(input.cabinetName);
   if (input.seed.length === 0) throw new Error('Seed kampanye wajib diisi.');
+  const backgroundId = input.backgroundId ?? BACKGROUND_NONE;
+  const promiseIds = [...(input.promiseIds ?? [])].sort();
+  validateChoices(defs, backgroundId, promiseIds);
 
-  return {
+  const indicators: Indicators = { ...scenario.initialIndicators };
+  let treasuryBillion = scenario.initialTreasuryBillion;
+  const ledger = new Ledger(1, 'B');
+  const background = defs.backgrounds.find((item) => item.id === backgroundId);
+  for (const modifier of background?.startModifiers ?? []) {
+    const before = indicators[modifier.target];
+    const after = clampToDomain(modifier.target, before + modifier.deltaTenths);
+    indicators[modifier.target] = after;
+    ledger.push({
+      kind: 'INDICATOR',
+      sourceType: 'BACKGROUND',
+      sourceId: backgroundId,
+      reasonCode: 'BACKGROUND_APPLIED',
+      target: modifier.target,
+      unit: 'tenths',
+      before,
+      delta: after - before,
+      after,
+    });
+  }
+  if (background !== undefined && background.treasuryBillion !== 0) {
+    ledger.push({
+      kind: 'TREASURY',
+      sourceType: 'BACKGROUND',
+      sourceId: backgroundId,
+      reasonCode: 'BACKGROUND_APPLIED',
+      target: 'treasury',
+      unit: 'billion',
+      before: treasuryBillion,
+      delta: background.treasuryBillion,
+      after: treasuryBillion + background.treasuryBillion,
+    });
+    treasuryBillion += background.treasuryBillion;
+  }
+
+  const state: GameState = {
     stateVersion: GAME_STATE_VERSION,
     presidentName,
     ...(cabinetName.length > 0 ? { cabinetName } : {}),
@@ -56,8 +138,8 @@ export function createInitialState(
     status: 'active',
     actionPointsPerTurn: scenario.actionPointsPerTurn,
     actionPointsRemaining: scenario.actionPointsPerTurn,
-    treasuryBillion: scenario.initialTreasuryBillion,
-    indicators: { ...scenario.initialIndicators },
+    treasuryBillion,
+    indicators,
     factions: sortById(defs.factions, (faction) => faction.id).map((faction) => ({
       factionId: faction.id,
       supportTenths: faction.initialSupportTenths,
@@ -87,8 +169,28 @@ export function createInitialState(
       totalPolicySpendingBillion: 0,
       quartersPlayed: 0,
       indicatorSums: zeroIndicators(),
-      indicatorMin: { ...scenario.initialIndicators },
-      indicatorMax: { ...scenario.initialIndicators },
+      // Statistik min/max mulai dari nilai awal setelah latar belakang.
+      indicatorMin: { ...indicators },
+      indicatorMax: { ...indicators },
     },
+    president: {
+      honorific: input.honorific ?? 'Bapak',
+      head: input.head ?? 'peci',
+      backgroundId,
+    },
+    promiseIds,
+    ...officeHoldersFromContent(defs),
+    reshuffleUsedTurn: 0,
+    provinces: provincesFromContent(defs),
   };
+  return { state, ledger: ledger.entries };
+}
+
+/** Bentuk lama: hanya state (ledger latar belakang dibuang). */
+export function createInitialState(
+  scenario: ScenarioDefinition,
+  defs: GameDefinitions,
+  input: InaugurationInput,
+): GameState {
+  return createCampaign(scenario, defs, input).state;
 }

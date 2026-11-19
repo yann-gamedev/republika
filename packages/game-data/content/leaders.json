@@ -1,0 +1,26 @@
+[
+  {
+    "id": "LDR-WAPRES",
+    "version": 1,
+    "title": "Wakil Presiden",
+    "replaceable": false
+  },
+  {
+    "id": "LDR-MENSESNEG",
+    "version": 1,
+    "title": "Menteri Sekretaris Negara",
+    "replaceable": true
+  },
+  {
+    "id": "LDR-KSP",
+    "version": 1,
+    "title": "Kepala Staf Kepresidenan",
+    "replaceable": true
+  },
+  {
+    "id": "LDR-JAKSA",
+    "version": 1,
+    "title": "Jaksa Agung",
+    "replaceable": true
+  }
+]

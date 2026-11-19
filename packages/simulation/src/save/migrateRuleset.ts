@@ -7,6 +7,7 @@ import type {
 } from '@republika/shared';
 
 import { compareIds, sortById } from '../core/order.js';
+import { syncCampaignContent } from '../politics/campaignState.js';
 import { ledgerId } from './compact.js';
 
 export type MigrateRulesetResult =
@@ -145,6 +146,8 @@ export function migrateRuleset(
         ministry.initialEffectiveness,
     })),
   };
+  // Tahap 6B: kabinet, pimpinan, dan provinsi diselaraskan dengan konten aktif.
+  state = syncCampaignContent(state, defs);
   return {
     ok: true,
     save: { ...save, rulesetVersion: toRuleset, state, history: { ...save.history, ledger } },

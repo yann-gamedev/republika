@@ -1,5 +1,7 @@
 import archetypesJson from '../content/archetypes.json';
+import backgroundsJson from '../content/backgrounds.json';
 import baselineJson from '../content/baseline.json';
+import candidatesJson from '../content/cabinet-candidates.json';
 import historicalEvent01 from '../content/events/EVT-HIST-001.json';
 import historicalEvent02 from '../content/events/EVT-HIST-002.json';
 import historicalEvent03 from '../content/events/EVT-HIST-003.json';
@@ -18,11 +20,14 @@ import factionPanjiMerdeka from '../content/factions/FAC-PANJI-MERDEKA.json';
 import factionSimpulDaerah from '../content/factions/FAC-SIMPUL-DAERAH.json';
 import factionSuaraJelata from '../content/factions/FAC-SUARA-JELATA.json';
 import factionTunasLestari from '../content/factions/FAC-TUNAS-LESTARI.json';
+import leadersJson from '../content/leaders.json';
 import ministriesJson from '../content/ministries.json';
 import policyEnergy from '../content/policies/POL-ENERGY-PLACEHOLDER-001.json';
 import policyFiscal from '../content/policies/POL-FISCAL-PLACEHOLDER-001.json';
 import policyGovernance from '../content/policies/POL-GOVERNANCE-PLACEHOLDER-001.json';
 import policySocial from '../content/policies/POL-SOCIAL-PLACEHOLDER-001.json';
+import promisesJson from '../content/promises.json';
+import provincesJson from '../content/provinces.json';
 import scenarioJson from '../content/scenario.json';
 import type { RawContentBundle } from '@republika/shared';
 
@@ -58,4 +63,9 @@ export const rawContentBundle: RawContentBundle = {
     historicalEvent10,
   ],
   archetypes: archetypesJson,
+  backgrounds: backgroundsJson,
+  promises: promisesJson,
+  provinces: provincesJson,
+  leaders: leadersJson,
+  candidates: candidatesJson,
 };

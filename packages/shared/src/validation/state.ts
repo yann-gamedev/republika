@@ -1,6 +1,13 @@
 import { z } from 'zod';
 
-import { GAME_STATE_VERSION } from '../types/constants.js';
+import {
+  BACKGROUND_NONE,
+  GAME_STATE_VERSION,
+  HONORIFICS,
+  PORTRAIT_HEADS,
+  PROMISE_COUNT,
+  PROVINCE_ACTIONS,
+} from '../types/constants.js';
 import {
   commandIdSchema,
   flagSchema,
@@ -55,6 +62,31 @@ export const pendingCommandSchema = z.discriminatedUnion('type', [
     apCost: nonNegativeInt.max(5),
   }),
 ]);
+
+/** Profil presiden (Tahap 6B.1). Sapaan dan potret kosmetik; latar belakang memengaruhi awal kampanye. */
+export const presidentProfileSchema = z.object({
+  honorific: z.enum(HONORIFICS),
+  head: z.enum(PORTRAIT_HEADS),
+  backgroundId: idSchema,
+});
+
+export type PresidentProfile = z.infer<typeof presidentProfileSchema>;
+
+export const officeHolderSchema = z.object({ holderId: idSchema });
+
+export const provinceStateSchema = z.object({
+  satisfactionTenths: z.number().int().min(0).max(1000),
+  /** Aksi yang diantrekan kuartal ini (satu per jenis). */
+  actionsThisTurn: z.array(z.enum(PROVINCE_ACTIONS)),
+});
+
+export type ProvinceState = z.infer<typeof provinceStateSchema>;
+
+export const DEFAULT_PRESIDENT_PROFILE: PresidentProfile = {
+  honorific: 'Bapak',
+  head: 'peci',
+  backgroundId: BACKGROUND_NONE,
+};
 
 export type PendingCommand = z.infer<typeof pendingCommandSchema>;
 
@@ -147,6 +179,17 @@ export const gameStateSchema = z
     delayedEffects: z.array(delayedEffectSchema),
     campaignStats: campaignStatsSchema,
     archetypeId: idSchema.optional(),
+    // Tahap 6B (format save v3).
+    president: presidentProfileSchema,
+    /** Janji kampanye: tepat 3, atau kosong untuk save lama (janji tidak dinilai). */
+    promiseIds: z.array(idSchema).max(PROMISE_COUNT),
+    /** Pemegang jabatan menteri per `ministryId`. */
+    cabinet: z.record(z.string(), officeHolderSchema),
+    /** Pemegang jabatan pimpinan non-kementerian per `roleId`. */
+    leaders: z.record(z.string(), officeHolderSchema),
+    /** Kuartal terakhir reshuffle diproses (0 = belum pernah). Maks. 1 per kuartal (K6). */
+    reshuffleUsedTurn: z.number().int().min(0).max(100),
+    provinces: z.record(z.string(), provinceStateSchema),
   })
   .superRefine((state, context) => {
     if (state.actionPointsRemaining > state.actionPointsPerTurn) {
@@ -220,6 +263,8 @@ export const gameStateSchema = z
 export type GameState = z.infer<typeof gameStateSchema>;
 
 export const ledgerKindSchema = z.enum([
+  'PROVINCE',
+  'CABINET',
   'INDICATOR',
   'TREASURY',
   'FACTION',
@@ -241,6 +286,9 @@ export const ledgerSourceTypeSchema = z.enum([
   'BASELINE',
   'MINISTRY',
   'SYSTEM',
+  'RESHUFFLE',
+  'PROVINCE',
+  'BACKGROUND',
 ]);
 
 export type LedgerSourceType = z.infer<typeof ledgerSourceTypeSchema>;

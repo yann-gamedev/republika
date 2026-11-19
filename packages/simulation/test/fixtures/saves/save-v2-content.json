@@ -1,0 +1,3169 @@
+{
+  "saveFormatVersion": 2,
+  "appVersion": "0.1.0-rc.1",
+  "rulesetVersion": 2,
+  "contentHash": "b37969605195a1a6d41c8564ad3d19076557d98fa641b36991d77fec4ad0460e",
+  "savedAt": "2026-11-19T08:00:00.000Z",
+  "label": "Presiden Simulasi — Kuartal 5",
+  "playTimeSeconds": 1200,
+  "state": {
+    "stateVersion": 1,
+    "presidentName": "Presiden Simulasi",
+    "rulesetVersion": 2,
+    "seed": "fixture-v2",
+    "turn": 6,
+    "maxTurns": 20,
+    "status": "active",
+    "actionPointsPerTurn": 2,
+    "actionPointsRemaining": 2,
+    "treasuryBillion": 130000,
+    "indicators": {
+      "approval": 578,
+      "stability": 649,
+      "fiscalHealth": 590,
+      "growthPct": 42,
+      "inflationPct": 31,
+      "unemploymentPct": 41,
+      "welfare": 558,
+      "trust": 490
+    },
+    "factions": [
+      {
+        "factionId": "FAC-CAKRAWALA",
+        "supportTenths": 570
+      },
+      {
+        "factionId": "FAC-MADANI",
+        "supportTenths": 540
+      },
+      {
+        "factionId": "FAC-PANJI-MERDEKA",
+        "supportTenths": 597
+      },
+      {
+        "factionId": "FAC-SIMPUL-DAERAH",
+        "supportTenths": 530
+      },
+      {
+        "factionId": "FAC-SUARA-JELATA",
+        "supportTenths": 520
+      },
+      {
+        "factionId": "FAC-TUNAS-LESTARI",
+        "supportTenths": 500
+      }
+    ],
+    "ministries": [
+      {
+        "ministryId": "MIN-PLACEHOLDER-ENERGY",
+        "effectiveness": 55
+      },
+      {
+        "ministryId": "MIN-PLACEHOLDER-FISCAL",
+        "effectiveness": 65
+      },
+      {
+        "ministryId": "MIN-PLACEHOLDER-GOVERNANCE",
+        "effectiveness": 64
+      },
+      {
+        "ministryId": "MIN-PLACEHOLDER-SOCIAL",
+        "effectiveness": 63
+      }
+    ],
+    "activePolicies": [],
+    "pendingCommands": [],
+    "pendingEvents": [],
+    "lobbyThisTurn": [],
+    "commandIdsThisTurn": [],
+    "policyCooldowns": {
+      "POL-GOVERNANCE-PLACEHOLDER-001": 2
+    },
+    "eventCooldowns": {
+      "EVT-PLACEHOLDER-001": 2
+    },
+    "eventsFired": [
+      "EVT-PLACEHOLDER-001",
+      "EVT-HIST-001",
+      "EVT-HIST-009",
+      "EVT-HIST-007"
+    ],
+    "flags": [],
+    "delayedEffects": [
+      {
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-009",
+        "createdTurn": 4,
+        "remainingTurns": 1,
+        "effect": {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "deltaTenths": 30,
+          "timing": "DELAYED",
+          "delayTurns": 2,
+          "reasonCode": "EVT_HIST_009_B_03"
+        }
+      }
+    ],
+    "campaignStats": {
+      "policiesEnacted": 2,
+      "policiesByCategory": {
+        "FISCAL": 0,
+        "SOCIAL": 1,
+        "ENERGY": 0,
+        "GOVERNANCE": 1
+      },
+      "votesHeld": 1,
+      "votesFailed": 0,
+      "lobbies": 1,
+      "eventsResolved": 4,
+      "totalDeficitBillion": 20000,
+      "totalPolicySpendingBillion": 21000,
+      "quartersPlayed": 5,
+      "indicatorSums": {
+        "approval": 2946,
+        "stability": 3216,
+        "fiscalHealth": 2850,
+        "growthPct": 219,
+        "inflationPct": 158,
+        "unemploymentPct": 235,
+        "welfare": 2720,
+        "trust": 2480
+      },
+      "indicatorMin": {
+        "approval": 578,
+        "stability": 620,
+        "fiscalHealth": 550,
+        "growthPct": 42,
+        "inflationPct": 31,
+        "unemploymentPct": 41,
+        "welfare": 500,
+        "trust": 490
+      },
+      "indicatorMax": {
+        "approval": 606,
+        "stability": 649,
+        "fiscalHealth": 590,
+        "growthPct": 48,
+        "inflationPct": 34,
+        "unemploymentPct": 56,
+        "welfare": 558,
+        "trust": 520
+      }
+    }
+  },
+  "history": {
+    "reports": [
+      {
+        "turn": 1,
+        "year": 2031,
+        "quarter": 1,
+        "presidentName": "Presiden Simulasi",
+        "indicatorsBefore": {
+          "approval": 580,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 48,
+          "inflationPct": 34,
+          "unemploymentPct": 56,
+          "welfare": 500,
+          "trust": 520
+        },
+        "indicatorsAfter": {
+          "approval": 606,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 46,
+          "inflationPct": 33,
+          "unemploymentPct": 53,
+          "welfare": 548,
+          "trust": 520
+        },
+        "treasuryBeforeBillion": 150000,
+        "treasuryAfterBillion": 144000,
+        "treasuryDeltaBillion": -6000,
+        "indicatorDeltas": {
+          "approval": 26,
+          "stability": 0,
+          "fiscalHealth": 0,
+          "growthPct": -2,
+          "inflationPct": -1,
+          "unemploymentPct": -3,
+          "welfare": 48,
+          "trust": 0
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_AID_SUPPORT",
+              "deltaTenths": 38
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -12
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [],
+          "growthPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_GROWTH_REVERSION",
+              "deltaTenths": -2
+            }
+          ],
+          "inflationPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_INFLATION_REVERSION",
+              "deltaTenths": -1
+            }
+          ],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -3
+            }
+          ],
+          "welfare": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_AID_REACH",
+              "deltaTenths": 48
+            }
+          ],
+          "trust": []
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-CAKRAWALA",
+            "beforeTenths": 550,
+            "afterTenths": 556
+          },
+          {
+            "factionId": "FAC-MADANI",
+            "beforeTenths": 520,
+            "afterTenths": 526
+          },
+          {
+            "factionId": "FAC-PANJI-MERDEKA",
+            "beforeTenths": 540,
+            "afterTenths": 546
+          },
+          {
+            "factionId": "FAC-SIMPUL-DAERAH",
+            "beforeTenths": 510,
+            "afterTenths": 516
+          },
+          {
+            "factionId": "FAC-SUARA-JELATA",
+            "beforeTenths": 500,
+            "afterTenths": 506
+          },
+          {
+            "factionId": "FAC-TUNAS-LESTARI",
+            "beforeTenths": 480,
+            "afterTenths": 486
+          }
+        ],
+        "policiesPassed": [
+          "POL-SOCIAL-PLACEHOLDER-001"
+        ],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "turn": 1,
+            "order": 0,
+            "kind": "VOTE",
+            "sourceType": "VOTE",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "VOTE_PASSED",
+            "target": "POL-SOCIAL-PLACEHOLDER-001",
+            "message": "80/100 kursi setuju."
+          },
+          {
+            "turn": 1,
+            "order": 1,
+            "kind": "POLICY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_ENACTED",
+            "target": "POL-SOCIAL-PLACEHOLDER-001"
+          },
+          {
+            "turn": 1,
+            "order": 2,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPFRONT_COST",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 150000,
+            "delta": -6000
+          },
+          {
+            "turn": 1,
+            "order": 3,
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_AID_SUPPORT",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 580,
+            "delta": 38
+          },
+          {
+            "turn": 1,
+            "order": 4,
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_AID_REACH",
+            "target": "welfare",
+            "unit": "tenths",
+            "before": 500,
+            "delta": 48
+          },
+          {
+            "turn": 1,
+            "order": 5,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_INFLATION_REVERSION",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 34,
+            "delta": -1
+          },
+          {
+            "turn": 1,
+            "order": 6,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 56,
+            "delta": -3
+          },
+          {
+            "turn": 1,
+            "order": 7,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 618,
+            "delta": -12
+          },
+          {
+            "turn": 1,
+            "order": 8,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_GROWTH_REVERSION",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 48,
+            "delta": -2
+          },
+          {
+            "turn": 1,
+            "order": 9,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 144000,
+            "delta": 40000
+          },
+          {
+            "turn": 1,
+            "order": 10,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 184000,
+            "delta": -38000
+          },
+          {
+            "turn": 1,
+            "order": 11,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 146000,
+            "delta": -2000
+          },
+          {
+            "turn": 1,
+            "order": 12,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-CAKRAWALA",
+            "unit": "tenths",
+            "before": 550,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 13,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-MADANI",
+            "unit": "tenths",
+            "before": 520,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 14,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 540,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 15,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SIMPUL-DAERAH",
+            "unit": "tenths",
+            "before": 510,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 16,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "before": 500,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 17,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-TUNAS-LESTARI",
+            "unit": "tenths",
+            "before": 480,
+            "delta": 6
+          },
+          {
+            "turn": 1,
+            "order": 18,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-SOCIAL",
+            "unit": "points",
+            "before": 60,
+            "delta": 1
+          },
+          {
+            "turn": 1,
+            "order": 19,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-PLACEHOLDER-001",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-PLACEHOLDER-001"
+          }
+        ],
+        "votes": [
+          {
+            "policyId": "POL-SOCIAL-PLACEHOLDER-001",
+            "seatsFor": 80,
+            "seatsAgainst": 20,
+            "passed": true,
+            "factionVotes": [
+              {
+                "factionId": "FAC-CAKRAWALA",
+                "supportTenths": 550,
+                "score": 450,
+                "vote": "AGAINST"
+              },
+              {
+                "factionId": "FAC-MADANI",
+                "supportTenths": 520,
+                "score": 520,
+                "vote": "FOR"
+              },
+              {
+                "factionId": "FAC-PANJI-MERDEKA",
+                "supportTenths": 540,
+                "score": 640,
+                "vote": "FOR"
+              },
+              {
+                "factionId": "FAC-SIMPUL-DAERAH",
+                "supportTenths": 510,
+                "score": 610,
+                "vote": "FOR"
+              },
+              {
+                "factionId": "FAC-SUARA-JELATA",
+                "supportTenths": 500,
+                "score": 700,
+                "vote": "FOR"
+              },
+              {
+                "factionId": "FAC-TUNAS-LESTARI",
+                "supportTenths": 480,
+                "score": 580,
+                "vote": "FOR"
+              }
+            ]
+          }
+        ],
+        "resolvedEvents": [],
+        "nextEventIds": [
+          "EVT-PLACEHOLDER-001"
+        ],
+        "summary": []
+      },
+      {
+        "turn": 2,
+        "year": 2031,
+        "quarter": 2,
+        "presidentName": "Presiden Simulasi",
+        "indicatorsBefore": {
+          "approval": 606,
+          "stability": 620,
+          "fiscalHealth": 550,
+          "growthPct": 46,
+          "inflationPct": 33,
+          "unemploymentPct": 53,
+          "welfare": 548,
+          "trust": 520
+        },
+        "indicatorsAfter": {
+          "approval": 578,
+          "stability": 649,
+          "fiscalHealth": 560,
+          "growthPct": 45,
+          "inflationPct": 32,
+          "unemploymentPct": 50,
+          "welfare": 548,
+          "trust": 490
+        },
+        "treasuryBeforeBillion": 144000,
+        "treasuryAfterBillion": 140000,
+        "treasuryDeltaBillion": -4000,
+        "indicatorDeltas": {
+          "approval": -28,
+          "stability": 29,
+          "fiscalHealth": 10,
+          "growthPct": -1,
+          "inflationPct": -1,
+          "unemploymentPct": -3,
+          "welfare": 0,
+          "trust": -30
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_RED_TAPE_DISCONTENT",
+              "deltaTenths": -19
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -9
+            }
+          ],
+          "stability": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_BUREAUCRACY_ORDER",
+              "deltaTenths": 29
+            }
+          ],
+          "fiscalHealth": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+              "deltaTenths": 10
+            }
+          ],
+          "growthPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_GROWTH_REVERSION",
+              "deltaTenths": -1
+            }
+          ],
+          "inflationPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_INFLATION_REVERSION",
+              "deltaTenths": -1
+            }
+          ],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -3
+            }
+          ],
+          "welfare": [],
+          "trust": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_SEEN_AS_ABSENT",
+              "deltaTenths": -30
+            }
+          ]
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-CAKRAWALA",
+            "beforeTenths": 556,
+            "afterTenths": 560
+          },
+          {
+            "factionId": "FAC-MADANI",
+            "beforeTenths": 526,
+            "afterTenths": 530
+          },
+          {
+            "factionId": "FAC-PANJI-MERDEKA",
+            "beforeTenths": 546,
+            "afterTenths": 550
+          },
+          {
+            "factionId": "FAC-SIMPUL-DAERAH",
+            "beforeTenths": 516,
+            "afterTenths": 520
+          },
+          {
+            "factionId": "FAC-SUARA-JELATA",
+            "beforeTenths": 506,
+            "afterTenths": 510
+          },
+          {
+            "factionId": "FAC-TUNAS-LESTARI",
+            "beforeTenths": 486,
+            "afterTenths": 490
+          }
+        ],
+        "policiesPassed": [
+          "POL-GOVERNANCE-PLACEHOLDER-001"
+        ],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "turn": 2,
+            "order": 0,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-PLACEHOLDER-001",
+            "reasonCode": "EVENT_RESOLVED",
+            "target": "B"
+          },
+          {
+            "turn": 2,
+            "order": 1,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_SEEN_AS_ABSENT",
+            "target": "trust",
+            "unit": "tenths",
+            "before": 520,
+            "delta": -30
+          },
+          {
+            "turn": 2,
+            "order": 2,
+            "kind": "POLICY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_ENACTED",
+            "target": "POL-GOVERNANCE-PLACEHOLDER-001"
+          },
+          {
+            "turn": 2,
+            "order": 3,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPFRONT_COST",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 144000,
+            "delta": -3000
+          },
+          {
+            "turn": 2,
+            "order": 4,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_BUREAUCRACY_ORDER",
+            "target": "stability",
+            "unit": "tenths",
+            "before": 620,
+            "delta": 29
+          },
+          {
+            "turn": 2,
+            "order": 5,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_RED_TAPE_DISCONTENT",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 606,
+            "delta": -19
+          },
+          {
+            "turn": 2,
+            "order": 6,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+            "target": "fiscalHealth",
+            "unit": "tenths",
+            "before": 550,
+            "delta": 10
+          },
+          {
+            "turn": 2,
+            "order": 7,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_INFLATION_REVERSION",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 33,
+            "delta": -1
+          },
+          {
+            "turn": 2,
+            "order": 8,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 53,
+            "delta": -3
+          },
+          {
+            "turn": 2,
+            "order": 9,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 587,
+            "delta": -9
+          },
+          {
+            "turn": 2,
+            "order": 10,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_GROWTH_REVERSION",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 46,
+            "delta": -1
+          },
+          {
+            "turn": 2,
+            "order": 11,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 141000,
+            "delta": 40000
+          },
+          {
+            "turn": 2,
+            "order": 12,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 181000,
+            "delta": -38000
+          },
+          {
+            "turn": 2,
+            "order": 13,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 143000,
+            "delta": -1000
+          },
+          {
+            "turn": 2,
+            "order": 14,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 142000,
+            "delta": -2000
+          },
+          {
+            "turn": 2,
+            "order": 15,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-CAKRAWALA",
+            "unit": "tenths",
+            "before": 556,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 16,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-MADANI",
+            "unit": "tenths",
+            "before": 526,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 17,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 546,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 18,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SIMPUL-DAERAH",
+            "unit": "tenths",
+            "before": 516,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 19,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "before": 506,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 20,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-TUNAS-LESTARI",
+            "unit": "tenths",
+            "before": 486,
+            "delta": 4
+          },
+          {
+            "turn": 2,
+            "order": 21,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-GOVERNANCE",
+            "unit": "points",
+            "before": 60,
+            "delta": 1
+          },
+          {
+            "turn": 2,
+            "order": 22,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-SOCIAL",
+            "unit": "points",
+            "before": 61,
+            "delta": 1
+          },
+          {
+            "turn": 2,
+            "order": 23,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-001",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-HIST-001"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [
+          {
+            "eventId": "EVT-PLACEHOLDER-001",
+            "choiceId": "B"
+          }
+        ],
+        "nextEventIds": [
+          "EVT-HIST-001"
+        ],
+        "summary": []
+      },
+      {
+        "turn": 3,
+        "year": 2031,
+        "quarter": 3,
+        "presidentName": "Presiden Simulasi",
+        "indicatorsBefore": {
+          "approval": 578,
+          "stability": 649,
+          "fiscalHealth": 560,
+          "growthPct": 45,
+          "inflationPct": 32,
+          "unemploymentPct": 50,
+          "welfare": 548,
+          "trust": 490
+        },
+        "indicatorsAfter": {
+          "approval": 597,
+          "stability": 649,
+          "fiscalHealth": 570,
+          "growthPct": 44,
+          "inflationPct": 31,
+          "unemploymentPct": 47,
+          "welfare": 548,
+          "trust": 490
+        },
+        "treasuryBeforeBillion": 140000,
+        "treasuryAfterBillion": 139000,
+        "treasuryDeltaBillion": -1000,
+        "indicatorDeltas": {
+          "approval": 19,
+          "stability": 0,
+          "fiscalHealth": 10,
+          "growthPct": -1,
+          "inflationPct": -1,
+          "unemploymentPct": -3,
+          "welfare": 0,
+          "trust": 0
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-HIST-001",
+              "reasonCode": "EVT_HIST_001_A_01",
+              "deltaTenths": 30
+            },
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -11
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+              "deltaTenths": 10
+            }
+          ],
+          "growthPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_GROWTH_REVERSION",
+              "deltaTenths": -1
+            }
+          ],
+          "inflationPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_INFLATION_REVERSION",
+              "deltaTenths": -1
+            }
+          ],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -3
+            }
+          ],
+          "welfare": [],
+          "trust": []
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-CAKRAWALA",
+            "beforeTenths": 560,
+            "afterTenths": 564
+          },
+          {
+            "factionId": "FAC-MADANI",
+            "beforeTenths": 530,
+            "afterTenths": 534
+          },
+          {
+            "factionId": "FAC-PANJI-MERDEKA",
+            "beforeTenths": 550,
+            "afterTenths": 599
+          },
+          {
+            "factionId": "FAC-SIMPUL-DAERAH",
+            "beforeTenths": 520,
+            "afterTenths": 524
+          },
+          {
+            "factionId": "FAC-SUARA-JELATA",
+            "beforeTenths": 510,
+            "afterTenths": 514
+          },
+          {
+            "factionId": "FAC-TUNAS-LESTARI",
+            "beforeTenths": 490,
+            "afterTenths": 494
+          }
+        ],
+        "policiesPassed": [],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "turn": 3,
+            "order": 0,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-001",
+            "reasonCode": "EVENT_RESOLVED",
+            "target": "A"
+          },
+          {
+            "turn": 3,
+            "order": 1,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-001",
+            "kind": "INDICATOR",
+            "reasonCode": "EVT_HIST_001_A_01",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 578,
+            "delta": 30
+          },
+          {
+            "turn": 3,
+            "order": 2,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-001",
+            "kind": "FACTION",
+            "reasonCode": "EVT_HIST_001_A_02",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 550,
+            "delta": 50
+          },
+          {
+            "turn": 3,
+            "order": 3,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+            "target": "fiscalHealth",
+            "unit": "tenths",
+            "before": 560,
+            "delta": 10
+          },
+          {
+            "turn": 3,
+            "order": 4,
+            "kind": "POLICY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_EXPIRED",
+            "target": "POL-SOCIAL-PLACEHOLDER-001"
+          },
+          {
+            "turn": 3,
+            "order": 5,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_INFLATION_REVERSION",
+            "target": "inflationPct",
+            "unit": "tenths",
+            "before": 32,
+            "delta": -1
+          },
+          {
+            "turn": 3,
+            "order": 6,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 50,
+            "delta": -3
+          },
+          {
+            "turn": 3,
+            "order": 7,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 608,
+            "delta": -11
+          },
+          {
+            "turn": 3,
+            "order": 8,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_GROWTH_REVERSION",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 45,
+            "delta": -1
+          },
+          {
+            "turn": 3,
+            "order": 9,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 140000,
+            "delta": 40000
+          },
+          {
+            "turn": 3,
+            "order": 10,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 180000,
+            "delta": -38000
+          },
+          {
+            "turn": 3,
+            "order": 11,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 142000,
+            "delta": -1000
+          },
+          {
+            "turn": 3,
+            "order": 12,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 141000,
+            "delta": -2000
+          },
+          {
+            "turn": 3,
+            "order": 13,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-CAKRAWALA",
+            "unit": "tenths",
+            "before": 560,
+            "delta": 4
+          },
+          {
+            "turn": 3,
+            "order": 14,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-MADANI",
+            "unit": "tenths",
+            "before": 530,
+            "delta": 4
+          },
+          {
+            "turn": 3,
+            "order": 15,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 600,
+            "delta": -1
+          },
+          {
+            "turn": 3,
+            "order": 16,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SIMPUL-DAERAH",
+            "unit": "tenths",
+            "before": 520,
+            "delta": 4
+          },
+          {
+            "turn": 3,
+            "order": 17,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "before": 510,
+            "delta": 4
+          },
+          {
+            "turn": 3,
+            "order": 18,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-TUNAS-LESTARI",
+            "unit": "tenths",
+            "before": 490,
+            "delta": 4
+          },
+          {
+            "turn": 3,
+            "order": 19,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-GOVERNANCE",
+            "unit": "points",
+            "before": 61,
+            "delta": 1
+          },
+          {
+            "turn": 3,
+            "order": 20,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-SOCIAL",
+            "unit": "points",
+            "before": 62,
+            "delta": 1
+          },
+          {
+            "turn": 3,
+            "order": 21,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-009",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-HIST-009"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [
+          {
+            "eventId": "EVT-HIST-001",
+            "choiceId": "A"
+          }
+        ],
+        "nextEventIds": [
+          "EVT-HIST-009"
+        ],
+        "summary": []
+      },
+      {
+        "turn": 4,
+        "year": 2031,
+        "quarter": 4,
+        "presidentName": "Presiden Simulasi",
+        "indicatorsBefore": {
+          "approval": 597,
+          "stability": 649,
+          "fiscalHealth": 570,
+          "growthPct": 44,
+          "inflationPct": 31,
+          "unemploymentPct": 47,
+          "welfare": 548,
+          "trust": 490
+        },
+        "indicatorsAfter": {
+          "approval": 587,
+          "stability": 649,
+          "fiscalHealth": 580,
+          "growthPct": 42,
+          "inflationPct": 31,
+          "unemploymentPct": 44,
+          "welfare": 518,
+          "trust": 490
+        },
+        "treasuryBeforeBillion": 139000,
+        "treasuryAfterBillion": 136000,
+        "treasuryDeltaBillion": -3000,
+        "indicatorDeltas": {
+          "approval": -10,
+          "stability": 0,
+          "fiscalHealth": 10,
+          "growthPct": -2,
+          "inflationPct": 0,
+          "unemploymentPct": -3,
+          "welfare": -30,
+          "trust": 0
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -10
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+              "deltaTenths": 10
+            }
+          ],
+          "growthPct": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-HIST-001",
+              "reasonCode": "EVT_HIST_001_A_03",
+              "deltaTenths": -2
+            }
+          ],
+          "inflationPct": [],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -3
+            }
+          ],
+          "welfare": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-HIST-009",
+              "reasonCode": "EVT_HIST_009_B_02",
+              "deltaTenths": -30
+            }
+          ],
+          "trust": []
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-CAKRAWALA",
+            "beforeTenths": 564,
+            "afterTenths": 567
+          },
+          {
+            "factionId": "FAC-MADANI",
+            "beforeTenths": 534,
+            "afterTenths": 537
+          },
+          {
+            "factionId": "FAC-PANJI-MERDEKA",
+            "beforeTenths": 599,
+            "afterTenths": 598
+          },
+          {
+            "factionId": "FAC-SIMPUL-DAERAH",
+            "beforeTenths": 524,
+            "afterTenths": 527
+          },
+          {
+            "factionId": "FAC-SUARA-JELATA",
+            "beforeTenths": 514,
+            "afterTenths": 517
+          },
+          {
+            "factionId": "FAC-TUNAS-LESTARI",
+            "beforeTenths": 494,
+            "afterTenths": 497
+          }
+        ],
+        "policiesPassed": [],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "turn": 4,
+            "order": 0,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-009",
+            "reasonCode": "EVENT_RESOLVED",
+            "target": "B"
+          },
+          {
+            "turn": 4,
+            "order": 1,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-009",
+            "kind": "TREASURY",
+            "reasonCode": "EVT_HIST_009_B_01",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 139000,
+            "delta": -4000
+          },
+          {
+            "turn": 4,
+            "order": 2,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-009",
+            "kind": "INDICATOR",
+            "reasonCode": "EVT_HIST_009_B_02",
+            "target": "welfare",
+            "unit": "tenths",
+            "before": 548,
+            "delta": -30
+          },
+          {
+            "turn": 4,
+            "order": 3,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+            "target": "fiscalHealth",
+            "unit": "tenths",
+            "before": 570,
+            "delta": 10
+          },
+          {
+            "turn": 4,
+            "order": 4,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-001",
+            "kind": "INDICATOR",
+            "reasonCode": "EVT_HIST_001_A_03",
+            "target": "growthPct",
+            "unit": "tenths",
+            "before": 44,
+            "delta": -2
+          },
+          {
+            "turn": 4,
+            "order": 5,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 47,
+            "delta": -3
+          },
+          {
+            "turn": 4,
+            "order": 6,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 597,
+            "delta": -10
+          },
+          {
+            "turn": 4,
+            "order": 7,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 135000,
+            "delta": 40000
+          },
+          {
+            "turn": 4,
+            "order": 8,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 175000,
+            "delta": -38000
+          },
+          {
+            "turn": 4,
+            "order": 9,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 137000,
+            "delta": -1000
+          },
+          {
+            "turn": 4,
+            "order": 10,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-CAKRAWALA",
+            "unit": "tenths",
+            "before": 564,
+            "delta": 3
+          },
+          {
+            "turn": 4,
+            "order": 11,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-MADANI",
+            "unit": "tenths",
+            "before": 534,
+            "delta": 3
+          },
+          {
+            "turn": 4,
+            "order": 12,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 599,
+            "delta": -1
+          },
+          {
+            "turn": 4,
+            "order": 13,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SIMPUL-DAERAH",
+            "unit": "tenths",
+            "before": 524,
+            "delta": 3
+          },
+          {
+            "turn": 4,
+            "order": 14,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "before": 514,
+            "delta": 3
+          },
+          {
+            "turn": 4,
+            "order": 15,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-TUNAS-LESTARI",
+            "unit": "tenths",
+            "before": 494,
+            "delta": 3
+          },
+          {
+            "turn": 4,
+            "order": 16,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-GOVERNANCE",
+            "unit": "points",
+            "before": 62,
+            "delta": 1
+          },
+          {
+            "turn": 4,
+            "order": 17,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-007",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-HIST-007"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [
+          {
+            "eventId": "EVT-HIST-009",
+            "choiceId": "B"
+          }
+        ],
+        "nextEventIds": [
+          "EVT-HIST-007"
+        ],
+        "summary": []
+      },
+      {
+        "turn": 5,
+        "year": 2032,
+        "quarter": 1,
+        "presidentName": "Presiden Simulasi",
+        "indicatorsBefore": {
+          "approval": 587,
+          "stability": 649,
+          "fiscalHealth": 580,
+          "growthPct": 42,
+          "inflationPct": 31,
+          "unemploymentPct": 44,
+          "welfare": 518,
+          "trust": 490
+        },
+        "indicatorsAfter": {
+          "approval": 578,
+          "stability": 649,
+          "fiscalHealth": 590,
+          "growthPct": 42,
+          "inflationPct": 31,
+          "unemploymentPct": 41,
+          "welfare": 558,
+          "trust": 490
+        },
+        "treasuryBeforeBillion": 136000,
+        "treasuryAfterBillion": 130000,
+        "treasuryDeltaBillion": -6000,
+        "indicatorDeltas": {
+          "approval": -9,
+          "stability": 0,
+          "fiscalHealth": 10,
+          "growthPct": 0,
+          "inflationPct": 0,
+          "unemploymentPct": -3,
+          "welfare": 40,
+          "trust": 0
+        },
+        "topCauses": {
+          "approval": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_APPROVAL_REVERSION",
+              "deltaTenths": -9
+            }
+          ],
+          "stability": [],
+          "fiscalHealth": [
+            {
+              "sourceType": "POLICY",
+              "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+              "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+              "deltaTenths": 10
+            }
+          ],
+          "growthPct": [],
+          "inflationPct": [],
+          "unemploymentPct": [
+            {
+              "sourceType": "BASELINE",
+              "reasonCode": "BASELINE_OKUN",
+              "deltaTenths": -3
+            }
+          ],
+          "welfare": [
+            {
+              "sourceType": "EVENT",
+              "sourceId": "EVT-HIST-007",
+              "reasonCode": "EVT_HIST_007_A_02",
+              "deltaTenths": 40
+            }
+          ],
+          "trust": []
+        },
+        "factionSupport": [
+          {
+            "factionId": "FAC-CAKRAWALA",
+            "beforeTenths": 567,
+            "afterTenths": 570
+          },
+          {
+            "factionId": "FAC-MADANI",
+            "beforeTenths": 537,
+            "afterTenths": 540
+          },
+          {
+            "factionId": "FAC-PANJI-MERDEKA",
+            "beforeTenths": 598,
+            "afterTenths": 597
+          },
+          {
+            "factionId": "FAC-SIMPUL-DAERAH",
+            "beforeTenths": 527,
+            "afterTenths": 530
+          },
+          {
+            "factionId": "FAC-SUARA-JELATA",
+            "beforeTenths": 517,
+            "afterTenths": 520
+          },
+          {
+            "factionId": "FAC-TUNAS-LESTARI",
+            "beforeTenths": 497,
+            "afterTenths": 500
+          }
+        ],
+        "policiesPassed": [],
+        "policiesFailed": [],
+        "ledger": [
+          {
+            "turn": 5,
+            "order": 0,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-007",
+            "reasonCode": "EVENT_RESOLVED",
+            "target": "A"
+          },
+          {
+            "turn": 5,
+            "order": 1,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-007",
+            "kind": "TREASURY",
+            "reasonCode": "EVT_HIST_007_A_01",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 136000,
+            "delta": -5000
+          },
+          {
+            "turn": 5,
+            "order": 2,
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-007",
+            "kind": "INDICATOR",
+            "reasonCode": "EVT_HIST_007_A_02",
+            "target": "welfare",
+            "unit": "tenths",
+            "before": 518,
+            "delta": 40
+          },
+          {
+            "turn": 5,
+            "order": 3,
+            "kind": "TREASURY",
+            "sourceType": "LOBBY",
+            "sourceId": "FAC-SUARA-JELATA",
+            "reasonCode": "LOBBY_COST",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 131000,
+            "delta": -2000
+          },
+          {
+            "turn": 5,
+            "order": 4,
+            "kind": "VOTE",
+            "sourceType": "LOBBY",
+            "sourceId": "FAC-SUARA-JELATA",
+            "reasonCode": "LOBBY_BONUS",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "delta": 150
+          },
+          {
+            "turn": 5,
+            "order": 5,
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "kind": "INDICATOR",
+            "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+            "target": "fiscalHealth",
+            "unit": "tenths",
+            "before": 580,
+            "delta": 10
+          },
+          {
+            "turn": 5,
+            "order": 6,
+            "kind": "POLICY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_EXPIRED",
+            "target": "POL-GOVERNANCE-PLACEHOLDER-001"
+          },
+          {
+            "turn": 5,
+            "order": 7,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_OKUN",
+            "target": "unemploymentPct",
+            "unit": "tenths",
+            "before": 44,
+            "delta": -3
+          },
+          {
+            "turn": 5,
+            "order": 8,
+            "kind": "INDICATOR",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_APPROVAL_REVERSION",
+            "target": "approval",
+            "unit": "tenths",
+            "before": 587,
+            "delta": -9
+          },
+          {
+            "turn": 5,
+            "order": 9,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_REVENUE",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 129000,
+            "delta": 40000
+          },
+          {
+            "turn": 5,
+            "order": 10,
+            "kind": "TREASURY",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SPENDING",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 169000,
+            "delta": -38000
+          },
+          {
+            "turn": 5,
+            "order": 11,
+            "kind": "TREASURY",
+            "sourceType": "POLICY",
+            "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+            "reasonCode": "POLICY_UPKEEP",
+            "target": "treasury",
+            "unit": "billion",
+            "before": 131000,
+            "delta": -1000
+          },
+          {
+            "turn": 5,
+            "order": 12,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-CAKRAWALA",
+            "unit": "tenths",
+            "before": 567,
+            "delta": 3
+          },
+          {
+            "turn": 5,
+            "order": 13,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-MADANI",
+            "unit": "tenths",
+            "before": 537,
+            "delta": 3
+          },
+          {
+            "turn": 5,
+            "order": 14,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-PANJI-MERDEKA",
+            "unit": "tenths",
+            "before": 598,
+            "delta": -1
+          },
+          {
+            "turn": 5,
+            "order": 15,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SIMPUL-DAERAH",
+            "unit": "tenths",
+            "before": 527,
+            "delta": 3
+          },
+          {
+            "turn": 5,
+            "order": 16,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-SUARA-JELATA",
+            "unit": "tenths",
+            "before": 517,
+            "delta": 3
+          },
+          {
+            "turn": 5,
+            "order": 17,
+            "kind": "FACTION",
+            "sourceType": "BASELINE",
+            "reasonCode": "BASELINE_SUPPORT_DRIFT",
+            "target": "FAC-TUNAS-LESTARI",
+            "unit": "tenths",
+            "before": 497,
+            "delta": 3
+          },
+          {
+            "turn": 5,
+            "order": 18,
+            "kind": "MINISTRY",
+            "sourceType": "MINISTRY",
+            "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+            "reasonCode": "MINISTRY_EXPERIENCE",
+            "target": "MIN-PLACEHOLDER-GOVERNANCE",
+            "unit": "points",
+            "before": 63,
+            "delta": 1
+          },
+          {
+            "turn": 5,
+            "order": 19,
+            "kind": "EVENT",
+            "sourceType": "EVENT",
+            "sourceId": "EVT-HIST-010",
+            "reasonCode": "EVENT_TRIGGERED",
+            "target": "EVT-HIST-010"
+          }
+        ],
+        "votes": [],
+        "resolvedEvents": [
+          {
+            "eventId": "EVT-HIST-007",
+            "choiceId": "A"
+          }
+        ],
+        "nextEventIds": [
+          "EVT-HIST-010"
+        ],
+        "summary": []
+      }
+    ],
+    "ledger": [
+      {
+        "turn": 1,
+        "order": 0,
+        "kind": "VOTE",
+        "sourceType": "VOTE",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "VOTE_PASSED",
+        "target": "POL-SOCIAL-PLACEHOLDER-001",
+        "message": "80/100 kursi setuju."
+      },
+      {
+        "turn": 1,
+        "order": 1,
+        "kind": "POLICY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_ENACTED",
+        "target": "POL-SOCIAL-PLACEHOLDER-001"
+      },
+      {
+        "turn": 1,
+        "order": 2,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPFRONT_COST",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 150000,
+        "delta": -6000
+      },
+      {
+        "turn": 1,
+        "order": 3,
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_AID_SUPPORT",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 580,
+        "delta": 38
+      },
+      {
+        "turn": 1,
+        "order": 4,
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_AID_REACH",
+        "target": "welfare",
+        "unit": "tenths",
+        "before": 500,
+        "delta": 48
+      },
+      {
+        "turn": 1,
+        "order": 5,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_INFLATION_REVERSION",
+        "target": "inflationPct",
+        "unit": "tenths",
+        "before": 34,
+        "delta": -1
+      },
+      {
+        "turn": 1,
+        "order": 6,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_OKUN",
+        "target": "unemploymentPct",
+        "unit": "tenths",
+        "before": 56,
+        "delta": -3
+      },
+      {
+        "turn": 1,
+        "order": 7,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_APPROVAL_REVERSION",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 618,
+        "delta": -12
+      },
+      {
+        "turn": 1,
+        "order": 8,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_GROWTH_REVERSION",
+        "target": "growthPct",
+        "unit": "tenths",
+        "before": 48,
+        "delta": -2
+      },
+      {
+        "turn": 1,
+        "order": 9,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_REVENUE",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 144000,
+        "delta": 40000
+      },
+      {
+        "turn": 1,
+        "order": 10,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SPENDING",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 184000,
+        "delta": -38000
+      },
+      {
+        "turn": 1,
+        "order": 11,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 146000,
+        "delta": -2000
+      },
+      {
+        "turn": 1,
+        "order": 12,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-CAKRAWALA",
+        "unit": "tenths",
+        "before": 550,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 13,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-MADANI",
+        "unit": "tenths",
+        "before": 520,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 14,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 540,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 15,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SIMPUL-DAERAH",
+        "unit": "tenths",
+        "before": 510,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 16,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "before": 500,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 17,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-TUNAS-LESTARI",
+        "unit": "tenths",
+        "before": 480,
+        "delta": 6
+      },
+      {
+        "turn": 1,
+        "order": 18,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-SOCIAL",
+        "unit": "points",
+        "before": 60,
+        "delta": 1
+      },
+      {
+        "turn": 1,
+        "order": 19,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-PLACEHOLDER-001",
+        "reasonCode": "EVENT_TRIGGERED",
+        "target": "EVT-PLACEHOLDER-001"
+      },
+      {
+        "turn": 2,
+        "order": 0,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-PLACEHOLDER-001",
+        "reasonCode": "EVENT_RESOLVED",
+        "target": "B"
+      },
+      {
+        "turn": 2,
+        "order": 1,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_SEEN_AS_ABSENT",
+        "target": "trust",
+        "unit": "tenths",
+        "before": 520,
+        "delta": -30
+      },
+      {
+        "turn": 2,
+        "order": 2,
+        "kind": "POLICY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_ENACTED",
+        "target": "POL-GOVERNANCE-PLACEHOLDER-001"
+      },
+      {
+        "turn": 2,
+        "order": 3,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPFRONT_COST",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 144000,
+        "delta": -3000
+      },
+      {
+        "turn": 2,
+        "order": 4,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_BUREAUCRACY_ORDER",
+        "target": "stability",
+        "unit": "tenths",
+        "before": 620,
+        "delta": 29
+      },
+      {
+        "turn": 2,
+        "order": 5,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_RED_TAPE_DISCONTENT",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 606,
+        "delta": -19
+      },
+      {
+        "turn": 2,
+        "order": 6,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+        "target": "fiscalHealth",
+        "unit": "tenths",
+        "before": 550,
+        "delta": 10
+      },
+      {
+        "turn": 2,
+        "order": 7,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_INFLATION_REVERSION",
+        "target": "inflationPct",
+        "unit": "tenths",
+        "before": 33,
+        "delta": -1
+      },
+      {
+        "turn": 2,
+        "order": 8,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_OKUN",
+        "target": "unemploymentPct",
+        "unit": "tenths",
+        "before": 53,
+        "delta": -3
+      },
+      {
+        "turn": 2,
+        "order": 9,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_APPROVAL_REVERSION",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 587,
+        "delta": -9
+      },
+      {
+        "turn": 2,
+        "order": 10,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_GROWTH_REVERSION",
+        "target": "growthPct",
+        "unit": "tenths",
+        "before": 46,
+        "delta": -1
+      },
+      {
+        "turn": 2,
+        "order": 11,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_REVENUE",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 141000,
+        "delta": 40000
+      },
+      {
+        "turn": 2,
+        "order": 12,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SPENDING",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 181000,
+        "delta": -38000
+      },
+      {
+        "turn": 2,
+        "order": 13,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 143000,
+        "delta": -1000
+      },
+      {
+        "turn": 2,
+        "order": 14,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 142000,
+        "delta": -2000
+      },
+      {
+        "turn": 2,
+        "order": 15,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-CAKRAWALA",
+        "unit": "tenths",
+        "before": 556,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 16,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-MADANI",
+        "unit": "tenths",
+        "before": 526,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 17,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 546,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 18,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SIMPUL-DAERAH",
+        "unit": "tenths",
+        "before": 516,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 19,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "before": 506,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 20,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-TUNAS-LESTARI",
+        "unit": "tenths",
+        "before": 486,
+        "delta": 4
+      },
+      {
+        "turn": 2,
+        "order": 21,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-GOVERNANCE",
+        "unit": "points",
+        "before": 60,
+        "delta": 1
+      },
+      {
+        "turn": 2,
+        "order": 22,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-SOCIAL",
+        "unit": "points",
+        "before": 61,
+        "delta": 1
+      },
+      {
+        "turn": 2,
+        "order": 23,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-001",
+        "reasonCode": "EVENT_TRIGGERED",
+        "target": "EVT-HIST-001"
+      },
+      {
+        "turn": 3,
+        "order": 0,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-001",
+        "reasonCode": "EVENT_RESOLVED",
+        "target": "A"
+      },
+      {
+        "turn": 3,
+        "order": 1,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-001",
+        "kind": "INDICATOR",
+        "reasonCode": "EVT_HIST_001_A_01",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 578,
+        "delta": 30
+      },
+      {
+        "turn": 3,
+        "order": 2,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-001",
+        "kind": "FACTION",
+        "reasonCode": "EVT_HIST_001_A_02",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 550,
+        "delta": 50
+      },
+      {
+        "turn": 3,
+        "order": 3,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+        "target": "fiscalHealth",
+        "unit": "tenths",
+        "before": 560,
+        "delta": 10
+      },
+      {
+        "turn": 3,
+        "order": 4,
+        "kind": "POLICY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_EXPIRED",
+        "target": "POL-SOCIAL-PLACEHOLDER-001"
+      },
+      {
+        "turn": 3,
+        "order": 5,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_INFLATION_REVERSION",
+        "target": "inflationPct",
+        "unit": "tenths",
+        "before": 32,
+        "delta": -1
+      },
+      {
+        "turn": 3,
+        "order": 6,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_OKUN",
+        "target": "unemploymentPct",
+        "unit": "tenths",
+        "before": 50,
+        "delta": -3
+      },
+      {
+        "turn": 3,
+        "order": 7,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_APPROVAL_REVERSION",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 608,
+        "delta": -11
+      },
+      {
+        "turn": 3,
+        "order": 8,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_GROWTH_REVERSION",
+        "target": "growthPct",
+        "unit": "tenths",
+        "before": 45,
+        "delta": -1
+      },
+      {
+        "turn": 3,
+        "order": 9,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_REVENUE",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 140000,
+        "delta": 40000
+      },
+      {
+        "turn": 3,
+        "order": 10,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SPENDING",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 180000,
+        "delta": -38000
+      },
+      {
+        "turn": 3,
+        "order": 11,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 142000,
+        "delta": -1000
+      },
+      {
+        "turn": 3,
+        "order": 12,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-SOCIAL-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 141000,
+        "delta": -2000
+      },
+      {
+        "turn": 3,
+        "order": 13,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-CAKRAWALA",
+        "unit": "tenths",
+        "before": 560,
+        "delta": 4
+      },
+      {
+        "turn": 3,
+        "order": 14,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-MADANI",
+        "unit": "tenths",
+        "before": 530,
+        "delta": 4
+      },
+      {
+        "turn": 3,
+        "order": 15,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 600,
+        "delta": -1
+      },
+      {
+        "turn": 3,
+        "order": 16,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SIMPUL-DAERAH",
+        "unit": "tenths",
+        "before": 520,
+        "delta": 4
+      },
+      {
+        "turn": 3,
+        "order": 17,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "before": 510,
+        "delta": 4
+      },
+      {
+        "turn": 3,
+        "order": 18,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-TUNAS-LESTARI",
+        "unit": "tenths",
+        "before": 490,
+        "delta": 4
+      },
+      {
+        "turn": 3,
+        "order": 19,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-GOVERNANCE",
+        "unit": "points",
+        "before": 61,
+        "delta": 1
+      },
+      {
+        "turn": 3,
+        "order": 20,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-SOCIAL",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-SOCIAL",
+        "unit": "points",
+        "before": 62,
+        "delta": 1
+      },
+      {
+        "turn": 3,
+        "order": 21,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-009",
+        "reasonCode": "EVENT_TRIGGERED",
+        "target": "EVT-HIST-009"
+      },
+      {
+        "turn": 4,
+        "order": 0,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-009",
+        "reasonCode": "EVENT_RESOLVED",
+        "target": "B"
+      },
+      {
+        "turn": 4,
+        "order": 1,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-009",
+        "kind": "TREASURY",
+        "reasonCode": "EVT_HIST_009_B_01",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 139000,
+        "delta": -4000
+      },
+      {
+        "turn": 4,
+        "order": 2,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-009",
+        "kind": "INDICATOR",
+        "reasonCode": "EVT_HIST_009_B_02",
+        "target": "welfare",
+        "unit": "tenths",
+        "before": 548,
+        "delta": -30
+      },
+      {
+        "turn": 4,
+        "order": 3,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+        "target": "fiscalHealth",
+        "unit": "tenths",
+        "before": 570,
+        "delta": 10
+      },
+      {
+        "turn": 4,
+        "order": 4,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-001",
+        "kind": "INDICATOR",
+        "reasonCode": "EVT_HIST_001_A_03",
+        "target": "growthPct",
+        "unit": "tenths",
+        "before": 44,
+        "delta": -2
+      },
+      {
+        "turn": 4,
+        "order": 5,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_OKUN",
+        "target": "unemploymentPct",
+        "unit": "tenths",
+        "before": 47,
+        "delta": -3
+      },
+      {
+        "turn": 4,
+        "order": 6,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_APPROVAL_REVERSION",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 597,
+        "delta": -10
+      },
+      {
+        "turn": 4,
+        "order": 7,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_REVENUE",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 135000,
+        "delta": 40000
+      },
+      {
+        "turn": 4,
+        "order": 8,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SPENDING",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 175000,
+        "delta": -38000
+      },
+      {
+        "turn": 4,
+        "order": 9,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 137000,
+        "delta": -1000
+      },
+      {
+        "turn": 4,
+        "order": 10,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-CAKRAWALA",
+        "unit": "tenths",
+        "before": 564,
+        "delta": 3
+      },
+      {
+        "turn": 4,
+        "order": 11,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-MADANI",
+        "unit": "tenths",
+        "before": 534,
+        "delta": 3
+      },
+      {
+        "turn": 4,
+        "order": 12,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 599,
+        "delta": -1
+      },
+      {
+        "turn": 4,
+        "order": 13,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SIMPUL-DAERAH",
+        "unit": "tenths",
+        "before": 524,
+        "delta": 3
+      },
+      {
+        "turn": 4,
+        "order": 14,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "before": 514,
+        "delta": 3
+      },
+      {
+        "turn": 4,
+        "order": 15,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-TUNAS-LESTARI",
+        "unit": "tenths",
+        "before": 494,
+        "delta": 3
+      },
+      {
+        "turn": 4,
+        "order": 16,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-GOVERNANCE",
+        "unit": "points",
+        "before": 62,
+        "delta": 1
+      },
+      {
+        "turn": 4,
+        "order": 17,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-007",
+        "reasonCode": "EVENT_TRIGGERED",
+        "target": "EVT-HIST-007"
+      },
+      {
+        "turn": 5,
+        "order": 0,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-007",
+        "reasonCode": "EVENT_RESOLVED",
+        "target": "A"
+      },
+      {
+        "turn": 5,
+        "order": 1,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-007",
+        "kind": "TREASURY",
+        "reasonCode": "EVT_HIST_007_A_01",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 136000,
+        "delta": -5000
+      },
+      {
+        "turn": 5,
+        "order": 2,
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-007",
+        "kind": "INDICATOR",
+        "reasonCode": "EVT_HIST_007_A_02",
+        "target": "welfare",
+        "unit": "tenths",
+        "before": 518,
+        "delta": 40
+      },
+      {
+        "turn": 5,
+        "order": 3,
+        "kind": "TREASURY",
+        "sourceType": "LOBBY",
+        "sourceId": "FAC-SUARA-JELATA",
+        "reasonCode": "LOBBY_COST",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 131000,
+        "delta": -2000
+      },
+      {
+        "turn": 5,
+        "order": 4,
+        "kind": "VOTE",
+        "sourceType": "LOBBY",
+        "sourceId": "FAC-SUARA-JELATA",
+        "reasonCode": "LOBBY_BONUS",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "delta": 150
+      },
+      {
+        "turn": 5,
+        "order": 5,
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "kind": "INDICATOR",
+        "reasonCode": "PLACEHOLDER_BUREAUCRACY_SAVINGS",
+        "target": "fiscalHealth",
+        "unit": "tenths",
+        "before": 580,
+        "delta": 10
+      },
+      {
+        "turn": 5,
+        "order": 6,
+        "kind": "POLICY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_EXPIRED",
+        "target": "POL-GOVERNANCE-PLACEHOLDER-001"
+      },
+      {
+        "turn": 5,
+        "order": 7,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_OKUN",
+        "target": "unemploymentPct",
+        "unit": "tenths",
+        "before": 44,
+        "delta": -3
+      },
+      {
+        "turn": 5,
+        "order": 8,
+        "kind": "INDICATOR",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_APPROVAL_REVERSION",
+        "target": "approval",
+        "unit": "tenths",
+        "before": 587,
+        "delta": -9
+      },
+      {
+        "turn": 5,
+        "order": 9,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_REVENUE",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 129000,
+        "delta": 40000
+      },
+      {
+        "turn": 5,
+        "order": 10,
+        "kind": "TREASURY",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SPENDING",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 169000,
+        "delta": -38000
+      },
+      {
+        "turn": 5,
+        "order": 11,
+        "kind": "TREASURY",
+        "sourceType": "POLICY",
+        "sourceId": "POL-GOVERNANCE-PLACEHOLDER-001",
+        "reasonCode": "POLICY_UPKEEP",
+        "target": "treasury",
+        "unit": "billion",
+        "before": 131000,
+        "delta": -1000
+      },
+      {
+        "turn": 5,
+        "order": 12,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-CAKRAWALA",
+        "unit": "tenths",
+        "before": 567,
+        "delta": 3
+      },
+      {
+        "turn": 5,
+        "order": 13,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-MADANI",
+        "unit": "tenths",
+        "before": 537,
+        "delta": 3
+      },
+      {
+        "turn": 5,
+        "order": 14,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-PANJI-MERDEKA",
+        "unit": "tenths",
+        "before": 598,
+        "delta": -1
+      },
+      {
+        "turn": 5,
+        "order": 15,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SIMPUL-DAERAH",
+        "unit": "tenths",
+        "before": 527,
+        "delta": 3
+      },
+      {
+        "turn": 5,
+        "order": 16,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-SUARA-JELATA",
+        "unit": "tenths",
+        "before": 517,
+        "delta": 3
+      },
+      {
+        "turn": 5,
+        "order": 17,
+        "kind": "FACTION",
+        "sourceType": "BASELINE",
+        "reasonCode": "BASELINE_SUPPORT_DRIFT",
+        "target": "FAC-TUNAS-LESTARI",
+        "unit": "tenths",
+        "before": 497,
+        "delta": 3
+      },
+      {
+        "turn": 5,
+        "order": 18,
+        "kind": "MINISTRY",
+        "sourceType": "MINISTRY",
+        "sourceId": "MIN-PLACEHOLDER-GOVERNANCE",
+        "reasonCode": "MINISTRY_EXPERIENCE",
+        "target": "MIN-PLACEHOLDER-GOVERNANCE",
+        "unit": "points",
+        "before": 63,
+        "delta": 1
+      },
+      {
+        "turn": 5,
+        "order": 19,
+        "kind": "EVENT",
+        "sourceType": "EVENT",
+        "sourceId": "EVT-HIST-010",
+        "reasonCode": "EVENT_TRIGGERED",
+        "target": "EVT-HIST-010"
+      }
+    ]
+  }
+}
