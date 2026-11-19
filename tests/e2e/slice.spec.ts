@@ -59,7 +59,7 @@ test('vertical slice: 4 kuartal dari pelantikan sampai riwayat', async ({ page }
   }
 
   // Riwayat dimuat dari save: 4 laporan + grafik SVG.
-  await shortcut(page, '7', copy.history.title);
+  await shortcut(page, '8', copy.history.title);
   await expect(page.getByText(copy.history.reportCount(4))).toBeVisible();
   await expect(page.locator('svg[role="img"]').first()).toBeVisible();
 

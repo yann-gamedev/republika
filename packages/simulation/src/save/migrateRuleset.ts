@@ -45,6 +45,8 @@ function renameAll(state: GameState, renamed: Readonly<Record<string, string>>):
             roleId: rename(command.roleId),
             candidateId: rename(command.candidateId),
           };
+        case 'PROVINCE_ACTION':
+          return { ...command, provinceId: rename(command.provinceId) };
       }
     }),
     pendingEvents: state.pendingEvents.map((event) => ({
@@ -132,10 +134,12 @@ export function migrateRuleset(
         ? policyIds.has(command.policyId)
         : command.type === 'LOBBY_FACTION'
           ? factionIds.has(command.factionId)
-          : defs.candidates.some(
-              (candidate) =>
-                candidate.id === command.candidateId && candidate.roleId === command.roleId,
-            ),
+          : command.type === 'RESHUFFLE'
+            ? defs.candidates.some(
+                (candidate) =>
+                  candidate.id === command.candidateId && candidate.roleId === command.roleId,
+              )
+            : defs.provinces.some((province) => province.id === command.provinceId),
     ),
     pendingEvents: state.pendingEvents.filter((event) => eventIds.has(event.eventId)),
     lobbyThisTurn: state.lobbyThisTurn.filter((id) => factionIds.has(id)),

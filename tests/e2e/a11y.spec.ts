@@ -55,6 +55,7 @@ test('aksesibilitas: tanpa pelanggaran axe serius/kritis di semua halaman', asyn
     ['game/parliament', copy.parliament.title],
     ['game/cabinet', copy.cabinet.title],
     ['game/events', copy.events.title],
+    ['game/map', copy.map.title],
     ['game/history', copy.history.title],
     ['settings', copy.settings.title],
   ];

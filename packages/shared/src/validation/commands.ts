@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { PROVINCE_ACTIONS } from '../types/constants.js';
 import { commandIdSchema, idSchema } from './common.js';
 
 const base = { commandId: commandIdSchema };
@@ -31,6 +32,12 @@ export const gameCommandSchema = z.discriminatedUnion('type', [
     type: z.literal('RESHUFFLE'),
     roleId: idSchema,
     candidateId: idSchema,
+  }),
+  z.object({
+    ...base,
+    type: z.literal('PROVINCE_ACTION'),
+    provinceId: idSchema,
+    action: z.enum(PROVINCE_ACTIONS),
   }),
   z.object({
     ...base,

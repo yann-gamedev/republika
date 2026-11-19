@@ -159,14 +159,17 @@ export default function CabinetPage() {
           },
         ];
   });
-  const leaders: Office[] = definitions.leaders.map((leader) => ({
-    roleId: leader.id,
-    title: leader.title,
-    kind: 'leader' as const,
-    replaceable: leader.replaceable,
-    holder: candidateById(state.leaders[leader.id]?.holderId),
-    effectiveness: null,
-  }));
+  // Jabatan yang tidak bisa diganti (Wakil Presiden) tampil paling depan.
+  const leaders: Office[] = [...definitions.leaders]
+    .sort((a, b) => Number(a.replaceable) - Number(b.replaceable) || a.id.localeCompare(b.id))
+    .map((leader) => ({
+      roleId: leader.id,
+      title: leader.title,
+      kind: 'leader' as const,
+      replaceable: leader.replaceable,
+      holder: candidateById(state.leaders[leader.id]?.holderId),
+      effectiveness: null,
+    }));
   const offices = [...leaders, ...ministers];
   const profile = offices.find((office) => office.roleId === profileId) ?? null;
   const reshuffleOffice = offices.find((office) => office.roleId === reshuffleId) ?? null;

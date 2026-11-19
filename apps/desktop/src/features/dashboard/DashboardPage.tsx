@@ -17,6 +17,7 @@ import {
   eventTitle,
   factionName,
   policyName,
+  provinceName,
   roleTitle,
 } from '@/content/gameContent';
 import { copy } from '@/copy/id';
@@ -195,15 +196,22 @@ export default function DashboardPage() {
                     <span className="text-xs font-medium text-text-secondary">
                       {command.type === 'LOBBY_FACTION'
                         ? copy.dashboard.lobbyKicker
-                        : copy.dashboard.reshuffleKicker}
+                        : command.type === 'RESHUFFLE'
+                          ? copy.dashboard.reshuffleKicker
+                          : copy.dashboard.provinceKicker}
                     </span>
                     <span className="font-serif text-lg leading-tight">
                       {command.type === 'LOBBY_FACTION'
                         ? copy.dashboard.queueLobby(factionName(command.factionId))
-                        : copy.dashboard.queueReshuffle(
-                            roleTitle(command.roleId),
-                            candidateName(command.candidateId),
-                          )}
+                        : command.type === 'RESHUFFLE'
+                          ? copy.dashboard.queueReshuffle(
+                              roleTitle(command.roleId),
+                              candidateName(command.candidateId),
+                            )
+                          : copy.dashboard.queueProvince(
+                              copy.map.actions[command.action],
+                              provinceName(command.provinceId),
+                            )}
                     </span>
                     <Button
                       size="sm"

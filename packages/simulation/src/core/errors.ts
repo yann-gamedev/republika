@@ -20,6 +20,8 @@ export const COMMAND_ERROR_CODES = [
   'UNKNOWN_CANDIDATE',
   'ALREADY_HOLDER',
   'RESHUFFLE_LIMIT',
+  'UNKNOWN_PROVINCE',
+  'PROVINCE_ACTION_LIMIT',
 ] as const;
 
 export type CommandErrorCode = (typeof COMMAND_ERROR_CODES)[number];
@@ -46,6 +48,8 @@ export const COMMAND_ERROR_MESSAGES: Readonly<Record<CommandErrorCode, string>> 
   UNKNOWN_CANDIDATE: 'Calon tidak tersedia untuk jabatan ini.',
   ALREADY_HOLDER: 'Calon ini sudah memegang jabatan tersebut.',
   RESHUFFLE_LIMIT: 'Reshuffle hanya boleh sekali per kuartal.',
+  UNKNOWN_PROVINCE: 'Provinsi tidak ditemukan.',
+  PROVINCE_ACTION_LIMIT: 'Aksi ini sudah dilakukan kuartal ini.',
 };
 
 export interface CommandError {

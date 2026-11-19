@@ -1,12 +1,12 @@
 import { loadGameDefinitions, rawContentBundle, rulesetMigrationMaps } from '@republika/game-data';
-import { SAVE_FORMAT_VERSION, saveFileSchema } from '@republika/shared';
+import { SAVE_FORMAT_VERSION, saveFileSchema, type SaveFile } from '@republika/shared';
 import { describe, expect, it } from 'vitest';
 
 import { applyCommand } from '../src/core/commands.js';
 import { createCampaign, createInitialState } from '../src/core/initialState.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
 import { evaluatePromises } from '../src/report/finalSummary.js';
-import { backgroundShowdown } from '../test-utils/index.js';
+import { backgroundShowdown, runCampaign } from '../test-utils/index.js';
 import { saveToDisk } from '../src/save/compact.js';
 import { migrateRuleset } from '../src/save/migrateRuleset.js';
 import { migrateSave } from '../src/save/migrateSave.js';
@@ -337,5 +337,157 @@ describe('reshuffle (Tahap 6B.3)', () => {
       content,
     );
     expect(next.error).toBeUndefined();
+  });
+});
+
+describe('peta daerah (Tahap 6B.4)', () => {
+  const start = () =>
+    createInitialState(content.scenario, content, { presidentName: 'Laras Pertiwi', seed: 'prv' });
+  const provinceId = content.provinces[0]?.id ?? '';
+  const act = (
+    state: ReturnType<typeof start>,
+    action: 'VISIT' | 'AID' | 'HEAR' | 'ENVOY',
+    id = provinceId,
+    commandId = `${action}-${id}`,
+  ) => applyCommand(state, { type: 'PROVINCE_ACTION', commandId, provinceId: id, action }, content);
+
+  it('aksi: biaya, satu per jenis per provinsi, HEAR sekali per kuartal, bisa dibatalkan', () => {
+    const state = start();
+    const visit = act(state, 'VISIT');
+    expect(visit.error).toBeUndefined();
+    expect(visit.state.actionPointsRemaining).toBe(state.actionPointsRemaining - 1);
+    expect(visit.state.provinces[provinceId]?.actionsThisTurn).toEqual(['VISIT']);
+    expect(act(visit.state, 'VISIT', provinceId, 'v2').error?.code).toBe('PROVINCE_ACTION_LIMIT');
+    const aid = act(visit.state, 'AID');
+    expect(aid.error).toBeUndefined();
+    expect(aid.state.actionPointsRemaining).toBe(visit.state.actionPointsRemaining);
+    const hear = act(aid.state, 'HEAR');
+    expect(hear.error).toBeUndefined();
+    const otherId = content.provinces[1]?.id ?? '';
+    expect(act(hear.state, 'HEAR', otherId).error?.code).toBe('PROVINCE_ACTION_LIMIT');
+    expect(act(hear.state, 'VISIT', 'PRV-X').error?.code).toBe('UNKNOWN_PROVINCE');
+    const pendingVisit = hear.state.pendingCommands.find(
+      (command) => command.type === 'PROVINCE_ACTION' && command.action === 'VISIT',
+    );
+    const cancelled = applyCommand(
+      hear.state,
+      { type: 'CANCEL_PENDING', commandId: 'c', pendingCommandId: pendingVisit?.commandId ?? '' },
+      content,
+    );
+    expect(cancelled.state.provinces[provinceId]?.actionsThisTurn).toEqual(['AID', 'HEAR']);
+    expect(cancelled.state.actionPointsRemaining).toBe(state.actionPointsRemaining);
+  });
+
+  it('langkah 2c + drift + reset: efek lokal, nasional, kas, flag aspirasi', () => {
+    let work = start();
+    for (const action of ['VISIT', 'AID', 'HEAR', 'ENVOY'] as const) work = act(work, action).state;
+    const result = resolveTurn(work, { type: 'END_QUARTER', commandId: 'end' }, content);
+    if (!result.ok) throw new Error(result.error.code);
+    const codes = result.ledger.map((entry) => entry.reasonCode);
+    for (const code of [
+      'PROVINCE_VISIT',
+      'PROVINCE_AID',
+      'PROVINCE_HEAR',
+      'PROVINCE_ENVOY',
+      'PROVINCE_DRIFT',
+    ])
+      expect(codes).toContain(code);
+    expect(result.state.flags).toContain(`ASPIRATION_${provinceId.replace(/-/gu, '_')}`);
+    const visitApproval = result.ledger.find(
+      (entry) => entry.reasonCode === 'PROVINCE_VISIT' && entry.target === 'approval',
+    );
+    expect(visitApproval?.delta).toBe(3);
+    const aid = result.ledger.find(
+      (entry) => entry.reasonCode === 'PROVINCE_AID' && entry.kind === 'TREASURY',
+    );
+    expect(aid?.delta).toBe(-3000);
+    const envoy = result.ledger.find(
+      (entry) => entry.reasonCode === 'PROVINCE_ENVOY' && entry.kind === 'MINISTRY',
+    );
+    expect(envoy?.delta).toBe(-2);
+    const local = result.ledger
+      .filter(
+        (entry) =>
+          entry.kind === 'PROVINCE' && entry.target === provinceId && entry.target === provinceId,
+      )
+      .reduce((sum, entry) => sum + (entry.delta ?? 0), 0);
+    expect(local).toBe(60 + 40 + 30);
+    for (const province of Object.values(result.state.provinces))
+      expect(province.actionsThisTurn).toEqual([]);
+  });
+
+  it('flag gejolak dipasang di bawah 25 dan dilepas saat pulih', () => {
+    const base = start();
+    const low = {
+      ...base,
+      provinces: {
+        ...base.provinces,
+        [provinceId]: { satisfactionTenths: 100, actionsThisTurn: [] },
+      },
+    };
+    const first = resolveTurn(low, { type: 'END_QUARTER', commandId: 'e1' }, content);
+    if (!first.ok) throw new Error(first.error.code);
+    const flag = `UNREST_${provinceId.replace(/-/gu, '_')}`;
+    expect(first.state.flags).toContain(flag);
+    const recovered = {
+      ...first.state,
+      pendingEvents: first.state.pendingEvents.map((item) => ({ ...item, resolvedChoiceId: 'B' })),
+      provinces: {
+        ...first.state.provinces,
+        [provinceId]: { satisfactionTenths: 600, actionsThisTurn: [] },
+      },
+    };
+    const second = resolveTurn(recovered, { type: 'END_QUARTER', commandId: 'e2' }, content);
+    if (!second.ok) throw new Error(second.error.code);
+    expect(second.state.flags).not.toContain(flag);
+    expect(second.ledger.some((entry) => entry.reasonCode === 'PROVINCE_CALM')).toBe(true);
+  });
+
+  it('38 provinsi deterministik, selalu 0..100; resolve ≤ 20 ms; save ≤ 300 KB', () => {
+    for (const strategy of ['visit', 'random'] as const) {
+      const a = runCampaign({ defs: content, seed: `det-${strategy}`, strategy });
+      const b = runCampaign({ defs: content, seed: `det-${strategy}`, strategy });
+      expect(a.final.provinces).toEqual(b.final.provinces);
+      expect(Object.keys(a.final.provinces)).toHaveLength(38);
+      for (const report of a.reports) {
+        for (const entry of report.ledger.filter((item) => item.kind === 'PROVINCE')) {
+          if (entry.reasonCode === 'CLAMPED') expect([0, 1000]).toContain(entry.after);
+        }
+      }
+      for (const province of Object.values(a.final.provinces)) {
+        expect(province.satisfactionTenths).toBeGreaterThanOrEqual(0);
+        expect(province.satisfactionTenths).toBeLessThanOrEqual(1000);
+      }
+      const save = {
+        saveFormatVersion: SAVE_FORMAT_VERSION,
+        appVersion: '0.1.0',
+        rulesetVersion: a.final.rulesetVersion,
+        contentHash: 'content-hash',
+        savedAt: '2026-11-19T00:00:00.000Z',
+        label: 'uji',
+        playTimeSeconds: 0,
+        state: a.final,
+        history: { reports: [...a.reports], ledger: a.reports.flatMap((report) => report.ledger) },
+      };
+      expect(JSON.stringify(saveToDisk(save as SaveFile)).length).toBeLessThan(300 * 1024);
+    }
+    let state = createInitialState(content.scenario, content, {
+      presidentName: 'Laras Pertiwi',
+      seed: 'perf',
+    });
+    const started = performance.now();
+    for (let turn = 0; turn < 20; turn += 1) {
+      const result = resolveTurn(state, { type: 'END_QUARTER', commandId: `p-${turn}` }, content);
+      if (!result.ok) break;
+      state = {
+        ...result.state,
+        pendingEvents: result.state.pendingEvents.map((item) => ({
+          ...item,
+          resolvedChoiceId:
+            content.events.find((event) => event.id === item.eventId)?.choices[0]?.id ?? 'A',
+        })),
+      };
+    }
+    expect((performance.now() - started) / 20).toBeLessThan(20);
   });
 });

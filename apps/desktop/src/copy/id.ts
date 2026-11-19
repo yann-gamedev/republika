@@ -161,7 +161,7 @@ export const copy = {
       `${pending} keputusan akan diproses. Sisa ${ap} AP tidak terbawa ke kuartal berikutnya.`,
     endQuarterConfirm: 'Akhiri kuartal',
     campaignCompleted: 'Masa jabatan selesai',
-    shortcutHint: 'Pintasan: 1–7 pindah halaman · ? bantuan',
+    shortcutHint: 'Pintasan: 1–8 pindah halaman · ? bantuan',
     quarterTrack: (turn: number, maxTurns: number) => `Kuartal ${turn} dari ${maxTurns}`,
     apTokens: (remaining: number, total: number) => `Sisa ${remaining} dari ${total} AP`,
     apShort: (remaining: number) => `${remaining} AP`,
@@ -180,6 +180,7 @@ export const copy = {
     cabinet: 'Kabinet',
     events: 'Nota dinas',
     report: 'Warta',
+    map: 'Peta daerah',
     history: 'Riwayat',
     saves: 'Simpan & muat',
     settings: 'Pengaturan',
@@ -220,6 +221,8 @@ export const copy = {
     billNoVoteBody: 'Langsung berlaku saat kuartal diakhiri.',
     lobbyKicker: 'Lobi · berlaku untuk voting kuartal ini',
     reshuffleKicker: 'Reshuffle · diproses sebelum voting',
+    provinceKicker: 'Aksi daerah · diproses sebelum voting',
+    queueProvince: (action: string, province: string) => `${action}: ${province}`,
     queueReshuffle: (role: string, name: string) => `${role}: ${name}`,
     cancel: 'Tarik pengajuan',
     cancelled: 'Pengajuan ditarik. AP dikembalikan.',
@@ -479,6 +482,43 @@ export const copy = {
     // Riwayat dan laporan akhir.
     turnArrived: (turn: number) => `Muncul pada kuartal ${turn}`,
     resolvedEmpty: 'Belum ada peristiwa yang dijawab.',
+  },
+  map: {
+    title: 'Peta daerah',
+    subtitle: (count: number) =>
+      `Kepuasan warga di ${count} provinsi. Pilih provinsi untuk berkunjung atau menyalurkan bantuan.`,
+    average: 'Rata-rata provinsi',
+    satisfied: 'Puas (≥ 70)',
+    vulnerable: 'Rawan (< 40)',
+    mapTitle: 'Peta provinsi',
+    tileLabel: (name: string, value: string, unrest: boolean) =>
+      `${name}, kepuasan ${value}${unrest ? ', bergejolak' : ''}`,
+    legend: 'Kepuasan',
+    levels: { 1: '≥ 70', 2: '55–69', 3: '40–54', 4: '25–39', 5: '< 25' } as Record<
+      1 | 2 | 3 | 4 | 5,
+      string
+    >,
+    unrestLegend: 'Ada gejolak',
+    issue: 'Isu utama',
+    actions: {
+      VISIT: 'Kunjungan kerja',
+      AID: 'Bantuan daerah',
+      HEAR: 'Dengar aspirasi',
+      ENVOY: 'Kirim utusan',
+    },
+    effectVisit: (local: string, approval: string) =>
+      `Kepuasan +${local}, persetujuan nasional +${approval}`,
+    effectAid: (local: string) => `Kepuasan +${local}`,
+    effectHear: 'Gratis, sekali per kuartal di seluruh negeri. Aspirasi tercatat.',
+    effectEnvoy: (local: string, eff: string) =>
+      `Kepuasan +${local}, efektivitas Dalam Negeri −${eff}`,
+    free: 'Gratis',
+    apCost: (ap: number) => `${ap} AP`,
+    queued: (action: string, province: string) =>
+      `${action} di ${province} diantrekan. Diproses saat kuartal diakhiri.`,
+    queuedNote: 'Diantrekan untuk kuartal ini',
+    cancel: 'Batalkan',
+    navBadge: (count: number) => `${count} gejolak`,
   },
   session: {
     breadcrumb: 'Parlemen',
@@ -754,6 +794,13 @@ export const copy = {
    */
   engineReasons: {
     BACKGROUND_APPLIED: 'Modal awal dari latar belakang presiden.',
+    PROVINCE_VISIT: 'Kunjungan kerja presiden ke daerah.',
+    PROVINCE_AID: 'Bantuan pemerintah pusat untuk daerah.',
+    PROVINCE_HEAR: 'Aspirasi daerah dicatat.',
+    PROVINCE_ENVOY: 'Utusan Dalam Negeri dikirim ke daerah.',
+    PROVINCE_DRIFT: 'Kepuasan daerah mengikuti suasana nasional.',
+    PROVINCE_UNREST: 'Provinsi bergejolak.',
+    PROVINCE_CALM: 'Gejolak di provinsi mereda.',
     RESHUFFLE: 'Reshuffle kabinet.',
     RESHUFFLE_APPOINTED: 'Kader partai ditunjuk dalam reshuffle.',
     RESHUFFLE_DISMISSED: 'Kader partai dicopot dalam reshuffle.',
@@ -867,7 +914,7 @@ export const copy = {
     title: 'Pintasan keyboard',
     open: 'Tekan ? untuk daftar pintasan',
     items: [
-      ['1–7', 'Meja kerja, Kebijakan, Parlemen, Kabinet, Nota dinas, Warta, Riwayat'],
+      ['1–8', 'Meja kerja, Kebijakan, Parlemen, Kabinet, Nota dinas, Warta, Peta daerah, Riwayat'],
       ['?', 'Buka atau tutup daftar pintasan'],
       ['/', 'Cari kebijakan (di halaman Kebijakan)'],
       ['Enter', 'Konfirmasi dialog'],
@@ -896,6 +943,8 @@ export const copy = {
     UNKNOWN_CANDIDATE: 'Calon tidak tersedia untuk jabatan ini.',
     ALREADY_HOLDER: 'Calon ini sudah memegang jabatan tersebut.',
     RESHUFFLE_LIMIT: 'Reshuffle hanya boleh sekali per kuartal.',
+    UNKNOWN_PROVINCE: 'Provinsi tidak ditemukan.',
+    PROVINCE_ACTION_LIMIT: 'Aksi ini sudah dilakukan kuartal ini.',
   },
   controller: {
     noCampaign: 'Belum ada kampanye yang berjalan.',

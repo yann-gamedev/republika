@@ -27,3 +27,4 @@ export * from './save/compact.js';
 export * from './save/migrateRuleset.js';
 export * from './save/migrateSave.js';
 export * from './politics/reshuffle.js';
+export * from './politics/provinces.js';

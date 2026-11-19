@@ -85,9 +85,15 @@ test('semua layar muat pada jendela minimum', async ({ page }) => {
     ).toBe(true);
   }
   await inaugurate(page);
-  const gameRoutes = ['dashboard', 'policies', 'parliament', 'cabinet', 'events', 'history'].map(
-    (name) => `game/${name}`,
-  );
+  const gameRoutes = [
+    'dashboard',
+    'policies',
+    'parliament',
+    'cabinet',
+    'events',
+    'map',
+    'history',
+  ].map((name) => `game/${name}`);
   for (const route of gameRoutes) {
     await gotoHash(page, route);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

@@ -49,6 +49,10 @@ export function roleTitle(roleId: string): string {
   );
 }
 
+export function provinceName(provinceId: string): string {
+  return definitions.provinces.find((province) => province.id === provinceId)?.name ?? provinceId;
+}
+
 export function candidateName(candidateId: string): string {
   return (
     definitions.candidates.find((candidate) => candidate.id === candidateId)?.name ?? candidateId

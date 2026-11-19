@@ -14,6 +14,7 @@ const PoliciesPage = lazy(() => import('@/features/policies/PoliciesPage'));
 const ParliamentPage = lazy(() => import('@/features/parliament/ParliamentPage'));
 const CabinetPage = lazy(() => import('@/features/cabinet/CabinetPage'));
 const EventsPage = lazy(() => import('@/features/events/EventsPage'));
+const MapPage = lazy(() => import('@/features/map/MapPage'));
 const SessionPage = lazy(() => import('@/features/session/SessionPage'));
 const HistoryPage = lazy(() => import('@/features/history/HistoryPage'));
 const ReportPage = lazy(() => import('@/features/report/ReportPage'));
@@ -58,6 +59,7 @@ export function App() {
               <Route path="cabinet" element={<CabinetPage />} />
               <Route path="events" element={<EventsPage />} />
               <Route path="session" element={<SessionPage />} />
+              <Route path="map" element={<MapPage />} />
               <Route path="history" element={<HistoryPage />} />
               <Route path="report" element={<ReportPage />} />
               <Route path="final" element={<FinalReportPage />} />

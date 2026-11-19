@@ -68,6 +68,13 @@ export const pendingCommandSchema = z.discriminatedUnion('type', [
     candidateId: idSchema,
     apCost: nonNegativeInt.max(5),
   }),
+  z.object({
+    type: z.literal('PROVINCE_ACTION'),
+    commandId: commandIdSchema,
+    provinceId: idSchema,
+    action: z.enum(PROVINCE_ACTIONS),
+    apCost: nonNegativeInt.max(5),
+  }),
 ]);
 
 /** Profil presiden (Tahap 6B.1). Sapaan dan potret kosmetik; latar belakang memengaruhi awal kampanye. */
