@@ -36,9 +36,15 @@ Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-6a-ui-v2`, dibuat 
 - Ilustrasi 260,2 KiB mentah melewati target ≤ 100 KB di `prompts/TAHAP-6`, tetapi tiap berkas < 14 KiB dan total gzip 67,4 KiB; SVG dimuat lazy per layar, bukan di awal.
 - `apps/desktop/src/assets/images/arrested.jpg` tetap acuan gaya dan tidak diimpor ke bundle.
 
+### Perbaikan dari playtest pertama (19 November 2026)
+
+- Pemilik melaporkan ilustrasi Nota dinas terpotong: aset 760×640 dipaksa masuk banner 240 px dengan `object-cover`, sehingga kepala dan objek utama hilang. Sekarang ilustrasi ditampilkan utuh pada rasio aslinya (maks. 420 px, di tengah kertas) dan stempel dipindah ke blok nomor agar tidak bergantung tinggi gambar. Perbaikan ini menambah tinggi nota ±114 px.
+- Warta sengaja tetap memotong foto (`object-cover`) karena meniru tata letak koran; yang diperbaiki hanya Nota dinas.
+- Jawaban gate pertama: Meja kerja "sudah bagus", stempel/voting/Warta "cukup memuaskan". Skala 125% dan RAM belum diukur.
+
 ### Gate akhir 6A — menunggu pemilik
 
-Isi `docs/PLAYTEST-UI-V2.md` setelah 2 kampanye di build desktop: kejelasan Meja kerja, rasa stempel/voting/Warta, teks terpotong di 1280×720 atau skala 125%, dan RAM dari Task Manager. 6B tidak boleh dimulai sebelum gate ini lolos; Bagian 0 sudah selesai.
+Isi `docs/PLAYTEST-UI-V2.md` setelah 2 kampanye di build desktop: kejelasan Meja kerja, rasa stempel/voting/Warta, teks terpotong di 1280×720 atau skala 125%, dan RAM dari Task Manager. Putaran pertama sudah memberi dua jawaban (Meja kerja dan kepuasan alur); yang tersisa: **uji skala 125% dan ukur RAM**. 6B tidak boleh dimulai sebelum gate ini lolos; Bagian 0 sudah selesai.
 
 ### Tindakan pemilik
 
