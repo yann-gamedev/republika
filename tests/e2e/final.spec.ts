@@ -31,6 +31,29 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
       // Pilih opsi terakhir (biasanya netral) agar kampanye tetap stabil.
       await answerMemos(page, 'last');
     }
+    // Kuartal 2: reshuffle Jaksa Agung dan kunjungan kerja ke Papua Pegunungan (6B).
+    if (turn === 2) {
+      await shortcut(page, '4', copy.cabinet.title);
+      await page
+        .getByTestId('office-LDR-JAKSA')
+        .getByRole('button', { name: copy.cabinet.reshuffle })
+        .click();
+      await page
+        .getByRole('dialog')
+        .locator('article[data-testid^="candidate-"]')
+        .first()
+        .getByRole('button', { name: copy.cabinet.appoint })
+        .click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await shortcut(page, '7', copy.map.title);
+      await page.getByTestId('tile-PRV-PAPPEG').click();
+      await page
+        .getByTestId('province-panel')
+        .getByRole('button', { name: new RegExp(`^${copy.map.actions.VISIT}`) })
+        .click();
+      await expect(page.getByTestId('province-panel')).toContainText(copy.map.queuedNote);
+      await shortcut(page, '1', copy.dashboard.title);
+    }
     // Sesekali ajukan kebijakan yang tersedia agar ledger berisi keputusan.
     if (turn % 3 === 1) {
       await shortcut(page, '2', copy.policies.title);
@@ -59,6 +82,7 @@ test('kampanye penuh sampai Laporan Akhir Masa Jabatan', async ({ page }) => {
   await expect(page.getByText(copy.commandErrors.CAMPAIGN_COMPLETED).first()).toBeVisible();
 
   const heap = await page.evaluate(() => {
+    (globalThis as { gc?: () => void }).gc?.();
     const memory = (performance as Performance & { memory?: { usedJSHeapSize: number } }).memory;
     return memory?.usedJSHeapSize ?? null;
   });

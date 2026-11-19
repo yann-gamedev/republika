@@ -4,6 +4,13 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 
 ## [Unreleased]
 
+### Ditambahkan
+
+- Pelantikan: pilih latar belakang presiden (mengubah modal awal) dan tiga janji kampanye yang dinilai di laporan akhir.
+- Kabinet: Wakil Presiden, Mensesneg, KSP, dan Jaksa Agung; reshuffle menteri dan pimpinan (1 AP, sekali per kuartal) dengan pratinjau dampak dan rekam jejak.
+- Peta daerah: 38 provinsi dengan kepuasan warga, empat aksi (kunjungan, bantuan, dengar aspirasi, utusan), dan tanda gejolak.
+- Format save v3 dan aturan permainan v3. Save lama dilanjutkan otomatis: kabinet dan provinsi diisi dari konten, janji tidak dinilai.
+
 ### Diubah
 
 - Enam partai mendapat nama fiktif final (Cakrawala Maju, Suara Jelata, Tunas Lestari, Musyawarah Madani, Panji Merdeka, Simpul Daerah) yang tidak menyerupai partai nyata.

@@ -25,6 +25,23 @@ Anggaran resmi ada di `AGENT.md` §5.17. Dokumen ini berisi cara mengukur dan ha
 | Resolve 1 kuartal       | Log lokal `resolve kuartal N: X ms`; test anggaran di `packages/simulation/test/determinism.test.ts`.                             |
 | Ukuran save             | `pnpm balance` (rata-rata/maksimum), atau lihat file di `Documents/REPUBLIKA/saves/`.                                             |
 
+## Hasil Tahap 6B — fitur gameplay (19 November 2026, Windows 11 x64, mesin pengembangan)
+
+Branch `feat/stage-6b-gameplay`. Engine kini memproses kabinet, reshuffle, dan 38 provinsi.
+
+| Metrik                     | Target   | Batas  | Hasil                                                                                                     | Status               |
+| -------------------------- | -------- | ------ | --------------------------------------------------------------------------------------------------------- | -------------------- |
+| Total RAM (app + WebView2) | ≤ 150 MB | 200 MB | **Belum terukur** — menunggu Task Manager pemilik                                                         | Perlu diukur pemilik |
+| JS heap setelah 20 kuartal | ≤ 30 MB  | 50 MB  | **10,6 MB** setelah GC paksa (3 run identik). Tanpa GC paksa 21,7–39,6 MB karena sampah belum dikumpulkan | ✓                    |
+| Ukuran installer           | ≤ 10 MB  | 15 MB  | **3,28 MiB** (3.442.455 byte), NSIS 0.1.0-rc.1                                                            | ✓                    |
+| Entry JS                   | —        | —      | 530,2 KiB (gzip 162,3 KiB); +35 KiB dari 6A karena konten 6B (38 provinsi, 22 calon) ikut dibundel        | ✓                    |
+| Resolve 1 kuartal          | ≤ 20 ms  | 50 ms  | **0,31–0,36 ms** rata-rata (Node, 3 strategi bot × 20 kampanye); test menjaga < 20 ms                     | ✓                    |
+| Ukuran save 20 kuartal     | ≤ 300 KB | 1 MB   | maks **259,6 KiB** (`pnpm balance --runs=5000`); test menjaga < 300 KB                                    | ✓                    |
+
+**Catatan heap.** `final.spec.ts` kini memanggil `gc()` (Chromium dengan `--js-flags=--expose-gc`, hanya di Playwright) sebelum membaca `usedJSHeapSize`, sehingga angkanya mewakili memori yang benar-benar tertahan. Angka 6A (19,3 MB) diukur tanpa GC paksa.
+
+**Catatan save.** Tanpa ringkasan, drift 38 provinsi menghasilkan ±760 entri ledger per kampanye dan save 20 kuartal mencapai ±424 KB. Drift kini dicatat sebagai satu entri per kuartal; aksi pemain tetap dicatat per provinsi.
+
 ## Hasil Tahap 6A — UI v2 (18 November 2026, Windows 11 x64, mesin pengembangan)
 
 Build: branch `feat/stage-6a-ui-v2`, `pnpm build:web` dan `pnpm perf:report`. Metrik heap dari `test-results/final-metrics.json` setelah kampanye 20 kuartal di Chromium Playwright.

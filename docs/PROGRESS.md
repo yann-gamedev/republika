@@ -1,5 +1,44 @@
 # Progres REPUBLIKA
 
+## Tahap 6B — Fitur gameplay baru
+
+Tanggal: 19 November 2026, Windows 11 x64. Branch `feat/stage-6b-gameplay`, dibuat dari `feat/stage-6a-ui-v2`. Dikerjakan atas permintaan pemilik walau gate playtest 6A baru terisi sebagian. Keputusan Bagian 0: K1 Indonesia nyata (tokoh fiktif), K6 angka Lampiran C dengan reshuffle 1× per kuartal, K7 konten 6B berupa fixture `PLACEHOLDER-*`.
+
+**Status: 6B.1–6B.5 selesai dan terverifikasi lokal. Berhenti di sini; menunggu review dan playtest pemilik.**
+
+| Bagian                           | Hasil                                                                                                                                                                                                                                                                         | Commit     |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 6B.1 Skema, konten, migrasi      | Skema dan konten placeholder: 5 latar belakang, 8 janji, 4 jabatan pimpinan, 22 calon, 38 provinsi nyata. `GameState` + profil presiden, janji, kabinet/pimpinan, `reshuffleUsedTurn`, provinsi. Format save v3 (migrator v2→v3 + fixture `save-v2-content.json`), ruleset 3. | `4856f61`  |
+| 6B.2 Latar belakang dan janji    | Langkah 02 dan 04 di berkas pencalonan; modifier diterapkan sekali (`BACKGROUND_APPLIED`); janji dinilai di laporan akhir; `pnpm balance` memeriksa dominasi latar belakang (maks 27%).                                                                                       | `79a76ce`  |
+| 6B.3 Reshuffle dan pimpinan      | Command `RESHUFFLE` (1 AP, 1× per kuartal, langkah 2b); kartu pimpinan dan menteri dari konten calon; laci reshuffle dengan pratinjau dampak; rekam jejak.                                                                                                                    | `1f9af2d`  |
+| 6B.4 Peta daerah                 | Command `PROVINCE_ACTION` (langkah 2c), drift 25% setelah baseline, flag gejolak; peta tile 17×7, legenda filter, panel aksi; strategi bot `visit`.                                                                                                                           | `f9ee206`  |
+| 6B.5 E2E, balancing, dokumentasi | E2E kampanye 20 kuartal kini mencakup latar belakang, janji, reshuffle, dan kunjungan provinsi; pengukuran heap dengan GC paksa; dokumentasi aturan, konten, performa, keputusan.                                                                                             | commit ini |
+
+### Bukti verifikasi lokal
+
+| Perintah                      | Hasil                                                                                                                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm lint`, `pnpm typecheck` | Lulus tanpa peringatan.                                                                                                                                                     |
+| `pnpm test`                   | 301 test lulus (termasuk `campaign6b.test.ts`: migrasi v2→v3, latar belakang sekali, janji, reshuffle, provinsi, determinisme 38 provinsi, resolve < 20 ms, save < 300 KB). |
+| `pnpm test:e2e`               | 12 test lulus: shell, slice, kampanye 20 kuartal + 6B, nota→sidang→warta, reshuffle, peta daerah, save slot, error boundary, 1280×720 + skala, audit axe (termasuk peta).   |
+| `pnpm balance --runs=5000`    | 0 softlock; tidak ada `DOMINANT_STRATEGY` (termasuk `visit`) dan tidak ada `BACKGROUND_DOMINANT`; save maks 259,6 KiB. Laporan: `docs/balance/latest.md`.                   |
+| `pnpm content:check`          | Valid, ruleset v3; 16 peringatan konten placeholder lama (bukan dari 6B).                                                                                                   |
+| `pnpm build`                  | Installer NSIS 3,28 MiB.                                                                                                                                                    |
+| JS heap 20 kuartal            | 10,6 MB setelah GC paksa (3 run).                                                                                                                                           |
+
+### Catatan 6B
+
+- Snapshot determinisme `slice-4q.json` diperbarui di 6B.1. Yang berubah hanya hash state karena field baru; hash laporan dan angka akhir identik, jadi aturan fixture tidak berubah.
+- Desain yang menyimpang dari prompt dicatat di `docs/DECISIONS.md`, misalnya pejabat awal sebagai calon `initial: true` dan drift provinsi diringkas di ledger.
+- Hal yang belum ada (event daerah, nama kementerian nyata, statistik loyalitas, berita reshuffle di Warta) dicatat di `docs/OPEN_QUESTIONS.md`.
+
+### Langkah manual untuk pemilik
+
+1. `pnpm build`, pasang installer, lalu mainkan minimal satu kampanye penuh: pilih latar belakang dan janji, lakukan reshuffle, dan pakai keempat aksi daerah.
+2. Muat save dari rc.1 atau 6A. Pastikan muncul "dilanjutkan dengan aturan v3", kabinet dan 38 provinsi terisi, dan janji tidak dinilai.
+3. Ukur RAM dengan Task Manager setelah 20 kuartal (cara di `docs/PERFORMANCE.md`).
+4. Tulis konten final 6B (latar belakang, janji, calon pejabat, isu provinsi) menggantikan `PLACEHOLDER-*`, lalu jalankan `pnpm content:check` dan `pnpm balance`.
+
 ## Tahap 6A — UI v2
 
 Tanggal: 18 November 2026, Windows 11 x64. Branch `feat/stage-6a-ui-v2`, dibuat dari `feat/content-factions`.
