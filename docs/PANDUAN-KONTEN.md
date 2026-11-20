@@ -312,7 +312,7 @@ Preferensi −2..+2 menggeser skor voting ±10 per poin. Ingat rumusnya: fraksi 
 
 **Wajib ada minimal satu opsi `"neutral": true`.** Opsi netral tidak harus tanpa efek; artinya "pilihan yang selalu bisa diambil" (tanpa prasyarat atau biaya AP). `hint` ditulis kualitatif dan tidak menyebut angka.
 
-Untuk rancangan rantai event: event A memakai efek `{ "type": "SET_FLAG", "flag": "BANJIR_DITANGANI_DAERAH", "reasonCode": "REGIONAL_RESPONSE_CHOSEN" }`, lalu event B memakai eligibility `{ "type": "FLAG_SET", "flag": "BANJIR_DITANGANI_DAERAH" }`. Pemilihan/evaluasi event belum diimplementasikan.
+Untuk rancangan rantai event: event A memakai efek `{ "type": "SET_FLAG", "flag": "BANJIR_DITANGANI_DAERAH", "reasonCode": "REGIONAL_RESPONSE_CHOSEN" }`, lalu event B memakai eligibility `{ "type": "FLAG_SET", "flag": "BANJIR_DITANGANI_DAERAH" }`. Engine memilih event sesuai bobot dan syarat; lihat §9 `SIMULATION_RULES.md`.
 
 ### Arketipe — `archetypes.json`
 
@@ -442,6 +442,17 @@ Berkas di bawah ini dibaca bila ada. Bila tidak ada, koleksinya dianggap kosong 
 - `roleId` adalah ID kementerian (`MIN-*`) atau jabatan pimpinan (`LDR-*`). Setiap jabatan wajib punya **tepat satu** calon `initial: true` sebagai pejabat saat pelantikan.
 - Calon menteri wajib punya `baseEffectiveness` (40–90). `factionId: null` berarti nonpartai.
 - `appearance.head`: `peci`, `rambut`, `panjang`, `uban`, `baret`, `botak`, atau `hijab`.
+
+### Event daerah - `events/EVT-REG-*.json`
+
+Event daerah memakai flag yang dipasang engine, bukan `SET_FLAG` konten. Format flag mengganti tanda hubung ID provinsi dengan garis bawah:
+
+- `UNREST_<id>` dipasang saat kepuasan provinsi < 25,0 dan dilepas saat pulih. Event dengan syarat `FLAG_SET UNREST_<id>` mendapat bobot **3x** saat syaratnya terpenuhi.
+- `ASPIRATION_<id>` dipasang oleh aksi `HEAR` (dengar aspirasi). Event dengan syarat ini tidak mendapat pengali; ia hanya muncul setelah pemain mendengar aspirasi provinsi tersebut.
+
+Contoh syarat: `{ "type": "FLAG_SET", "flag": "UNREST_PRV_PAPPEG" }` untuk `PRV-PAPPEG`, atau `{ "type": "FLAG_SET", "flag": "ASPIRATION_PRV_NTT" }` untuk `PRV-NTT`. Jangan menulis `UNREST_*`/`ASPIRATION_*` sebagai `SET_FLAG` konten; engine yang memilikinya. `pnpm content:check` tidak menandai flag engine sebagai "tidak pernah di-set".
+
+Fixture `EVT-REG-PLACEHOLDER-001` sampai `-003` adalah contoh; ganti dengan konten final dan tambahkan ilustrasi `events/evt-reg-*.svg`, atau daftarkan di `FALLBACK_EVENTS` pada `apps/desktop/test/art.test.ts`.
 
 ## Tugas konten per tahap
 
