@@ -1,4 +1,11 @@
-import type { GameDefinitions, GameState, PendingCommand, ProvinceAction } from '@republika/shared';
+import {
+  ASPIRATION_FLAG_PREFIX,
+  UNREST_FLAG_PREFIX,
+  type GameDefinitions,
+  type GameState,
+  type PendingCommand,
+  type ProvinceAction,
+} from '@republika/shared';
 
 import type { CommandErrorCode } from '../core/errors.js';
 import type { Ledger } from '../core/ledger.js';
@@ -39,11 +46,11 @@ function flagSuffix(provinceId: string): string {
 }
 
 export function aspirationFlag(provinceId: string): string {
-  return `ASPIRATION_${flagSuffix(provinceId)}`;
+  return `${ASPIRATION_FLAG_PREFIX}${flagSuffix(provinceId)}`;
 }
 
 export function unrestFlag(provinceId: string): string {
-  return `UNREST_${flagSuffix(provinceId)}`;
+  return `${UNREST_FLAG_PREFIX}${flagSuffix(provinceId)}`;
 }
 
 /**

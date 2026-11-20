@@ -135,4 +135,12 @@ describe('qualityWarnings', () => {
     const orphan = withEvent({ eligibility: [{ type: 'FLAG_NOT_SET', flag: 'FX_YATIM' }] });
     expect(codes(orphan)).toContain('FLAG_NEVER_SET@flags.FX_YATIM');
   });
+
+  it('flag provinsi dari engine tidak dianggap mustahil atau yatim', () => {
+    for (const flag of ['UNREST_PRV_PAPPEG', 'ASPIRATION_PRV_NTT']) {
+      const regional = withEvent({ eligibility: [{ type: 'FLAG_SET', flag }] });
+      expect(codes(regional)).not.toContain('EVENT_NEVER_ELIGIBLE@events.EVT-UJI-001.eligibility');
+      expect(codes(regional)).not.toContain(`FLAG_NEVER_SET@flags.${flag}`);
+    }
+  });
 });

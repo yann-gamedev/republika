@@ -4,7 +4,7 @@
 
 Tanggal: 19 November 2026, Windows 11 x64. Branch `feat/stage-6b-gameplay`, dibuat dari `feat/stage-6a-ui-v2`. Dikerjakan atas permintaan pemilik walau gate playtest 6A baru terisi sebagian. Keputusan Bagian 0: K1 Indonesia nyata (tokoh fiktif), K6 angka Lampiran C dengan reshuffle 1× per kuartal, K7 konten 6B berupa fixture `PLACEHOLDER-*`.
 
-**Status: 6B.1–6B.5 selesai dan terverifikasi lokal. Berhenti di sini; menunggu review dan playtest pemilik.**
+**Status: 6B.1–6B.5 dan event daerah 6B.4 selesai serta terverifikasi lokal. Berhenti di sini; menunggu review dan playtest pemilik.**
 
 | Bagian                           | Hasil                                                                                                                                                                                                                                                                         | Commit     |
 | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -12,25 +12,27 @@ Tanggal: 19 November 2026, Windows 11 x64. Branch `feat/stage-6b-gameplay`, dibu
 | 6B.2 Latar belakang dan janji    | Langkah 02 dan 04 di berkas pencalonan; modifier diterapkan sekali (`BACKGROUND_APPLIED`); janji dinilai di laporan akhir; `pnpm balance` memeriksa dominasi latar belakang (maks 27%).                                                                                       | `79a76ce`  |
 | 6B.3 Reshuffle dan pimpinan      | Command `RESHUFFLE` (1 AP, 1× per kuartal, langkah 2b); kartu pimpinan dan menteri dari konten calon; laci reshuffle dengan pratinjau dampak; rekam jejak.                                                                                                                    | `1f9af2d`  |
 | 6B.4 Peta daerah                 | Command `PROVINCE_ACTION` (langkah 2c), drift 25% setelah baseline, flag gejolak; peta tile 17×7, legenda filter, panel aksi; strategi bot `visit`.                                                                                                                           | `f9ee206`  |
+| 6B.4a Event daerah               | Tiga fixture membaca `UNREST_PRV_PAPPEG`, `UNREST_PRV_PAPUA`, dan `ASPIRATION_PRV_NTT`; event `UNREST_*` berbobot 3×; flag engine tidak lagi dianggap mustahil/yatim oleh `content:check`; fallback ilustrasi dicatat di test aset.                                           | commit ini |
 | 6B.5 E2E, balancing, dokumentasi | E2E kampanye 20 kuartal kini mencakup latar belakang, janji, reshuffle, dan kunjungan provinsi; pengukuran heap dengan GC paksa; dokumentasi aturan, konten, performa, keputusan.                                                                                             | commit ini |
 
 ### Bukti verifikasi lokal
 
-| Perintah                      | Hasil                                                                                                                                                                       |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm lint`, `pnpm typecheck` | Lulus tanpa peringatan.                                                                                                                                                     |
-| `pnpm test`                   | 301 test lulus (termasuk `campaign6b.test.ts`: migrasi v2→v3, latar belakang sekali, janji, reshuffle, provinsi, determinisme 38 provinsi, resolve < 20 ms, save < 300 KB). |
-| `pnpm test:e2e`               | 12 test lulus: shell, slice, kampanye 20 kuartal + 6B, nota→sidang→warta, reshuffle, peta daerah, save slot, error boundary, 1280×720 + skala, audit axe (termasuk peta).   |
-| `pnpm balance --runs=5000`    | 0 softlock; tidak ada `DOMINANT_STRATEGY` (termasuk `visit`) dan tidak ada `BACKGROUND_DOMINANT`; save maks 259,6 KiB. Laporan: `docs/balance/latest.md`.                   |
-| `pnpm content:check`          | Valid, ruleset v3; 16 peringatan konten placeholder lama (bukan dari 6B).                                                                                                   |
-| `pnpm build`                  | Installer NSIS 3,28 MiB.                                                                                                                                                    |
-| JS heap 20 kuartal            | 10,6 MB setelah GC paksa (3 run).                                                                                                                                           |
+| Perintah                      | Hasil                                                                                                                                                                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm lint`, `pnpm typecheck` | Lulus tanpa peringatan.                                                                                                                                                                                                              |
+| `pnpm test`                   | 305 test lulus (termasuk `campaign6b.test.ts`: migrasi v2→v3, latar belakang sekali, janji, reshuffle, provinsi, determinisme 38 provinsi, resolve < 20 ms, save < 300 KB; ditambah uji bobot dan keterkaitan fixture event daerah). |
+| `pnpm test:e2e`               | 12 test lulus: shell, slice, kampanye 20 kuartal + 6B, nota→sidang→warta, reshuffle, peta daerah, save slot, error boundary, 1280×720 + skala, audit axe (termasuk peta).                                                            |
+| `pnpm balance --runs=5000`    | 0 softlock; tidak ada `DOMINANT_STRATEGY` (termasuk `visit`) dan tidak ada `BACKGROUND_DOMINANT`; save maks 259,6 KiB. Laporan: `docs/balance/latest.md`.                                                                            |
+| `pnpm content:check`          | Valid, ruleset v3; 18 peringatan: 15 placeholder (termasuk 3 fixture event daerah baru), 2 target konten, 1 efek kebijakan; tanpa error.                                                                                             |
+| `pnpm build`                  | Installer NSIS 3,28 MiB.                                                                                                                                                                                                             |
+| JS heap 20 kuartal            | 10,6 MB setelah GC paksa (3 run).                                                                                                                                                                                                    |
 
 ### Catatan 6B
 
 - Snapshot determinisme `slice-4q.json` diperbarui di 6B.1. Yang berubah hanya hash state karena field baru; hash laporan dan angka akhir identik, jadi aturan fixture tidak berubah.
 - Desain yang menyimpang dari prompt dicatat di `docs/DECISIONS.md`, misalnya pejabat awal sebagai calon `initial: true` dan drift provinsi diringkas di ledger.
-- Hal yang belum ada (event daerah, nama kementerian nyata, statistik loyalitas, berita reshuffle di Warta) dicatat di `docs/OPEN_QUESTIONS.md`.
+- Balance 5000 run memunculkan event aspirasi NTT (membantu bot `visit`) tetapi belum memunculkan dua event gejolak karena bot tidak menurunkan persetujuan cukup rendah. Ini bukan softlock; skenario persetujuan rendah perlu playtest pemilik (`docs/OPEN_QUESTIONS.md`).
+- Hal yang belum ada (nama kementerian nyata, statistik loyalitas, berita reshuffle di Warta, ilustrasi event daerah) dicatat di `docs/OPEN_QUESTIONS.md`.
 
 ### Langkah manual untuk pemilik
 

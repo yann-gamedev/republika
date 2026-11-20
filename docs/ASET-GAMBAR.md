@@ -6,18 +6,18 @@ Daftar ilustrasi yang masih dibutuhkan, disusun mengikuti gaya `apps/desktop/src
 
 Ilustrasi flat SVG sudah ada di repo dan terdaftar di `apps/desktop/src/content/art.ts`. SVG menggantikan rencana `.webp` di bawah karena jauh lebih kecil dan tajam di semua skala UI.
 
-| Kelompok        | Berkas                                                                                                               | Status                           | Dipakai lewat                             |
-| --------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------- |
-| Adegan layar    | `scenes/menu-hero.svg`, `inauguration-oath.svg`, `cabinet-briefing.svg`, `parliament-vote.svg`, `dashboard-desk.svg` | ✅ SVG                           | `sceneArt(key)`                           |
-| Adegan berita   | `scenes/protest.svg`, `flood.svg`, `market.svg`, `port.svg`, `map-visit.svg`                                         | ✅ SVG                           | `sceneArt(key)`                           |
-| Kartu kebijakan | `scenes/policy-fiscal.svg`, `policy-social.svg`, `policy-energy.svg`, `policy-governance.svg`                        | ✅ SVG                           | `policyArt(kategori)`                     |
-| Event           | `events/evt-hist-001.svg` … `evt-hist-010.svg`, `evt-placeholder-001.svg`, `evt-placeholder-002.svg`                 | ✅ SVG (12/12 event konten)      | `eventArt(id)`, fallback `dashboard-desk` |
-| Acuan gaya      | `arrested.jpg`                                                                                                       | ✅ ada, belum dipetakan ke event | — (tidak ikut bundle)                     |
-| Akhir kampanye  | `final-term`, `ending-*`                                                                                             | ⬜ belum                         | —                                         |
-| Fraksi          | `faction-*`                                                                                                          | ⬜ belum                         | —                                         |
-| Utilitas        | `texture-stripes`, `empty-archive`, `offline-notice`                                                                 | ⬜ belum (opsional)              | —                                         |
+| Kelompok        | Berkas                                                                                                               | Status                                  | Dipakai lewat                             |
+| --------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------- |
+| Adegan layar    | `scenes/menu-hero.svg`, `inauguration-oath.svg`, `cabinet-briefing.svg`, `parliament-vote.svg`, `dashboard-desk.svg` | ✅ SVG                                  | `sceneArt(key)`                           |
+| Adegan berita   | `scenes/protest.svg`, `flood.svg`, `market.svg`, `port.svg`, `map-visit.svg`                                         | ✅ SVG                                  | `sceneArt(key)`                           |
+| Kartu kebijakan | `scenes/policy-fiscal.svg`, `policy-social.svg`, `policy-energy.svg`, `policy-governance.svg`                        | ✅ SVG                                  | `policyArt(kategori)`                     |
+| Event           | `events/evt-hist-001.svg` … `evt-hist-010.svg`, `evt-placeholder-001.svg`, `evt-placeholder-002.svg`                 | ✅ SVG (12/15 event konten; 3 fallback) | `eventArt(id)`, fallback `dashboard-desk` |
+| Acuan gaya      | `arrested.jpg`                                                                                                       | ✅ ada, belum dipetakan ke event        | — (tidak ikut bundle)                     |
+| Akhir kampanye  | `final-term`, `ending-*`                                                                                             | ⬜ belum                                | —                                         |
+| Fraksi          | `faction-*`                                                                                                          | ⬜ belum                                | —                                         |
+| Utilitas        | `texture-stripes`, `empty-archive`, `offline-notice`                                                                 | ⬜ belum (opsional)                     | —                                         |
 
-Ukuran: 26 SVG — 260,2 KiB mentah, 67,4 KiB gzip. Setiap berkas < 14 KiB (dijaga `apps/desktop/test/art.test.ts`). Event baru: tambahkan `events/<id event huruf kecil>.svg`. Tanpa berkas, event otomatis memakai `dashboard-desk`, kecuali didaftarkan sengaja di `FALLBACK_EVENTS` pada test.
+Ukuran: 26 SVG — 260,2 KiB mentah, 67,4 KiB gzip. Setiap berkas < 14 KiB (dijaga `apps/desktop/test/art.test.ts`). Event baru: tambahkan `events/<id event huruf kecil>.svg`. Tanpa berkas, event otomatis memakai `dashboard-desk`, kecuali didaftarkan sengaja di `FALLBACK_EVENTS` pada test. Tiga fixture event daerah 6B.4 (`EVT-REG-PLACEHOLDER-001` sampai `-003`) sengaja memakai fallback sampai ilustrasi final dibuat.
 
 Bagian 1–4 di bawah adalah rencana awal dan tetap berlaku untuk gaya, palet, dan aset yang belum ada.
 

@@ -2,10 +2,12 @@
 
 - Kampanye: 5000 (random, greedy-approval, austerity, welfare, no-op, visit), 20 kuartal, seed dasar `balance`
 - Softlock: **0**
-- Ukuran save: rata-rata 183.7 KiB, maksimum 259.6 KiB
+- Ukuran save: rata-rata 184.2 KiB, maksimum 259.6 KiB
 
 ## Bendera otomatis
 
+- EVENT_NEVER_SEEN: EVT-REG-PLACEHOLDER-001 tidak pernah muncul.
+- EVENT_NEVER_SEEN: EVT-REG-PLACEHOLDER-002 tidak pernah muncul.
 - VOTE_ALWAYS_PASSES: POL-ENERGY-PLACEHOLDER-001 (4670/4670).
 - VOTE_ALWAYS_PASSES: POL-SOCIAL-PLACEHOLDER-001 (11810/11810).
 - GREEDY_FAVOURITE: bot greedy memilih POL-SOCIAL-PLACEHOLDER-001 di 100% kampanye. Terlalu kuat?
@@ -87,14 +89,14 @@
 
 | Indikator | P5 | P25 | P50 | P75 | P95 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Persetujuan | 60.9 | 61.2 | 61.5 | 62.4 | 64.5 |
+| Persetujuan | 61.7 | 62.2 | 62.5 | 63.3 | 65.7 |
 | Stabilitas | 72.0 | 72.0 | 72.0 | 72.0 | 75.0 |
 | Fiskal | 51.0 | 51.0 | 51.0 | 51.0 | 51.0 |
 | Pertumbuhan | 3.8% | 3.8% | 3.8% | 3.8% | 3.8% |
 | Inflasi | 3.1% | 3.1% | 3.1% | 3.1% | 3.1% |
-| Pengangguran | 0.8% | 1.0% | 1.1% | 1.2% | 1.3% |
-| Kesejahteraan | 59.0 | 59.0 | 59.0 | 59.0 | 59.0 |
-| Kepercayaan | 44.0 | 50.0 | 50.0 | 50.0 | 50.0 |
+| Pengangguran | 0.7% | 0.9% | 1.1% | 1.2% | 1.3% |
+| Kesejahteraan | 61.0 | 61.0 | 61.0 | 61.0 | 61.0 |
+| Kepercayaan | 45.0 | 51.0 | 51.0 | 51.0 | 51.0 |
 
 ## Frekuensi arketipe
 
@@ -144,15 +146,16 @@
 
 | Latar belakang | Menang | % |
 | --- | ---: | ---: |
-| BG-PLACEHOLDER-AKTIVIS | 160.8 | 27% |
-| BG-PLACEHOLDER-EKONOM | 117.8 | 20% |
-| BG-PLACEHOLDER-PENGUSAHA | 127.9 | 21% |
-| BG-PLACEHOLDER-PURNAWIRAWAN | 158.1 | 26% |
-| BG-PLACEHOLDER-WALIKOTA | 35.4 | 6% |
+| BG-PLACEHOLDER-AKTIVIS | 154.3 | 26% |
+| BG-PLACEHOLDER-EKONOM | 122.6 | 20% |
+| BG-PLACEHOLDER-PENGUSAHA | 124.2 | 21% |
+| BG-PLACEHOLDER-PURNAWIRAWAN | 153.3 | 26% |
+| BG-PLACEHOLDER-WALIKOTA | 45.5 | 8% |
 
 ## Event yang tidak pernah muncul
 
-- Semua event muncul setidaknya sekali.
+- EVT-REG-PLACEHOLDER-001
+- EVT-REG-PLACEHOLDER-002
 
 ## Rekomendasi
 

@@ -1,4 +1,5 @@
 import {
+  isEngineFlag,
   parseArchetypeStat,
   type EffectRule,
   type GameDefinitions,
@@ -160,9 +161,14 @@ export function qualityWarnings(defs: GameDefinitions): ValidationIssue[] {
         : [],
     ),
   );
+  // Flag UNREST_*/ASPIRATION_* dipasang engine (provinsi), bukan efek konten.
+  const flagsAvailable = new Set(flagsSet);
+  for (const flag of flagsRead) {
+    if (isEngineFlag(flag)) flagsAvailable.add(flag);
+  }
 
   for (const event of defs.events) {
-    const reason = contradiction(event.eligibility, defs.scenario.maxTurns, flagsSet);
+    const reason = contradiction(event.eligibility, defs.scenario.maxTurns, flagsAvailable);
     if (reason !== null) {
       warnings.push(
         warning(
@@ -174,7 +180,7 @@ export function qualityWarnings(defs: GameDefinitions): ValidationIssue[] {
     }
   }
   for (const policy of defs.policies) {
-    const reason = contradiction(policy.requirements, defs.scenario.maxTurns, flagsSet);
+    const reason = contradiction(policy.requirements, defs.scenario.maxTurns, flagsAvailable);
     if (reason !== null) {
       warnings.push(
         warning(
@@ -212,7 +218,7 @@ export function qualityWarnings(defs: GameDefinitions): ValidationIssue[] {
     }
   }
   for (const flag of [...flagsRead].sort()) {
-    if (!flagsSet.has(flag)) {
+    if (!flagsSet.has(flag) && !isEngineFlag(flag)) {
       warnings.push(
         warning(
           'FLAG_NEVER_SET',

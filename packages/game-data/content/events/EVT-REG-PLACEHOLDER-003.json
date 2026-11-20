@@ -1,0 +1,93 @@
+{
+  "id": "EVT-REG-PLACEHOLDER-003",
+  "version": 1,
+  "title": "Warga NTT Menagih Janji Air Bersih",
+  "body": "Setelah aspirasi warga dicatat, ratusan keluarga di Nusa Tenggara Timur kembali menagih janji penyediaan air bersih. Musim kemarau membuat sumur warga mengering dan harga air naik.",
+  "eligibility": [{ "type": "FLAG_SET", "flag": "ASPIRATION_PRV_NTT" }],
+  "triggerWeight": 7,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Danai proyek air bersih tahun ini",
+      "hint": "Janji ditepati, tetapi anggaran tahun ini tertekan.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -2,
+          "reasonCode": "EVT_REG_003_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_A_03"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_A_04"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Bentuk gugus tugas lintas kementerian",
+      "hint": "Biaya lebih kecil, tetapi hasilnya baru terasa bertahap.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -1,
+          "reasonCode": "EVT_REG_003_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": 1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_B_03"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "label": "Catat sebagai prioritas anggaran berikutnya",
+      "hint": "Tidak ada biaya sekarang, tetapi warga merasa ditunda lagi.",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_C_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_003_C_02"
+        }
+      ]
+    }
+  ]
+}

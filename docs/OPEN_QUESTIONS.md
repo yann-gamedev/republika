@@ -40,7 +40,7 @@ Jika total melewati 200 MB, opsi (perlu keputusan, bukan hack):
 
 ## Tahap 6B — catatan untuk pemilik
 
-1. **Event daerah belum ada.** Flag `ASPIRATION_<id>` dan `UNREST_<id>` sudah dipasang engine, tetapi belum ada event yang membacanya, dan bobot event daerah belum dinaikkan saat gejolak. Usulan: tulis event daerah dengan syarat `FLAG_SET`, lalu putuskan apakah gejolak menaikkan bobot otomatis.
+1. **Event daerah masih fixture.** Tiga event `EVT-REG-PLACEHOLDER-*` sudah membaca `UNREST_PRV_PAPPEG`, `UNREST_PRV_PAPUA`, dan `ASPIRATION_PRV_NTT`; event gejolak mendapat bobot 3x. Bot `pnpm balance` tidak menurunkan persetujuan cukup rendah, jadi dua event gejolak belum pernah muncul di 5000 run; event aspirasi NTT muncul dan menaikkan hasil bot `visit`. Yang tersisa: playtest skenario persetujuan rendah (apakah ambang 25 dan bobot 3x tepat), lalu konten/ilustrasi final dari pemilik.
 2. **Nama kementerian masih placeholder.** K1 mengizinkan nama lembaga nyata ("Kementerian Keuangan"); `ministries.json` belum diganti karena itu konten final pemilik.
 3. **Statistik "Loyalitas" di wireframe profil** belum ada di model; profil menampilkan efektivitas dan integritas.
 4. **Warta belum memberitakan reshuffle dan aksi daerah** sebagai berita utama; keduanya hanya muncul di ledger, Meja kerja, dan rekam jejak.

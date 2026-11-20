@@ -17,8 +17,13 @@ import { copy } from '@/copy/id';
 
 const IMAGES = join(import.meta.dirname, '../src/assets/images');
 
-/** Event yang SENGAJA memakai fallback `dashboard-desk`. Kosong = semua punya gambar. */
-const FALLBACK_EVENTS: readonly string[] = [];
+/** Event yang SENGAJA memakai fallback `dashboard-desk`. */
+const FALLBACK_EVENTS: readonly string[] = [
+  // Fixture event daerah 6B.4; ilustrasi final menyusul dari pemilik.
+  'EVT-REG-PLACEHOLDER-001',
+  'EVT-REG-PLACEHOLDER-002',
+  'EVT-REG-PLACEHOLDER-003',
+];
 
 const contentEventIds = (rawContentBundle.events as Array<{ id: string }>)
   .map((event) => event.id)
