@@ -1,5 +1,30 @@
 # Progres REPUBLIKA
 
+## Kesiapan rilis — dokumentasi dan gate konten final
+
+Tanggal: 23 November 2026. Basis audit `49bb1fb`, branch `feat/stage-6b-gameplay`; PR [#9](https://github.com/yann-gamedev/republika/pull/9) sudah digabung ke `main` (`847eca9`) pada verifikasi akhir, jadi bagian ini diajukan lewat branch dan PR terpisah. Bagian ini disetujui pemilik: **dokumen + gate rilis**, bukan penulisan konten final.
+
+- [x] Inventaris dan backlog `docs/RELEASE-READINESS.md`: 50 ID placeholder (koreksi hitungan percakapan 38), kekurangan 8 kebijakan/4 arketipe, pemilik tugas, kriteria lulus, urutan orchestrator, gate desktop/manual, scope opsional.
+- [x] `docs/RELEASE.md` dan `docs/OPEN_QUESTIONS.md` disinkronkan; tautan readiness di README. Catatan historis di bawah tetap riwayat tahap, bukan status terkini.
+- [x] Review independen: 50 ID dan risiko migrasi dikonfirmasi; contoh folder CLI diperbaiki ke path absolut karena cwd script berada di package.
+- [x] `content:check --strict`: token `placeholder` case-insensitive pada semua key/nilai raw bundle aktif membuat exit 1; argumen folder lama tetap didukung. Mode biasa dan warning selain placeholder tetap nonfatal.
+- [x] Workflow rilis memakai strict untuk tag stabil tanpa `-` (termasuk dispatch tag); prerelease tetap pemeriksaan biasa. Tidak membuat tag/publikasi.
+- [x] Test scanner dan CLI memakai salinan sementara: ID/teks/key, biografi calon di luar cakupan warning ID lama, normal vs strict, urutan argumen, konten tanpa token, opsi salah.
+
+### Bukti bagian ini
+
+| Pemeriksaan | Hasil |
+| --- | --- |
+| `pnpm lint`, `pnpm typecheck` | Lulus. |
+| `pnpm test` | 307 test / 39 file lulus. |
+| `pnpm content:check` | Valid schema, 18 peringatan; hash tetap `30cd533095581bc5f8c9800033bbe4b4e40ed12e89387527e6a822340807d1d6`. |
+| `pnpm content:check --strict` | **Exit 1 sesuai tujuan**: 123 lokasi key/nilai bertoken placeholder. Bukan regresi dan bukan bukti konten sudah final. |
+| `pnpm build:web` | Lulus; peringatan chunk > 500 kB tetap ada. |
+
+**Risiko belum diperbaiki:** `migrateRuleset:renameAll` belum memetakan field ID 6B dan `archetypeId`; sebelum ID final diganti perlu test/pemetaan agar janji dan pejabat tersimpan tidak hilang/reset. Detail di readiness §4. Strict bukan pengganti review target jumlah, balancing, narasi, aset atau RAM. `PANDUAN-KONTEN.md` masih memiliki klaim historis usang; dicatat sebagai backlog sinkronisasi, bukan mengaku selesai.
+
+Konten dilindungi, fixture historis, `prompts/**`, versi aplikasi/ruleset, dan file pemain tidak diubah. `docs/IDEAS.md` serta `docs/RENCANA-KONTEN.md` tetap untracked milik pemilik; tidak diikutkan commit. Tidak ada dependency atau dampak runtime/anggaran §5.17. Uji native installer/RAM dan workflow rilis aktual tidak dijalankan dalam bagian CLI/dokumentasi ini. **Berhenti setelah commit/push; lanjut finalisasi konten perlu keputusan pemilik/orchestrator.**
+
 ## Tahap 6B — Fitur gameplay baru
 
 Tanggal: 19 November 2026, Windows 11 x64. Branch `feat/stage-6b-gameplay`, dibuat dari `feat/stage-6a-ui-v2`. Dikerjakan atas permintaan pemilik walau gate playtest 6A baru terisi sebagian. Keputusan Bagian 0: K1 Indonesia nyata (tokoh fiktif), K6 angka Lampiran C dengan reshuffle 1× per kuartal, K7 konten 6B berupa fixture `PLACEHOLDER-*`.
