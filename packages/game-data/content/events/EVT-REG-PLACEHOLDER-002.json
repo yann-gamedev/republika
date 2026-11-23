@@ -1,0 +1,88 @@
+{
+  "id": "EVT-REG-PLACEHOLDER-002",
+  "version": 1,
+  "title": "Nelayan Memblokir Pelabuhan di Papua",
+  "body": "Ratusan nelayan dan buruh pelabuhan memblokir akses menuju pelabuhan karena harga bahan bakar dan biaya bongkar muat naik. Distribusi barang ke distrik pedalaman ikut tertahan.",
+  "eligibility": [{ "type": "FLAG_SET", "flag": "UNREST_PRV_PAPUA" }],
+  "triggerWeight": 8,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Buka dialog dan subsidi bahan bakar sementara",
+      "hint": "Blokade mereda, tetapi subsidi menambah beban kas.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -2,
+          "reasonCode": "EVT_REG_002_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": 0.2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Minta operator pelabuhan menanggung kompensasi",
+      "hint": "Kas negara aman, tetapi operator dan warga sama-sama kecewa.",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "growthPct",
+          "delta": 0.2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_B_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_B_03"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "label": "Tertibkan akses pelabuhan dengan aparat",
+      "hint": "Pelabuhan kembali beroperasi, tetapi ketegangan meningkat.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_C_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_002_C_02"
+        }
+      ]
+    }
+  ]
+}

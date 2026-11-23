@@ -1,0 +1,88 @@
+{
+  "id": "EVT-REG-PLACEHOLDER-001",
+  "version": 1,
+  "title": "Akses Jalan Terputus di Papua Pegunungan",
+  "body": "Longsor memutus jalan penghubung antar-distrik di Papua Pegunungan. Warga mengepung kantor gubernur karena pasokan bahan bakar dan pangan tertahan, sementara pemerintah provinsi menyatakan anggaran daruratnya hampir habis.",
+  "eligibility": [{ "type": "FLAG_SET", "flag": "UNREST_PRV_PAPPEG" }],
+  "triggerWeight": 9,
+  "cooldownTurns": 0,
+  "uniquePerCampaign": true,
+  "choices": [
+    {
+      "id": "A",
+      "label": "Kirim dana darurat dan tim teknis",
+      "hint": "Akses pulih lebih cepat, tetapi kas pusat terkuras.",
+      "effects": [
+        {
+          "type": "MODIFY_TREASURY",
+          "deltaTrillion": -3,
+          "reasonCode": "EVT_REG_001_A_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_A_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "welfare",
+          "delta": 1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_A_03"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "label": "Serahkan penanganan ke pemerintah provinsi",
+      "hint": "Anggaran pusat aman, tetapi warga menilai presiden lepas tangan.",
+      "neutral": true,
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_B_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_B_02"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "label": "Kerahkan aparat untuk membuka akses",
+      "hint": "Jalan dibuka paksa; ketertiban naik, kepercayaan turun.",
+      "effects": [
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "stability",
+          "delta": 2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_C_01"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "approval",
+          "delta": -2,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_C_02"
+        },
+        {
+          "type": "MODIFY_INDICATOR",
+          "target": "trust",
+          "delta": -1,
+          "timing": "IMMEDIATE",
+          "reasonCode": "EVT_REG_001_C_03"
+        }
+      ]
+    }
+  ]
+}

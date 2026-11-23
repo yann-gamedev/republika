@@ -30,6 +30,15 @@ export type Honorific = (typeof HONORIFICS)[number];
 export const PROVINCE_ACTIONS = ['VISIT', 'AID', 'HEAR', 'ENVOY'] as const;
 export type ProvinceAction = (typeof PROVINCE_ACTIONS)[number];
 
+/** Flag yang dipasang engine, bukan efek konten. */
+export const UNREST_FLAG_PREFIX = 'UNREST_';
+export const ASPIRATION_FLAG_PREFIX = 'ASPIRATION_';
+export const ENGINE_FLAG_PREFIXES = [UNREST_FLAG_PREFIX, ASPIRATION_FLAG_PREFIX] as const;
+
+export function isEngineFlag(flag: string): boolean {
+  return ENGINE_FLAG_PREFIXES.some((prefix) => flag.startsWith(prefix));
+}
+
 /** Latar belakang untuk save lama yang belum memilih latar belakang. */
 export const BACKGROUND_NONE = 'BG-NONE';
 /** Jumlah janji kampanye yang dipilih saat pelantikan. */

@@ -14,6 +14,9 @@ import historicalEvent09 from '../content/events/EVT-HIST-009.json';
 import historicalEvent10 from '../content/events/EVT-HIST-010.json';
 import eventPlaceholderOne from '../content/events/EVT-PLACEHOLDER-001.json';
 import eventPlaceholderTwo from '../content/events/EVT-PLACEHOLDER-002.json';
+import regionalEvent01 from '../content/events/EVT-REG-PLACEHOLDER-001.json';
+import regionalEvent02 from '../content/events/EVT-REG-PLACEHOLDER-002.json';
+import regionalEvent03 from '../content/events/EVT-REG-PLACEHOLDER-003.json';
 import factionCakrawala from '../content/factions/FAC-CAKRAWALA.json';
 import factionMadani from '../content/factions/FAC-MADANI.json';
 import factionPanjiMerdeka from '../content/factions/FAC-PANJI-MERDEKA.json';
@@ -51,6 +54,9 @@ export const rawContentBundle: RawContentBundle = {
   events: [
     eventPlaceholderOne,
     eventPlaceholderTwo,
+    regionalEvent01,
+    regionalEvent02,
+    regionalEvent03,
     historicalEvent01,
     historicalEvent02,
     historicalEvent03,

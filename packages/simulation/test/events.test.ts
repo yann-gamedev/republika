@@ -8,7 +8,12 @@ import { indexDefinitions } from '../src/core/definitions.js';
 import { Ledger } from '../src/core/ledger.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
 import { createRng } from '../src/core/rng.js';
-import { eligibleEvents, selectNextEvents } from '../src/events/select.js';
+import {
+  UNREST_EVENT_WEIGHT_MULTIPLIER,
+  eligibleEvents,
+  eventSelectionWeight,
+  selectNextEvents,
+} from '../src/events/select.js';
 import { EVENT_FLOOD, EVENT_PROTEST, defs, newState } from './helpers.js';
 
 const index = indexDefinitions(defs);
@@ -54,6 +59,61 @@ describe('eligibleEvents', () => {
     };
     expect(ids(newState(), 1, gated)).toEqual([]);
     expect(ids({ ...newState(), flags: ['FX_NEEDS_FLAG'] }, 1, gated)).toEqual([EVENT_FLOOD]);
+  });
+});
+
+describe('bobot event daerah', () => {
+  it('syarat FLAG_SET UNREST_* menaikkan bobot; syarat aspirasi dan event biasa tidak', () => {
+    const base = defs.events[0];
+    if (base === undefined) throw new Error('fixture tanpa event');
+    const unrest = {
+      ...base,
+      eligibility: [{ type: 'FLAG_SET' as const, flag: 'UNREST_PRV_PAPPEG' }],
+    };
+    const aspiration = {
+      ...base,
+      eligibility: [{ type: 'FLAG_SET' as const, flag: 'ASPIRATION_PRV_NTT' }],
+    };
+    expect(eventSelectionWeight(unrest)).toBe(base.triggerWeight * UNREST_EVENT_WEIGHT_MULTIPLIER);
+    expect(eventSelectionWeight(aspiration)).toBe(base.triggerWeight);
+    expect(eventSelectionWeight(base)).toBe(base.triggerWeight);
+  });
+
+  it('gejolak membuat event daerah setara dengan event nasional berbobot tiga kali lipat', () => {
+    const base = defs.events[0];
+    if (base === undefined) throw new Error('fixture tanpa event');
+    const national = {
+      ...base,
+      id: 'EVT-FX-NASIONAL',
+      eligibility: [],
+      triggerWeight: 30,
+      uniquePerCampaign: false,
+      cooldownTurns: 0,
+    };
+    const regional = {
+      ...base,
+      id: 'EVT-FX-DAERAH',
+      eligibility: [{ type: 'FLAG_SET' as const, flag: 'UNREST_PRV_PAPPEG' }],
+      triggerWeight: 10,
+      uniquePerCampaign: false,
+      cooldownTurns: 0,
+    };
+    const regionalDefs: GameDefinitions = {
+      ...defs,
+      scenario: { ...defs.scenario, maxEventsPerQuarter: 1 },
+      events: [national, regional],
+    };
+    const regionalIndex = indexDefinitions(regionalDefs);
+    const state = { ...newState(), flags: ['UNREST_PRV_PAPPEG'] };
+    const rng = createRng('bobot-daerah');
+    const draws = 10_000;
+    let regionalWins = 0;
+    for (let draw = 0; draw < draws; draw += 1) {
+      const [picked] = selectNextEvents(cloneState(state), regionalIndex, rng, new Ledger(1), 2);
+      if (picked === regional.id) regionalWins += 1;
+    }
+    // Tanpa pengali, peluangnya 10/40 = 25%; dengan 3x menjadi 30/60 = 50%.
+    expect(Math.abs(regionalWins / draws - 0.5)).toBeLessThan(0.03);
   });
 });
 

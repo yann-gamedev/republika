@@ -3,8 +3,10 @@ import { SAVE_FORMAT_VERSION, saveFileSchema, type SaveFile } from '@republika/s
 import { describe, expect, it } from 'vitest';
 
 import { applyCommand } from '../src/core/commands.js';
+import { indexDefinitions } from '../src/core/definitions.js';
 import { createCampaign, createInitialState } from '../src/core/initialState.js';
 import { resolveTurn } from '../src/core/resolveTurn.js';
+import { eligibleEvents, eventSelectionWeight } from '../src/events/select.js';
 import { evaluatePromises } from '../src/report/finalSummary.js';
 import { backgroundShowdown, runCampaign } from '../test-utils/index.js';
 import { saveToDisk } from '../src/save/compact.js';
@@ -441,6 +443,28 @@ describe('peta daerah (Tahap 6B.4)', () => {
     if (!second.ok) throw new Error(second.error.code);
     expect(second.state.flags).not.toContain(flag);
     expect(second.ledger.some((entry) => entry.reasonCode === 'PROVINCE_CALM')).toBe(true);
+  });
+
+  it('fixture event daerah membaca flag engine dan bobot gejolak 3x', () => {
+    const calm = start();
+    const index = indexDefinitions(content);
+    const ids = (flags: readonly string[]) =>
+      eligibleEvents({ ...calm, flags: [...flags] }, index, 2).map((event) => event.id);
+
+    expect(ids(calm.flags)).not.toContain('EVT-REG-PLACEHOLDER-001');
+    const unrestIds = ids(['UNREST_PRV_PAPPEG']);
+    expect(unrestIds).toContain('EVT-REG-PLACEHOLDER-001');
+    const unrest = eligibleEvents({ ...calm, flags: ['UNREST_PRV_PAPPEG'] }, index, 2).find(
+      (event) => event.id === 'EVT-REG-PLACEHOLDER-001',
+    );
+    if (unrest === undefined) throw new Error('event gejolak tidak layak');
+    expect(eventSelectionWeight(unrest)).toBe(unrest.triggerWeight * 3);
+
+    const aspiration = eligibleEvents({ ...calm, flags: ['ASPIRATION_PRV_NTT'] }, index, 2).find(
+      (event) => event.id === 'EVT-REG-PLACEHOLDER-003',
+    );
+    if (aspiration === undefined) throw new Error('event aspirasi tidak layak');
+    expect(eventSelectionWeight(aspiration)).toBe(aspiration.triggerWeight);
   });
 
   it('38 provinsi deterministik, selalu 0..100; resolve ≤ 20 ms; save ≤ 300 KB', () => {

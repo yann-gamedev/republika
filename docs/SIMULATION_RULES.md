@@ -158,7 +158,7 @@ Contoh pada keadaan awal fixture (persetujuan 58, inflasi 3,4, pertumbuhan 4,8, 
 3. Bila `uniquePerCampaign: true`, belum pernah muncul di kampanye ini.
 4. Tidak sedang menunggu tanggapan.
 
-**Cara undian.** Kandidat diurutkan menurut ID, lalu dipilih acak sesuai bobot `triggerWeight`. Peluang sebuah event = bobotnya ÷ jumlah bobot semua kandidat. Contoh fixture kuartal 2: Banjir (10) dan Demo (30) → 25% dan 75%. Jumlah event per kuartal maksimal `maxEventsPerQuarter` (default 1); bila lebih dari 1, event yang sudah terpilih tidak diundi lagi.
+**Cara undian.** Kandidat diurutkan menurut ID, lalu dipilih acak sesuai bobot `triggerWeight`. Peluang sebuah event = bobotnya ÷ jumlah bobot semua kandidat. Contoh fixture kuartal 2: Banjir (10) dan Demo (30) → 25% dan 75%. Event dengan syarat `FLAG_SET UNREST_*` memakai bobot `triggerWeight × 3` (event daerah saat gejolak; §15.4). Jumlah event per kuartal maksimal `maxEventsPerQuarter` (default 1); bila lebih dari 1, event yang sudah terpilih tidak diundi lagi.
 
 **Keacakan tetap bisa diulang.** Undian memakai seed kampanye + nomor kuartal. Kampanye dengan seed sama dan keputusan sama selalu mendapat event yang sama.
 
@@ -257,4 +257,6 @@ Angka di bagian ini disetujui pemilik (K6) sebagai angka awal dan boleh diturunk
 | `HEAR` dengar aspirasi  | gratis, 1× per kuartal di seluruh negeri              | flag `ASPIRATION_<id>` untuk event daerah      |
 | `ENVOY` kirim utusan    | efektivitas kementerian tata kelola (Dalam Negeri) −2 | kepuasan lokal +3,0                            |
 
-- Di bawah 25,0 provinsi **bergejolak**: flag `UNREST_<id>` dipasang di langkah 10 dan dilepas saat pulih. Event daerah bisa memakai flag ini lewat syarat `FLAG_SET`. Konten event daerah belum ada.
+- Di bawah 25,0 provinsi **bergejolak**: flag `UNREST_<id>` dipasang di langkah 10 dan dilepas saat pulih. Event daerah membaca flag ini lewat syarat `FLAG_SET`.
+- Event yang mensyaratkan `FLAG_SET` pada flag `UNREST_*` diundi dengan bobot **3x** `triggerWeight` (`UNREST_EVENT_WEIGHT_MULTIPLIER`). Event dengan syarat `ASPIRATION_*` tetap memakai bobot dasarnya. Pengali ini angka awal untuk playtest; ubah satu konstanta bila event daerah terlalu sering/jarang.
+- Fixture saat ini: `EVT-REG-PLACEHOLDER-001` (Papua Pegunungan), `EVT-REG-PLACEHOLDER-002` (Papua), dan `EVT-REG-PLACEHOLDER-003` (aspirasi NTT). Ketiganya memakai ilustrasi fallback sampai gambar final tersedia.
