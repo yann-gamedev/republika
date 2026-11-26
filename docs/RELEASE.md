@@ -1,6 +1,8 @@
-# Build dan Verifikasi — Tahap 1
+# Build dan Verifikasi Rilis
 
-Belum rilis game siap dimainkan. Tahap 1 menghasilkan shell mock dan fondasi schema/konten. Identifier final `id.republika.game` sudah dikonfirmasi pemilik; jangan diubah setelah rilis.
+Kode fitur Tahap 6B selesai dan terverifikasi lokal, tetapi **belum siap rilis final**. Acuan status, bukti, dan blocker: [Kesiapan Rilis](RELEASE-READINESS.md). Saat audit: `APP_VERSION = 0.1.0-rc.1`, `SAVE_FORMAT_VERSION = 3`, `rulesetVersion = 3`; PR #9 sudah digabung ke `main` (`847eca9`) saat verifikasi akhir 23 November 2026. Identifier final `id.republika.game` sudah dikonfirmasi pemilik; jangan diubah setelah rilis.
+
+Gate manual installer, runtime offline, kampanye desktop 20 kuartal, skala 125%, dan RAM belum lengkap. Build/test hijau atau `content:check` exit 0 **bukan tanda konten final maupun rilis final sudah siap**.
 
 ## Gate lokal
 
@@ -19,7 +21,9 @@ cargo check --manifest-path apps/desktop/src-tauri/Cargo.toml
 pnpm build
 ```
 
-Installer NSIS di `apps/desktop/src-tauri/target/release/bundle/nsis/`. `pnpm build` memerlukan toolchain Windows pada README. Perintah tercantum bukan klaim sudah lulus. CLI `sim`, `balance`, dan `perf:report` belum tersedia.
+Installer NSIS di `apps/desktop/src-tauri/target/release/bundle/nsis/`. `pnpm build` memerlukan toolchain Windows pada README. Perintah tercantum bukan klaim sudah lulus.
+
+CLI `pnpm sim`, `pnpm balance`, dan `pnpm perf:report` sudah tersedia, begitu juga `pnpm content:check --strict`. `--strict` menggagalkan proses bila masih ada token `placeholder`; **tag stabil wajib lulus `--strict`**, dan warning lain tetap harus ditinjau sebelum rilis (lihat bagian konten di `RELEASE-READINESS.md`).
 
 Pemeriksaan presisi: lewat fixture/salinan pengujian, gunakan nilai indikator `0.12` dan pastikan validasi gagal dengan exit bukan nol. Jangan mengubah konten final atau meninggalkan JSON invalid dalam repo.
 
@@ -28,20 +32,26 @@ Pemeriksaan presisi: lewat fixture/salinan pengujian, gunakan nilai indikator `0
 - [ ] Run GitHub Actions aktual: `checks` lulus lint, typecheck, test, content check, build web; `desktop` membangun Windows dan mengunggah artifact.
 - [ ] Catat URL/run CI dan ukuran installer dari artifact/summary.
 - [ ] Pemilik memasang installer artifact pada Windows 10/11 x64 dan membuka aplikasi.
-- [ ] Periksa Menu Utama, Pelantikan, Dashboard, Kebijakan, Parlemen, Kabinet, Peristiwa, Riwayat, dan Pengaturan; lihat label/mock, bukan menuntut engine yang belum dibuat.
-- [ ] Periksa ukuran minimum 1280×720, skala UI, keterbacaan, dan tema “ruang rapat negara”. Preferensi hanya sesi; fullscreen native belum dijamin.
+- [ ] Periksa Menu Utama, Pelantikan, Dashboard, Kebijakan, Parlemen, Kabinet, Peristiwa, Riwayat, dan Pengaturan.
+- [ ] Periksa ukuran minimum 1280×720, skala UI termasuk 125%, keterbacaan, dan tema “ruang rapat negara”.
+- [ ] Kampanye penuh 20 kuartal di build desktop, bukan hanya E2E browser.
 - [ ] Setelah dependency dan WebView2 tersedia, buka ulang aplikasi tanpa jaringan; font dan aset tetap tampil lokal. Installer `embedBootstrapper` dapat mengunduh WebView2 bila runtime belum terpasang; jangan menyamakan instalasi dengan runtime offline.
-- [ ] Catat RAM awal total semua proses REPUBLIKA + WebView2 lewat Task Manager, berikut OS dan kondisi pengukuran.
+- [ ] Catat RAM total semua proses REPUBLIKA + WebView2 lewat Task Manager setelah 20 kuartal, berikut OS dan kondisi pengukuran (acuan `docs/PERFORMANCE.md`).
 
-Workflow upload artifact bukan publikasi GitHub Release. Instalasi pemilik dan RAM belum terverifikasi; tidak boleh menandai tahap sepenuhnya lolos hanya karena build lokal berhasil.
+Workflow upload artifact bukan publikasi GitHub Release. Tidak ada satu pun butir manual di atas yang boleh diklaim lulus sebelum dijalankan.
 
 ## Batas performa
 
-Acuan `AGENT.md` §5.17: RAM target ≤150 MB / maksimum 200 MB; heap ≤30/50 MB; installer ≤10/15 MB; cold start ≤1,5/3 detik; resolve kuartal ≤20/50 ms; save 20 kuartal ≤300 KB/1 MB. Target runtime kampanye diukur pada dashboard Windows 11 setelah 20 kuartal nyata. Mock Tahap 1 hanya baseline shell, bukan bukti target engine/save tercapai.
+Acuan `AGENT.md` §5.17: RAM target ≤150 MB / maksimum 200 MB; heap ≤30/50 MB; installer ≤10/15 MB; cold start ≤1,5/3 detik; resolve kuartal ≤20/50 ms; save 20 kuartal ≤300 KB/1 MB. Heap, cold start, resolve, dan ukuran save sudah terukur lokal (`docs/PERFORMANCE.md`, `docs/PROGRESS.md`). **RAM total app termasuk WebView2 setelah 20 kuartal di Windows belum terukur andal**; angka lokal hanya indikatif. Ukuran installer sebelum rilis stabil harus dicatat dari artifact.
 
-## Sebelum rilis tahap lanjutan
+## Sebelum rilis stabil
 
-Validasi konten final dan versi; lengkapi save/backup/migrasi serta test kompatibilitas sebelum menerima save pemain. Update manual melalui GitHub Releases, tanpa updater atau pengecekan versi online. Peta migrasi ruleset dan formatnya belum diimplementasikan pada Tahap 1. Jangan membuat tag atau menerbitkan rilis dalam pekerjaan fondasi ini.
+- [ ] `pnpm content:check --strict` lulus tanpa token `placeholder`; warning kualitas lain ditinjau dan ditutup/diputuskan satu per satu.
+- [ ] Seluruh gate manual di atas lulus dan buktinya dicatat.
+- [ ] Blocker di [Kesiapan Rilis](RELEASE-READINESS.md) ditutup atau disetujui pemilik.
+- [ ] Versi stabil ditetapkan (bukan `-rc`), `CHANGELOG.md` diperbarui.
+
+Validasi konten final dan versi; lengkapi save/backup/migrasi serta test kompatibilitas sebelum menerima save pemain. Update manual melalui GitHub Releases, tanpa updater atau pengecekan versi online. Peta migrasi ruleset sudah ada (ruleset 3). Jangan membuat tag atau menerbitkan rilis tanpa konfirmasi pemilik.
 
 ## Checklist WAJIB saat format save atau ID konten berubah
 
@@ -76,11 +86,18 @@ Jalankan setiap kali salah satu hal berikut terjadi sebelum rilis. Tujuannya: sa
 ## Prosedur rilis GitHub
 
 1. Pastikan `main` hijau di CI dan checklist di atas sudah dijalankan bila format save atau ID konten berubah.
-2. Setel versi dari satu sumber: `pnpm version:set 0.1.0-rc.1`. Ini memperbarui `package.json`, `apps/desktop/package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`, dan `APP_VERSION`. Test `tests/version.test.ts` gagal bila ada yang tertinggal.
-3. Tulis bagian `## [0.1.0-rc.1] - <tanggal>` di `CHANGELOG.md`. Isinya dipakai sebagai catatan rilis.
-4. Commit, lalu buat tag beranotasi dan push: `git tag -a v0.1.0-rc.1 -m "REPUBLIKA 0.1.0-rc.1"` → `git push origin v0.1.0-rc.1`. **Membuat tag rilis wajib dikonfirmasi pemilik proyek.**
-5. Workflow `release.yml` (windows-latest) memeriksa tag = versi `package.json`, menjalankan lint/typecheck/test/content:check/cargo test, membangun installer NSIS per-user, lalu membuat **draft** GitHub Release berisi `.exe`, `.exe.sha256`, dan catatan dari `CHANGELOG.md`. Versi dengan tanda `-` (mis. `-rc.1`) ditandai _pre-release_.
-6. Unduh installer dari draft, uji di Windows bersih (lihat di bawah), lalu publikasikan draft secara manual.
+2. Untuk rilis stabil, jalankan `pnpm content:check --strict` dan pastikan tidak ada token `placeholder` tersisa. Exit 0 dengan warning lain tetap harus ditinjau satu per satu; bukan tanda konten siap rilis stabil. Contoh langkah berikut memakai versi stabil; untuk pra-rilis, gunakan versi seperti `0.1.0-rc.1` secara konsisten.
+3. Setel versi dari satu sumber: `pnpm version:set 0.1.0`. Ini memperbarui `package.json`, `apps/desktop/package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`, dan `APP_VERSION`. Test `tests/version.test.ts` gagal bila ada yang tertinggal.
+4. Tulis bagian `## [0.1.0] - <tanggal>` di `CHANGELOG.md`. Isinya dipakai sebagai catatan rilis.
+5. Commit, lalu buat tag beranotasi dan push: `git tag -a v0.1.0 -m "REPUBLIKA 0.1.0"` → `git push origin v0.1.0`. **Membuat tag rilis wajib dikonfirmasi pemilik proyek.**
+6. Workflow `release.yml` (windows-latest) memeriksa tag = versi `package.json`, menjalankan lint/typecheck/test/content:check/cargo test, membangun installer NSIS per-user, lalu membuat **draft** GitHub Release berisi `.exe`, `.exe.sha256`, dan catatan dari `CHANGELOG.md`.
+7. Unduh installer dari draft, uji di Windows bersih (lihat di bawah), lalu publikasikan draft secara manual.
+
+### Tag stabil vs pra-rilis
+
+- Tag stabil **tidak boleh mengandung `-`**. Semua versi dengan `-` (`-rc.1`, `-beta.1`, dan prerelease lain) adalah pra-rilis dan **tidak wajib** strict, tetapi tetap disarankan.
+- `content:check --strict` **wajib lulus sebelum tag stabil** (tidak boleh ada token `placeholder`). CI menegakkannya untuk tag tanpa `-`; kegagalan memblokir rilis stabil. Warning kualitas lain tetap ditinjau manusia.
+- Exit 0 biasa (tanpa `--strict`) tidak membuktikan kelengkapan konten. Jangan menandai rilis final dari hasil itu saja.
 
 ### Uji instalasi bersih (manual)
 

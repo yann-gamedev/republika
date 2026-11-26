@@ -64,4 +64,4 @@ Save dari komputer lain atau folder lain: buka **Simpan & Muat → Impor dari ve
 
 ## Untuk pengembang
 
-Lihat [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (prasyarat, perintah, alat konten, cara rilis) dan [AGENT.md](AGENT.md) (aturan proyek). Lisensi: [MIT](LICENSE). Kredit font dan dependensi: [CREDITS.md](CREDITS.md). Riwayat perubahan: [CHANGELOG.md](CHANGELOG.md).
+Lihat [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (prasyarat, perintah, alat konten, cara rilis), [kesiapan rilis](docs/RELEASE-READINESS.md) (pekerjaan tersisa dan gate), dan [AGENT.md](AGENT.md) (aturan proyek). Lisensi: [MIT](LICENSE). Kredit font dan dependensi: [CREDITS.md](CREDITS.md). Riwayat perubahan: [CHANGELOG.md](CHANGELOG.md).

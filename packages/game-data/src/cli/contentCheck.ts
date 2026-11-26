@@ -1,10 +1,12 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseArgs } from 'node:util';
 
 import type { ValidationIssue } from '@republika/shared';
 
 import { parseRawContent } from '../parseContent.js';
 import { readContentFromDisk } from '../readContentFromDisk.js';
+import { placeholderPaths } from './placeholderPaths.js';
 
 function printIssue(issue: ValidationIssue): void {
   const label = issue.severity === 'error' ? 'KESALAHAN' : 'PERINGATAN';
@@ -13,10 +15,15 @@ function printIssue(issue: ValidationIssue): void {
 }
 
 function main(): void {
+  const { values, positionals } = parseArgs({
+    options: { strict: { type: 'boolean', default: false } },
+    allowPositionals: true,
+  });
+  if (positionals.length > 1) throw new Error('Gunakan content:check [folder] [--strict].');
   const contentDirectory =
-    process.argv[2] === undefined
+    positionals[0] === undefined
       ? resolve(dirname(fileURLToPath(import.meta.url)), '../../content')
-      : resolve(process.argv[2]);
+      : resolve(positionals[0]);
   console.log('REPUBLIKA — Pemeriksaan Konten');
   console.log(`Folder: ${contentDirectory}`);
 
@@ -44,6 +51,19 @@ function main(): void {
     for (const issue of result.warnings) printIssue(issue);
   }
 
+  // Tag rilis stabil wajib bebas placeholder, termasuk yang tidak memakai ID PLACEHOLDER.
+  if (values.strict) {
+    const leftovers = placeholderPaths(disk.raw);
+    if (leftovers.length > 0) {
+      console.error(
+        `Pemeriksaan ketat gagal: ${leftovers.length} nilai masih mengandung "placeholder".`,
+      );
+      for (const path of leftovers.slice(0, 20)) console.error(`  ${path}`);
+      if (leftovers.length > 20) console.error(`  ... dan ${leftovers.length - 20} lainnya.`);
+      process.exitCode = 1;
+    }
+  }
+
   if (result.definitions !== null && result.contentHash !== null) {
     const definitions = result.definitions;
     console.log('Ringkasan konten:');
@@ -65,7 +85,7 @@ function main(): void {
     );
     console.log(`contentHash: ${result.contentHash}`);
     console.log(
-      `Konten valid. ${result.warnings.length > 0 ? `${result.warnings.length} peringatan untuk ditinjau.` : 'Tidak ada peringatan.'}`,
+      `Konten valid secara schema. ${result.warnings.length > 0 ? `${result.warnings.length} peringatan untuk ditinjau.` : 'Tidak ada peringatan.'}`,
     );
   }
 
